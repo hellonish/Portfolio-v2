@@ -1,0 +1,326 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fff;
+}
+
+/* Two-column layout */
+.wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Left sidebar */
+.sidebar {
+    width: 280px;
+    background-color: #f5f5f5;
+    padding: 40px 30px;
+    border-right: 1px solid #ddd;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.profile-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.sidebar h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #222;
+}
+
+.sidebar .title {
+    font-size: 15px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.sidebar .affiliation {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Navigation */
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-links a {
+    color: #0066cc;
+    text-decoration: none;
+    padding: 8px 0;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: #004499;
+}
+
+/* Contact in sidebar */
+.sidebar .contact h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #222;
+}
+
+.sidebar .contact p {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 6px;
+    line-height: 1.5;
+}
+
+.social-links {
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+.social-links a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+/* Main content area */
+.content {
+    margin-left: 280px;
+    padding: 50px 60px;
+    max-width: 900px;
+    flex: 1;
+}
+
+/* Sections */
+section {
+    margin-bottom: 50px;
+    position: relative;
+}
+
+section h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e0e0e0;
+    position: relative;
+    z-index: 2;
+    background: white;
+}
+
+section h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 25px;
+    margin-bottom: 12px;
+}
+
+section p {
+    margin-bottom: 15px;
+    color: #444;
+    text-align: justify;
+}
+
+.note {
+    font-size: 14px;
+    color: #777;
+    font-style: italic;
+    margin-bottom: 25px;
+}
+
+/* Links */
+a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Lists */
+ul {
+    list-style-position: outside;
+    margin-left: 20px;
+}
+
+ul li {
+    margin-bottom: 10px;
+    color: #444;
+}
+
+/* Publications */
+.paper {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.paper:last-child {
+    border-bottom: none;
+}
+
+.paper-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.paper-title a {
+    color: #222;
+}
+
+.paper-title a:hover {
+    color: #0066cc;
+}
+
+.paper-authors {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 3px;
+}
+
+.paper-venue {
+    font-size: 14px;
+    color: #777;
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.paper-links {
+    font-size: 13px;
+}
+
+.paper-links a {
+    color: #0066cc;
+    margin-right: 5px;
+}
+
+/* 3D Neural Network Visualization */
+#neural-network-container {
+    position: fixed;
+    top: 80px;
+    right: 60px;
+    width: 120px;
+    height: 120px;
+    pointer-events: all;
+    z-index: 10;
+    opacity: 1;
+}
+
+#neural-network-container canvas {
+    display: block;
+}
+
+/* Personal Statement */
+.personal-statement {
+    background-color: #f8f9fa;
+    border-left: 3px solid #0066cc;
+    padding: 20px;
+    margin: 25px 0;
+    border-radius: 4px;
+}
+
+.personal-statement p {
+    margin-bottom: 0;
+    font-style: italic;
+    color: #333;
+    line-height: 1.7;
+}
+
+/* Skills Section */
+.skills-category {
+    margin-bottom: 20px;
+}
+
+.skills-category h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0066cc;
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+.skills-category p {
+    margin-bottom: 0;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Footer */
+footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+    color: #999;
+    font-size: 13px;
+}
+
+/* Responsive design */
+@media (max-width: 968px) {
+    .wrapper {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .nav-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 30px 25px;
+    }
+
+    section p {
+        text-align: left;
+    }
+
+    #neural-network-container {
+        display: none;
+    }
+}
