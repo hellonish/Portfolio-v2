@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nishant Sharma</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
     <div class="wrapper">
@@ -39,7 +38,6 @@
         </aside>
 
         <main class="content">
-            <div id="neural-network-container"></div>
             <section id="about">
                 <h2>About</h2>
                     <p>
@@ -220,131 +218,5 @@
             </footer>
         </main>
     </div>
-
-    <script>
-        // 3D Gradient Torus Visualization
-        const container = document.getElementById('neural-network-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-
-        renderer.setSize(120, 120);
-        renderer.setClearColor(0x000000, 0);
-        container.appendChild(renderer.domElement);
-
-        // Create gradient torus knot
-        const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
-
-        // Create vertex colors for gradient effect
-        const colors = [];
-        const color1 = new THREE.Color(0x0066cc); // Blue
-        const color2 = new THREE.Color(0x00ccff); // Light blue
-        const color3 = new THREE.Color(0x6699ff); // Purple-blue
-
-        const positionAttribute = geometry.attributes.position;
-        for (let i = 0; i < positionAttribute.count; i++) {
-            const y = positionAttribute.getY(i);
-            const t = (y + 1) / 2; // Normalize to 0-1
-
-            let color;
-            if (t < 0.5) {
-                color = new THREE.Color().lerpColors(color1, color2, t * 2);
-            } else {
-                color = new THREE.Color().lerpColors(color2, color3, (t - 0.5) * 2);
-            }
-            colors.push(color.r, color.g, color.b);
-        }
-
-        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
-
-        const material = new THREE.MeshStandardMaterial({
-            vertexColors: true,
-            metalness: 0.3,
-            roughness: 0.4,
-            flatShading: false
-        });
-
-        const torus = new THREE.Mesh(geometry, material);
-        scene.add(torus);
-
-        // Add lights
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-        scene.add(ambientLight);
-
-        const pointLight1 = new THREE.PointLight(0xffffff, 0.8);
-        pointLight1.position.set(5, 5, 5);
-        scene.add(pointLight1);
-
-        const pointLight2 = new THREE.PointLight(0x0066cc, 0.5);
-        pointLight2.position.set(-5, -5, -5);
-        scene.add(pointLight2);
-
-        camera.position.z = 5;
-
-        // Interactive 360-degree rotation
-        let isDragging = false;
-        let previousMouseX = 0;
-        let previousMouseY = 0;
-        let rotationVelocityX = 0.003;
-        let rotationVelocityY = 0.005;
-
-        container.addEventListener('mousedown', (event) => {
-            isDragging = true;
-            previousMouseX = event.clientX;
-            previousMouseY = event.clientY;
-        });
-
-        container.addEventListener('mousemove', (event) => {
-            if (isDragging) {
-                const deltaX = event.clientX - previousMouseX;
-                const deltaY = event.clientY - previousMouseY;
-
-                rotationVelocityY = deltaX * 0.01;
-                rotationVelocityX = deltaY * 0.01;
-
-                previousMouseX = event.clientX;
-                previousMouseY = event.clientY;
-            }
-        });
-
-        container.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
-
-        container.addEventListener('mouseleave', () => {
-            isDragging = false;
-        });
-
-        function animate() {
-            requestAnimationFrame(animate);
-
-            // Apply rotation with momentum
-            torus.rotation.y += rotationVelocityY;
-            torus.rotation.x += rotationVelocityX;
-
-            // Gradual slowdown when not dragging
-            if (!isDragging) {
-                rotationVelocityX *= 0.95;
-                rotationVelocityY *= 0.95;
-
-                // Keep minimum rotation speed
-                if (Math.abs(rotationVelocityX) < 0.003) rotationVelocityX = 0.003;
-                if (Math.abs(rotationVelocityY) < 0.005) rotationVelocityY = 0.005;
-            }
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 968) {
-                container.style.display = 'none';
-            } else {
-                container.style.display = 'block';
-            }
-        });
-    </script>
 </body>
 </html>
