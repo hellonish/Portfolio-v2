@@ -91,25 +91,6 @@
 
                 <div class="paper">
                     <div class="paper-title">
-                        Co-Founder | Ingelt Board
-                    </div>
-                    <div class="paper-authors">Delhi, India</div>
-                    <div class="paper-venue">Dec 2022 - Jul 2024</div>
-                    <div class="paper-description">
-                        <ul>
-                            <li>Architected and deployed secure workflows for Teachers, Students, and Management,
-                                featuring real-time capabilities: Group Chat and Live Streaming</li>
-                            <li>Designed a cloud-native architecture using AWS S3 for scalable content storage mapped
-                                via RDS, and ensuring high availability through region-specific EC2 instance management
-                            </li>
-                            <li>Implemented secure infrastructure with SSL/TLS roles and security groups, while
-                                integrating stripe payment gateway to handle secure transactions</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="paper">
-                    <div class="paper-title">
                         Co-Founder | Macverin Technologies
                     </div>
                     <div class="paper-authors">Hybrid (UP, India)</div>
@@ -132,27 +113,20 @@
 
             <section id="skills">
                 <h2>Technical Skills</h2>
-
-                <div class="skills-category">
-                    <h3>Programming Languages</h3>
-                    <p>Python, Java, C++, JavaScript, TypeScript</p>
-                </div>
-
-                <div class="skills-category">
-                    <h3>Applied AI and Research</h3>
-                    <p>PyTorch, TensorFlow, Fine-Tuning, RAG, Language Models, Vision Models, Langraph</p>
-                </div>
-
-                <div class="skills-category">
-                    <h3>Development & Operations</h3>
-                    <p>AWS, GCP, Prometheus, Grafana, Jenkins, Github Actions, Docker, Kubernetes, Ansible, Terraform
-                    </p>
-                </div>
-
-                <div class="skills-category">
-                    <h3>Frontend Frameworks</h3>
-                    <p>Next.js, Node.js, FastAPI, Django, Flask, SQL, NoSQL</p>
-                </div>
+                <ul>
+                    <li><strong>Programming Languages:</strong> Python, Java, C++, JavaScript, TypeScript, Bash/Shell
+                    </li>
+                    <li><strong>Backend Data Systems:</strong> FastAPI, Django, OOP, System Design, EDA
+                        (Event-Distributed Systems), DBMS, Agile/Scrum</li>
+                    <li><strong>Frontend Frameworks:</strong> Next.js, Express, FastAPI, Django, Flask, Spring Boot,
+                        GraphQL</li>
+                    <li><strong>Cloud and DevOps:</strong> AWS (EC2, S3, RDS, IAM), Docker, Kubernetes, Terraform,
+                        Ansible, Jenkins, GitHub Actions, Prometheus, Grafana</li>
+                    <li><strong>Machine Learning & MLOps:</strong> PyTorch, TensorFlow, LLM Fine-Tuning (LoRA), MLflow,
+                        Vector Databases (Pinecone, Milvus)</li>
+                    <li><strong>AI Systems:</strong> AI-Agentics, Langchain, Langraph, Agent-based systems</li>
+                    <li><strong>Databases and Storage:</strong> PostgreSQL, MySQL, MongoDB, Redis, ChromaDB</li>
+                </ul>
             </section>
 
             <section id="publications">
@@ -160,19 +134,21 @@
 
                 <div class="paper">
                     <div class="paper-title">
-                        <a href="https://www.wort.nyc" target="_blank">Wort - Deep Research Assistant</a>
+                        <a href="https://www.wort.nyc" target="_blank">Wort – Personal Research Assistant</a>
                     </div>
                     <div class="paper-venue">2025 (In-Progress)</div>
                     <div class="paper-description">
-                        Your Personal Research Assistant. Why would you use it over any traditional Generative AI tools?
-                        It is specifically tailored to minimize hallucinations and have a directed research.
-                        <br><br>
-                        <strong>Usecases:</strong>
-                        <ol>
-                            <li>General Lifestyle</li>
-                            <li>Study</li>
-                            <li>Research</li>
-                        </ol>
+                        <ul>
+                            <li>Designed a recursive research agent that uses BFS algorithm to autonomously detect
+                                information gaps and navigate complex web sub-graphs to generate comprehensive reports.
+                            </li>
+                            <li>Architected a custom hybrid memory system combining Qdrant (Dense + Sparse BM25) with
+                                Cross-Encoders and RRF re-ranking to achieve state-of-the-art retrieval precision.</li>
+                            <li>Implemented RLVR to fine-tune Qwen models for complex query generation, elevating base
+                                accuracy from 71% to 94% and surpassing GPT-5.1 benchmarks (91%).</li>
+                            <li>Developed parallel scrapers capable of navigating dynamic, human-interaction-heavy
+                                websites to harvest structured data for agent processing.</li>
+                        </ul>
                     </div>
                     <div class="paper-links">
                         [ <a href="https://www.wort.nyc" target="_blank">project page</a> ]
@@ -186,11 +162,14 @@
                     </div>
                     <div class="paper-venue">2025 (In-Progress)</div>
                     <div class="paper-description">
-                        Created a financial analysis tool that speaks your language—literally. It pulls real-time data
-                        from SEC Filings and macro APIs, searches through financial news, and answers questions about
-                        portfolios and risk in plain English. The conversational interface makes institutional-grade
-                        analysis accessible. Currently fine-tuning it on sentiment-labeled datasets so it can better
-                        read between the lines of earnings calls and market commentary.
+                        <ul>
+                            <li>Created a financial analysis tool with conversational interface that pulls real-time
+                                data from SEC Filings and macro APIs.</li>
+                            <li>Implemented RAG-based system to search through financial news and answer questions about
+                                portfolios and risk in plain English.</li>
+                            <li>Fine-tuning the model on sentiment-labeled datasets to improve interpretation of
+                                earnings calls and market commentary.</li>
+                        </ul>
                     </div>
                     <div class="paper-links">
                         [ <a href="https://finassistant-frontend.s3-website.us-east-2.amazonaws.com"
@@ -206,12 +185,14 @@
                     </div>
                     <div class="paper-venue">2025</div>
                     <div class="paper-description">
-                        Built a complete ML pipeline that turns photos into Instagram-ready captions and hashtags in
-                        under 2 seconds. Fine-tuned LLaVA-1.5/1.6 (7B parameter) vision models using LoRA—a technique
-                        that makes training efficient without losing quality—on 100k urban images. The production setup
-                        handles 300+ requests per hour and includes the full monitoring stack (MLflow, Prometheus,
-                        Grafana) so we know exactly how it's performing. Infrastructure is fully automated with
-                        Terraform on GPU clusters.
+                        <ul>
+                            <li>Built an end-to-end image captioning service that generates Instagram-ready captions and
+                                hashtags via a FastAPI inference API with &lt;2s P90 latency.</li>
+                            <li>Fine-tuned LLaVA-1.5/1.6 (7B) using LoRA on 100k urban images, enabling efficient
+                                multimodal training with reproducible, containerized workflows.</li>
+                            <li>Deployed and operated the system on GPU infrastructure, automating provisioning with
+                                Terraform and implementing MLflow-based experiment tracking and monitoring.</li>
+                        </ul>
                     </div>
                     <div class="paper-links">
                         [ <a href="https://github.com/nishant-ai/Snap2Caption" target="_blank">code</a> ]
@@ -225,12 +206,14 @@
                     </div>
                     <div class="paper-venue">Published Research (2024)</div>
                     <div class="paper-description">
-                        Explored why AI models struggle when small businesses try to use them. The problem? These models
-                        are trained on massive datasets, but small e-commerce stores have limited data and long-tail
-                        product distributions—lots of niche items with few examples. Tested classification models,
-                        recommendation engines, and LLM-powered support systems to understand where they break down. The
-                        published research gives practical guidance for small merchants trying to adopt AI without
-                        enterprise-level resources.
+                        <ul>
+                            <li>Explored why AI models struggle with small e-commerce businesses that have limited data
+                                and long-tail product distributions.</li>
+                            <li>Tested classification models, recommendation engines, and LLM-powered support systems to
+                                identify failure points.</li>
+                            <li>Published research providing practical guidance for small merchants adopting AI without
+                                enterprise-level resources.</li>
+                        </ul>
                     </div>
                     <div class="paper-links">
                         [ <a href="https://www.ijcrt.org/papers/IJCRT24A5111.pdf" target="_blank">research paper</a> ]
@@ -290,8 +273,6 @@
                 <ul>
                     <li><strong>Technical Head (Jun 2023 - Jun 2024):</strong> Computer Society of India (CSI) Student
                         Chapter. Led a 15-member team and organized 12+ technical events.</li>
-                    <li><strong>Technical Workforce Lead (Dec 2022 - Jul 2024):</strong> Ingelt Board. Led a technical
-                        workforce of 6 engineers.</li>
                 </ul>
 
                 <h3>Extracurriculars</h3>
