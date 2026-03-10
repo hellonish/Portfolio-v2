@@ -4,11 +4,21 @@
     box-sizing: border-box;
 }
 
+:root {
+    --accent: #0d9488;
+    --accent-hover: #0f766e;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --surface: #f8fafc;
+    --sidebar-bg: #f1f5f9;
+}
+
 body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     font-size: 15px;
     line-height: 1.6;
-    color: #333;
+    color: var(--text);
     background-color: #fff;
 }
 
@@ -21,9 +31,9 @@ body {
 /* Left sidebar */
 .sidebar {
     width: 280px;
-    background-color: #f5f5f5;
+    background-color: var(--sidebar-bg);
     padding: 40px 30px;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid var(--border);
     position: fixed;
     height: 100vh;
     overflow-y: auto;
@@ -36,25 +46,25 @@ body {
     object-fit: cover;
     margin-bottom: 20px;
     border: 3px solid #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .sidebar h1 {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 8px;
-    color: #222;
+    color: var(--text);
 }
 
 .sidebar .title {
     font-size: 15px;
-    color: #666;
+    color: var(--text-muted);
     margin-bottom: 5px;
 }
 
 .sidebar .affiliation {
     font-size: 14px;
-    color: #777;
+    color: var(--text-muted);
     margin-bottom: 25px;
     line-height: 1.5;
 }
@@ -65,11 +75,11 @@ body {
     flex-direction: column;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid var(--border);
 }
 
 .nav-links a {
-    color: #0066cc;
+    color: var(--accent);
     text-decoration: none;
     padding: 8px 0;
     font-size: 14px;
@@ -77,7 +87,7 @@ body {
 }
 
 .nav-links a:hover {
-    color: #004499;
+    color: var(--accent-hover);
 }
 
 /* Contact in sidebar */
@@ -85,27 +95,35 @@ body {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 12px;
-    color: #222;
+    color: var(--text);
 }
 
 .sidebar .contact p {
     font-size: 13px;
-    color: #555;
+    color: var(--text-muted);
     margin-bottom: 6px;
     line-height: 1.5;
+}
+
+.sidebar .contact a {
+    color: var(--accent);
 }
 
 .social-links {
     margin-top: 12px;
     font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
 }
 
 .social-links a {
-    color: #0066cc;
+    color: var(--accent);
     text-decoration: none;
 }
 
 .social-links a:hover {
+    color: var(--accent-hover);
     text-decoration: underline;
 }
 
@@ -126,10 +144,10 @@ section {
 section h2 {
     font-size: 22px;
     font-weight: 600;
-    color: #222;
+    color: var(--text);
     margin-bottom: 20px;
     padding-bottom: 8px;
-    border-bottom: 2px solid #e0e0e0;
+    border-bottom: 2px solid var(--accent);
     position: relative;
     z-index: 2;
     background: white;
@@ -138,31 +156,32 @@ section h2 {
 section h3 {
     font-size: 17px;
     font-weight: 600;
-    color: #333;
+    color: var(--text);
     margin-top: 25px;
     margin-bottom: 12px;
 }
 
 section p {
     margin-bottom: 15px;
-    color: #444;
+    color: var(--text-muted);
     text-align: justify;
 }
 
 .note {
     font-size: 14px;
-    color: #777;
+    color: var(--text-muted);
     font-style: italic;
     margin-bottom: 25px;
 }
 
 /* Links */
 a {
-    color: #0066cc;
+    color: var(--accent);
     text-decoration: none;
 }
 
 a:hover {
+    color: var(--accent-hover);
     text-decoration: underline;
 }
 
@@ -174,54 +193,72 @@ ul {
 
 ul li {
     margin-bottom: 10px;
-    color: #444;
+    color: var(--text-muted);
 }
 
-/* Publications */
+/* Publications / Project cards */
 .paper {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 28px;
+    padding: 20px 22px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: box-shadow 0.2s, border-color 0.2s;
 }
 
-.paper:last-child {
-    border-bottom: none;
+.paper:hover {
+    border-color: rgba(13, 148, 136, 0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
 .paper-title {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 5px;
+    color: var(--text);
 }
 
 .paper-title a {
-    color: #222;
+    color: var(--text);
 }
 
 .paper-title a:hover {
-    color: #0066cc;
+    color: var(--accent);
 }
 
 .paper-authors {
     font-size: 14px;
-    color: #555;
+    color: var(--text-muted);
     margin-bottom: 3px;
 }
 
 .paper-venue {
     font-size: 14px;
-    color: #777;
+    color: var(--text-muted);
     font-style: italic;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.paper-description {
+    margin-bottom: 12px;
+}
+
+.paper-description ul {
+    margin-left: 18px;
 }
 
 .paper-links {
     font-size: 13px;
+    margin-top: 8px;
 }
 
 .paper-links a {
-    color: #0066cc;
-    margin-right: 5px;
+    color: var(--accent);
+    margin-right: 8px;
+}
+
+.paper-links a:hover {
+    color: var(--accent-hover);
 }
 
 /* 3D Neural Network Visualization */
@@ -242,17 +279,17 @@ ul li {
 
 /* Personal Statement */
 .personal-statement {
-    background-color: #f8f9fa;
-    border-left: 3px solid #0066cc;
+    background-color: var(--surface);
+    border-left: 4px solid var(--accent);
     padding: 20px;
     margin: 25px 0;
-    border-radius: 4px;
+    border-radius: 6px;
 }
 
 .personal-statement p {
     margin-bottom: 0;
     font-style: italic;
-    color: #333;
+    color: var(--text);
     line-height: 1.7;
 }
 
@@ -264,14 +301,14 @@ ul li {
 .skills-category h3 {
     font-size: 15px;
     font-weight: 600;
-    color: #0066cc;
+    color: var(--accent);
     margin-bottom: 8px;
     margin-top: 0;
 }
 
 .skills-category p {
     margin-bottom: 0;
-    color: #555;
+    color: var(--text-muted);
     line-height: 1.8;
 }
 
@@ -279,8 +316,8 @@ ul li {
 footer {
     margin-top: 60px;
     padding-top: 20px;
-    border-top: 1px solid #e0e0e0;
-    color: #999;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
     font-size: 13px;
 }
 
@@ -295,8 +332,9 @@ footer {
         position: relative;
         height: auto;
         border-right: none;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--border);
         text-align: center;
+        background-color: var(--sidebar-bg);
     }
 
     .profile-photo {
