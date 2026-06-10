@@ -97,7 +97,7 @@ function PortfolioAbout() {
             border: '1px solid var(--border)',
             aspectRatio: '1 / 1', background: 'var(--surface)',
           }}>
-            <img src="../../assets/profile.png" alt="Nishant Sharma"
+            <img src="profile.png" alt="Nishant Sharma"
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'grayscale(0.12) contrast(1.02)' }} />
           </div>
         </div>
