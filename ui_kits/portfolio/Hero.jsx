@@ -1,70 +1,204 @@
-/* Portfolio UI kit — hero. Deep night surface with an interactive
-   dot-matrix data field, accurate dev-tool marks, sharp CTAs, status strip. */
+/* Portfolio UI kit — hero. Deep night surface with ML-visualisation background:
+   Mixture of Gaussian bell curves (drifting, glowing) + interactive softmax
+   temperature panel whose τ is driven by cursor Y. */
 
-// ─── Dot-Matrix Data Field ──────────────────────────────────────────────────
-// A structured grid of points whose brightness flows on a travelling wave,
-// crossed by a slow diagnostic scan band and bloomed under the cursor.
-function DotMatrix() {
+// ─── ML Background ───────────────────────────────────────────────────────────
+// Layer 1: 6 drifting 1-D Gaussian curves with teal / violet glow.
+// Layer 2: Softmax distribution panel — cursor Y tunes temperature τ.
+function MLBackground() {
   const cvRef = React.useRef(null);
-  const st = React.useRef({ mx: -9999, my: -9999, t: 0 });
+  const st    = React.useRef({ mx: -9999, my: -9999, t: 0 });
 
   React.useEffect(() => {
-    const cv = cvRef.current;
+    const cv  = cvRef.current;
     const ctx = cv.getContext('2d');
-    let W, H, cols, rows, raf, dpr;
-    const GAP = 26;
+    let W, H, raf, dpr;
+
+    // ── Gaussian definitions ─────────────────────────────────────────────────
+    // cy  = baseline y (0-1 of H)   sx   = σ in x (0-1 normalised)
+    // amp = peak height fraction     ph   = phase offset
+    // spd = drift speed              c    = [r,g,b] colour
+    const GS = [
+      { cy:0.18, sx:0.14, amp:0.72, ph:0.0,  spd: 0.00016, c:[45,212,191]  },
+      { cy:0.40, sx:0.20, amp:0.48, ph:2.1,  spd:-0.00013, c:[139,92,246]  },
+      { cy:0.60, sx:0.11, amp:0.82, ph:4.3,  spd: 0.00021, c:[45,212,191]  },
+      { cy:0.28, sx:0.24, amp:0.38, ph:1.5,  spd:-0.00017, c:[94,234,212]  },
+      { cy:0.74, sx:0.16, amp:0.60, ph:3.7,  spd: 0.00014, c:[139,92,246]  },
+      { cy:0.50, sx:0.18, amp:0.44, ph:5.0,  spd:-0.00020, c:[45,212,191]  },
+    ];
+
+    // ── Softmax logits (6, slowly oscillating) ───────────────────────────────
+    const logits  = [1.8, 2.4, 0.9, 3.0, 1.5, 2.1];
+    const ltarget = [...logits];
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    const gauss = (x, mu, sig) => Math.exp(-0.5 * ((x - mu) / sig) ** 2);
+
+    function softmax(z, tau) {
+      const s  = z.map(v => v / tau);
+      const m  = Math.max(...s);
+      const ex = s.map(v => Math.exp(v - m));
+      const sm = ex.reduce((a, b) => a + b, 0);
+      return ex.map(e => e / sm);
+    }
+
+    function rrect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
+      ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+      ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
+      ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
+      ctx.closePath();
+    }
 
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = cv.offsetWidth; H = cv.offsetHeight;
-      cv.width = Math.round(W * dpr);
+      W   = cv.offsetWidth;  H = cv.offsetHeight;
+      cv.width  = Math.round(W * dpr);
       cv.height = Math.round(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.ceil(W / GAP) + 1;
-      rows = Math.ceil(H / GAP) + 1;
     };
+
+    const STEPS = 200; // path resolution per curve
 
     const frame = () => {
       const { mx, my, t } = st.current;
       ctx.clearRect(0, 0, W, H);
 
-      // diagonal diagnostic scan position
-      const span = W + H + 400;
-      const scan = ((t * 1.4) % span) - 200;
+      // ── LAYER 1 — Gaussian bell curves ────────────────────────────────────
+      GS.forEach(g => {
+        // μ drifts sinusoidally; σ breathes slowly
+        const mu  = 0.5 + 0.38 * Math.sin(t * g.spd + g.ph);
+        const sig = g.sx * (1 + 0.12 * Math.sin(t * g.spd * 1.9 + g.ph + 1));
 
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          const x = i * GAP;
-          const y = j * GAP;
+        const baseY = g.cy * H;
+        const maxH  = H * 0.26 * g.amp;
+        const [r, gv, b] = g.c;
 
-          // travelling interference wave → base brightness
-          let v = 0.5 + 0.5 * Math.sin(x * 0.010 + y * 0.006 + t * 0.020)
-                            * Math.cos(y * 0.011 - x * 0.004 - t * 0.014);
-          v *= 0.5;
-
-          // scan band highlight
-          const sd = Math.abs((x + y) - scan);
-          if (sd < 100) v += (1 - sd / 100) * 0.28;
-
-          // cursor bloom
-          const dx = x - mx, dy = y - my;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 175) v += (1 - d / 175) * 0.95;
-
-          v = v < 0 ? 0 : v > 1 ? 1 : v;
-
-          const r = 0.5 + v * 2.2;
-          const a = 0.05 + v * 0.55;
-          const w = v > 0.6 ? (v - 0.6) / 0.4 : 0;   // mix toward white at peaks
-          const cr = (52 + w * 200) | 0;
-          const cg = (184 + w * 71) | 0;
-          const cb = (112 + w * 143) | 0;
-
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, 6.2832);
-          ctx.fillStyle = `rgba(${cr},${cg},${cb},${a})`;
-          ctx.fill();
+        // build curve points
+        const pts = [];
+        for (let i = 0; i <= STEPS; i++) {
+          const xn = i / STEPS;
+          pts.push({ x: xn * W, y: baseY - gauss(xn, mu, sig) * maxH });
         }
+
+        // filled area — gradient from peak to baseline
+        ctx.beginPath();
+        pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.lineTo(W, baseY); ctx.lineTo(0, baseY); ctx.closePath();
+        const fill = ctx.createLinearGradient(0, baseY - maxH, 0, baseY);
+        fill.addColorStop(0, `rgba(${r},${gv},${b},0.11)`);
+        fill.addColorStop(1, `rgba(${r},${gv},${b},0.00)`);
+        ctx.fillStyle = fill;
+        ctx.fill();
+
+        // glowing stroke — the bell curve line
+        ctx.beginPath();
+        pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+        ctx.shadowColor = `rgba(${r},${gv},${b},0.65)`;
+        ctx.shadowBlur  = 7;
+        ctx.strokeStyle = `rgba(${r},${gv},${b},0.42)`;
+        ctx.lineWidth   = 1.3;
+        ctx.stroke();
+        ctx.shadowBlur  = 0;
+
+        // μ peak dot
+        const peakX = mu * W;
+        const peakY = baseY - maxH;
+        ctx.shadowColor = `rgba(${r},${gv},${b},0.9)`;
+        ctx.shadowBlur  = 12;
+        ctx.beginPath();
+        ctx.arc(peakX, peakY, 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${gv},${b},0.9)`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // μ tick label — only when peak is in the right half (away from text)
+        if (mu > 0.45) {
+          ctx.font      = "400 9px 'IBM Plex Mono', monospace";
+          ctx.fillStyle = `rgba(${r},${gv},${b},0.35)`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'bottom';
+          ctx.fillText('μ', peakX, peakY - 5);
+        }
+      });
+
+      // ── LAYER 2 — Softmax panel ───────────────────────────────────────────
+      // τ: cursor Y maps top → high temp (flat) / bottom → low temp (sharp)
+      const inHero = my > 0 && my < H;
+      const yNorm  = inHero ? Math.min(1, Math.max(0, my / H)) : 0.5;
+      const tau    = 0.2 + yNorm * 2.6;   // range [0.2, 2.8]
+
+      // slowly evolve logit targets
+      for (let i = 0; i < logits.length; i++) {
+        ltarget[i] = 0.5 + 2.8 * (0.5 + 0.5 * Math.sin(t * 0.0009 + i * 1.47));
+        logits[i] += (ltarget[i] - logits[i]) * 0.012;
+      }
+      const probs = softmax(logits, tau);
+      const maxP  = Math.max(...probs);
+
+      const N  = logits.length;
+      const BW = 20, BH = 76, GAP_B = 7;
+      const TW = N * BW + (N - 1) * GAP_B;
+      const PX = W - TW - 56;
+      const PY = H * 0.30;
+
+      // panel background
+      rrect(PX - 18, PY - 44, TW + 36, BH + 78, 7);
+      ctx.fillStyle   = 'rgba(7,10,11,0.58)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(45,212,191,0.11)';
+      ctx.lineWidth   = 1;
+      rrect(PX - 18, PY - 44, TW + 36, BH + 78, 7);
+      ctx.stroke();
+
+      // formula + τ readout
+      ctx.textBaseline = 'alphabetic';
+      ctx.font         = "500 9.5px 'IBM Plex Mono', monospace";
+      ctx.fillStyle    = 'rgba(45,212,191,0.60)';
+      ctx.textAlign    = 'left';
+      ctx.fillText('softmax(z / τ)', PX, PY - 26);    // τ as unicode
+
+      const tauLabel = `τ = ${tau.toFixed(2)}`;
+      const desc     = tau < 0.55 ? ' → sharp' : tau > 2.1 ? ' → flat' : '';
+      ctx.fillStyle  = 'rgba(232,236,236,0.32)';
+      ctx.fillText(tauLabel + desc, PX, PY - 13);
+
+      // bars
+      probs.forEach((p, i) => {
+        const bx  = PX + i * (BW + GAP_B);
+        const bh  = p * BH;
+        const by  = PY + BH - bh;
+        const hi  = p === maxP;
+        const alp = 0.22 + p * 0.68;
+
+        if (hi) { ctx.shadowColor = 'rgba(45,212,191,0.55)'; ctx.shadowBlur = 10; }
+        ctx.fillStyle = hi
+          ? `rgba(45,212,191,${alp})`
+          : `rgba(45,212,191,${alp * 0.42})`;
+        ctx.fillRect(bx, by, BW, bh);
+        ctx.shadowBlur = 0;
+
+        ctx.font      = "500 8px 'IBM Plex Mono', monospace";
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        // probability
+        ctx.fillStyle = hi ? 'rgba(45,212,191,0.90)' : 'rgba(232,236,236,0.28)';
+        ctx.fillText((p * 100).toFixed(0) + '%', bx + BW / 2, PY + BH + 6);
+
+        // z index label
+        ctx.fillStyle = 'rgba(232,236,236,0.20)';
+        ctx.fillText('z' + (i + 1), bx + BW / 2, PY + BH + 18);
+      });
+
+      // hint when cursor is outside
+      if (!inHero) {
+        ctx.font      = "400 9px 'IBM Plex Mono', monospace";
+        ctx.fillStyle = 'rgba(232,236,236,0.16)';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'top';
+        ctx.fillText('move cursor ↕ to tune τ', PX, PY + BH + 34);
       }
 
       st.current.t++;
@@ -74,14 +208,14 @@ function DotMatrix() {
     resize();
     frame();
 
-    const parent = cv.parentElement;
+    const parent   = cv.parentElement;
     const onResize = () => resize();
-    const onMouse = (e) => {
+    const onMouse  = e => {
       const rct = cv.getBoundingClientRect();
       st.current.mx = e.clientX - rct.left;
       st.current.my = e.clientY - rct.top;
     };
-    const onLeave = () => { st.current.mx = -9999; st.current.my = -9999; };
+    const onLeave  = () => { st.current.mx = -9999; st.current.my = -9999; };
 
     window.addEventListener('resize', onResize);
     parent.addEventListener('mousemove', onMouse);
@@ -94,7 +228,10 @@ function DotMatrix() {
     };
   }, []);
 
-  return <canvas ref={cvRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />;
+  return (
+    <canvas ref={cvRef}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
+  );
 }
 
 // ─── Sharp CTA Buttons ──────────────────────────────────────────────────────
@@ -190,7 +327,7 @@ const CodexIcon = () => (
 function PortfolioHero({ onNav }) {
   return (
     <header style={{ position: 'relative', minHeight: '92vh', overflow: 'hidden', background: 'var(--night-800)' }}>
-      <DotMatrix />
+      <MLBackground />
       {/* legibility scrims */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',

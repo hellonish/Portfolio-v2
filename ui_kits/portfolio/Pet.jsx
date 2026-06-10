@@ -18,7 +18,6 @@ const MESSAGES = [
   "compiling feelings... done. empty.",
   "i've read your resume. impressive.",
   "agent autonomy level: mostly.",
-  "this site was built in 13 days. i helped.",
   "singularity is live btw.",
   "ineedajob.pro helped real humans.",
 ];
