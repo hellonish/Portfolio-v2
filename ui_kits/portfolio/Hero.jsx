@@ -3,8 +3,9 @@
    temperature panel whose τ is driven by cursor Y. */
 
 // ─── ML Background ───────────────────────────────────────────────────────────
-// Layer 1: 6 drifting 1-D Gaussian curves with teal / violet glow.
-// Layer 2: Softmax distribution panel — cursor Y tunes temperature τ.
+// Layer 1: 6 Gaussian bell curves — cursor X attracts them, cursor Y near a
+//          curve boosts its amplitude. Hover a curve → equation tooltip.
+// Layer 2: Softmax panel — cursor Y tunes temperature τ.
 function MLBackground() {
   const cvRef = React.useRef(null);
   const st    = React.useRef({ mx: -9999, my: -9999, t: 0 });
@@ -15,19 +16,17 @@ function MLBackground() {
     let W, H, raf, dpr;
 
     // ── Gaussian definitions ─────────────────────────────────────────────────
-    // cy  = baseline y (0-1 of H)   sx   = σ in x (0-1 normalised)
-    // amp = peak height fraction     ph   = phase offset
-    // spd = drift speed              c    = [r,g,b] colour
+    // Each object carries live state: muA (actual μ), sigA (actual σ), ampA (actual amp)
     const GS = [
-      { cy:0.18, sx:0.14, amp:0.72, ph:0.0,  spd: 0.00016, c:[45,212,191]  },
-      { cy:0.40, sx:0.20, amp:0.48, ph:2.1,  spd:-0.00013, c:[139,92,246]  },
-      { cy:0.60, sx:0.11, amp:0.82, ph:4.3,  spd: 0.00021, c:[45,212,191]  },
-      { cy:0.28, sx:0.24, amp:0.38, ph:1.5,  spd:-0.00017, c:[94,234,212]  },
-      { cy:0.74, sx:0.16, amp:0.60, ph:3.7,  spd: 0.00014, c:[139,92,246]  },
-      { cy:0.50, sx:0.18, amp:0.44, ph:5.0,  spd:-0.00020, c:[45,212,191]  },
+      { cy:0.18, sx:0.14, amp:0.72, ph:0.0,  spd: 0.00016, c:[45,212,191],  muA:0.50, sigA:0.14, ampA:0.72 },
+      { cy:0.40, sx:0.20, amp:0.48, ph:2.1,  spd:-0.00013, c:[139,92,246],  muA:0.55, sigA:0.20, ampA:0.48 },
+      { cy:0.60, sx:0.11, amp:0.82, ph:4.3,  spd: 0.00021, c:[45,212,191],  muA:0.45, sigA:0.11, ampA:0.82 },
+      { cy:0.28, sx:0.24, amp:0.38, ph:1.5,  spd:-0.00017, c:[94,234,212],  muA:0.60, sigA:0.24, ampA:0.38 },
+      { cy:0.74, sx:0.16, amp:0.60, ph:3.7,  spd: 0.00014, c:[139,92,246],  muA:0.40, sigA:0.16, ampA:0.60 },
+      { cy:0.50, sx:0.18, amp:0.44, ph:5.0,  spd:-0.00020, c:[45,212,191],  muA:0.50, sigA:0.18, ampA:0.44 },
     ];
 
-    // ── Softmax logits (6, slowly oscillating) ───────────────────────────────
+    // ── Softmax state ────────────────────────────────────────────────────────
     const logits  = [1.8, 2.4, 0.9, 3.0, 1.5, 2.1];
     const ltarget = [...logits];
 
@@ -59,77 +58,149 @@ function MLBackground() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const STEPS = 200; // path resolution per curve
+    const STEPS = 200;
 
     const frame = () => {
       const { mx, my, t } = st.current;
       ctx.clearRect(0, 0, W, H);
 
-      // ── LAYER 1 — Gaussian bell curves ────────────────────────────────────
-      GS.forEach(g => {
-        // μ drifts sinusoidally; σ breathes slowly
-        const mu  = 0.5 + 0.38 * Math.sin(t * g.spd + g.ph);
-        const sig = g.sx * (1 + 0.12 * Math.sin(t * g.spd * 1.9 + g.ph + 1));
+      const inHero   = mx > 0 && mx < W && my > 0 && my < H;
+      const cxNorm   = inHero ? mx / W : -1;
+      const cyNorm   = inHero ? my / H : -1;
 
-        const baseY = g.cy * H;
-        const maxH  = H * 0.26 * g.amp;
+      // ── Update Gaussian live state + find hover ───────────────────────────
+      let hovIdx  = -1;
+      let hovDist = 28;  // px threshold to "hit" a curve
+
+      GS.forEach((g, gi) => {
+        // Natural drift targets
+        const muNat  = 0.5 + 0.38 * Math.sin(t * g.spd + g.ph);
+        const sigNat = g.sx * (1 + 0.12 * Math.sin(t * g.spd * 1.9 + g.ph + 1));
+
+        // Cursor attraction: pull μ gently toward cursor X
+        // Influence fades with distance so only the nearest curves react most
+        let muTarget = muNat;
+        if (inHero) {
+          const pull = Math.max(0, 1 - Math.abs(g.muA - cxNorm) / 0.55);
+          muTarget   = muNat + (cxNorm - muNat) * pull * 0.38;
+        }
+        g.muA  += (muTarget  - g.muA)  * 0.032;
+        g.sigA += (sigNat    - g.sigA) * 0.07;
+
+        // Amplitude boost: curve near cursor Y blooms taller
+        const cyDelta  = inHero ? Math.abs(cyNorm - g.cy) : 1;
+        const ampBoost = cyDelta < 0.18 ? (1 - cyDelta / 0.18) * 0.35 : 0;
+        g.ampA += (g.amp * (1 + ampBoost) - g.ampA) * 0.06;
+
+        // Hover detection: is the cursor sitting on this curve?
+        if (inHero) {
+          const baseY = g.cy * H;
+          const maxH  = H * 0.26 * g.ampA;
+          const gVal  = gauss(cxNorm, g.muA, g.sigA);
+          const curveY = baseY - gVal * maxH;
+          const dist   = Math.abs(my - curveY);
+          if (dist < hovDist && gVal > 0.12) { hovDist = dist; hovIdx = gi; }
+        }
+      });
+
+      // ── LAYER 1 — Draw Gaussian bell curves ──────────────────────────────
+      GS.forEach((g, gi) => {
+        const isHov  = gi === hovIdx;
         const [r, gv, b] = g.c;
+        const baseY  = g.cy * H;
+        const maxH   = H * 0.26 * g.ampA;
 
-        // build curve points
         const pts = [];
         for (let i = 0; i <= STEPS; i++) {
           const xn = i / STEPS;
-          pts.push({ x: xn * W, y: baseY - gauss(xn, mu, sig) * maxH });
+          pts.push({ x: xn * W, y: baseY - gauss(xn, g.muA, g.sigA) * maxH });
         }
 
-        // filled area — gradient from peak to baseline
+        // filled area
         ctx.beginPath();
         pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
         ctx.lineTo(W, baseY); ctx.lineTo(0, baseY); ctx.closePath();
         const fill = ctx.createLinearGradient(0, baseY - maxH, 0, baseY);
-        fill.addColorStop(0, `rgba(${r},${gv},${b},0.11)`);
+        fill.addColorStop(0, `rgba(${r},${gv},${b},${isHov ? 0.20 : 0.11})`);
         fill.addColorStop(1, `rgba(${r},${gv},${b},0.00)`);
         ctx.fillStyle = fill;
         ctx.fill();
 
-        // glowing stroke — the bell curve line
+        // glowing stroke
         ctx.beginPath();
         pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.shadowColor = `rgba(${r},${gv},${b},0.65)`;
-        ctx.shadowBlur  = 7;
-        ctx.strokeStyle = `rgba(${r},${gv},${b},0.42)`;
-        ctx.lineWidth   = 1.3;
+        ctx.shadowColor = `rgba(${r},${gv},${b},0.75)`;
+        ctx.shadowBlur  = isHov ? 16 : 7;
+        ctx.strokeStyle = `rgba(${r},${gv},${b},${isHov ? 0.80 : 0.42})`;
+        ctx.lineWidth   = isHov ? 2.0 : 1.3;
         ctx.stroke();
         ctx.shadowBlur  = 0;
 
-        // μ peak dot
-        const peakX = mu * W;
+        // μ peak dot — pulses larger on hover
+        const peakX = g.muA * W;
         const peakY = baseY - maxH;
         ctx.shadowColor = `rgba(${r},${gv},${b},0.9)`;
-        ctx.shadowBlur  = 12;
+        ctx.shadowBlur  = isHov ? 20 : 12;
         ctx.beginPath();
-        ctx.arc(peakX, peakY, 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r},${gv},${b},0.9)`;
+        ctx.arc(peakX, peakY, isHov ? 4.0 : 2.4, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${r},${gv},${b},${isHov ? 1 : 0.9})`;
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // μ tick label — only when peak is in the right half (away from text)
-        if (mu > 0.45) {
-          ctx.font      = "400 9px 'IBM Plex Mono', monospace";
-          ctx.fillStyle = `rgba(${r},${gv},${b},0.35)`;
-          ctx.textAlign = 'center';
+        // μ label (right half only, away from text content)
+        if (g.muA > 0.44) {
+          ctx.font         = `${isHov ? 500 : 400} 9px 'IBM Plex Mono', monospace`;
+          ctx.fillStyle    = `rgba(${r},${gv},${b},${isHov ? 0.75 : 0.35})`;
+          ctx.textAlign    = 'center';
           ctx.textBaseline = 'bottom';
-          ctx.fillText('μ', peakX, peakY - 5);
+          ctx.fillText('μ', peakX, peakY - 6);
         }
       });
 
-      // ── LAYER 2 — Softmax panel ───────────────────────────────────────────
-      // τ: cursor Y maps top → high temp (flat) / bottom → low temp (sharp)
-      const inHero = my > 0 && my < H;
-      const yNorm  = inHero ? Math.min(1, Math.max(0, my / H)) : 0.5;
-      const tau    = 0.2 + yNorm * 2.6;   // range [0.2, 2.8]
+      // ── Equation tooltip for hovered curve ───────────────────────────────
+      if (hovIdx >= 0 && inHero) {
+        const g    = GS[hovIdx];
+        const [r, gv, b] = g.c;
+        const fVal = gauss(cxNorm, g.muA, g.sigA);
+        const line1 = `\u{1D4A9}(μ = ${g.muA.toFixed(2)}, σ = ${g.sigA.toFixed(2)})`;
+        const line2 = `f(x) = ${fVal.toFixed(3)}`;
 
-      // slowly evolve logit targets
+        const TW = 172, TH = 48;
+        let tx = mx + 18, ty = my - 58;
+        if (tx + TW > W - 12) tx = mx - TW - 12;
+        if (ty < 12)          ty = my + 18;
+
+        // bg panel
+        rrect(tx, ty, TW, TH, 5);
+        ctx.fillStyle   = 'rgba(7,10,11,0.90)';
+        ctx.fill();
+        ctx.strokeStyle = `rgba(${r},${gv},${b},0.38)`;
+        ctx.lineWidth   = 1;
+        rrect(tx, ty, TW, TH, 5);
+        ctx.stroke();
+
+        // left accent bar
+        ctx.fillStyle = `rgba(${r},${gv},${b},0.6)`;
+        ctx.fillRect(tx, ty + 6, 2, TH - 12);
+
+        ctx.textAlign    = 'left';
+        ctx.textBaseline = 'top';
+
+        // equation line
+        ctx.font      = `600 10px 'IBM Plex Mono', monospace`;
+        ctx.fillStyle = `rgba(${r},${gv},${b},0.95)`;
+        ctx.fillText(line1, tx + 12, ty + 10);
+
+        // f(x) value line
+        ctx.font      = `400 9.5px 'IBM Plex Mono', monospace`;
+        ctx.fillStyle = 'rgba(232,236,236,0.55)';
+        ctx.fillText(line2, tx + 12, ty + 27);
+      }
+
+      // ── LAYER 2 — Softmax panel ───────────────────────────────────────────
+      const yNorm = inHero ? Math.min(1, Math.max(0, my / H)) : 0.5;
+      const tau   = 0.2 + yNorm * 2.6;
+
       for (let i = 0; i < logits.length; i++) {
         ltarget[i] = 0.5 + 2.8 * (0.5 + 0.5 * Math.sin(t * 0.0009 + i * 1.47));
         logits[i] += (ltarget[i] - logits[i]) * 0.012;
@@ -137,67 +208,50 @@ function MLBackground() {
       const probs = softmax(logits, tau);
       const maxP  = Math.max(...probs);
 
-      const N  = logits.length;
       const BW = 20, BH = 76, GAP_B = 7;
-      const TW = N * BW + (N - 1) * GAP_B;
-      const PX = W - TW - 56;
-      const PY = H * 0.30;
+      const TW2 = logits.length * BW + (logits.length - 1) * GAP_B;
+      const PX  = W - TW2 - 56;
+      const PY  = H * 0.30;
 
-      // panel background
-      rrect(PX - 18, PY - 44, TW + 36, BH + 78, 7);
-      ctx.fillStyle   = 'rgba(7,10,11,0.58)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(45,212,191,0.11)';
-      ctx.lineWidth   = 1;
-      rrect(PX - 18, PY - 44, TW + 36, BH + 78, 7);
-      ctx.stroke();
+      rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7);
+      ctx.fillStyle = 'rgba(7,10,11,0.58)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(45,212,191,0.11)'; ctx.lineWidth = 1;
+      rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7); ctx.stroke();
 
-      // formula + τ readout
       ctx.textBaseline = 'alphabetic';
       ctx.font         = "500 9.5px 'IBM Plex Mono', monospace";
       ctx.fillStyle    = 'rgba(45,212,191,0.60)';
       ctx.textAlign    = 'left';
-      ctx.fillText('softmax(z / τ)', PX, PY - 26);    // τ as unicode
+      ctx.fillText('softmax(z / τ)', PX, PY - 26);
 
-      const tauLabel = `τ = ${tau.toFixed(2)}`;
-      const desc     = tau < 0.55 ? ' → sharp' : tau > 2.1 ? ' → flat' : '';
-      ctx.fillStyle  = 'rgba(232,236,236,0.32)';
-      ctx.fillText(tauLabel + desc, PX, PY - 13);
+      const desc = tau < 0.55 ? ' → sharp' : tau > 2.1 ? ' → flat' : '';
+      ctx.fillStyle = 'rgba(232,236,236,0.32)';
+      ctx.fillText(`τ = ${tau.toFixed(2)}${desc}`, PX, PY - 13);
 
-      // bars
       probs.forEach((p, i) => {
-        const bx  = PX + i * (BW + GAP_B);
-        const bh  = p * BH;
-        const by  = PY + BH - bh;
-        const hi  = p === maxP;
+        const bx = PX + i * (BW + GAP_B);
+        const bh = p * BH;
+        const by = PY + BH - bh;
+        const hi = p === maxP;
         const alp = 0.22 + p * 0.68;
 
         if (hi) { ctx.shadowColor = 'rgba(45,212,191,0.55)'; ctx.shadowBlur = 10; }
-        ctx.fillStyle = hi
-          ? `rgba(45,212,191,${alp})`
-          : `rgba(45,212,191,${alp * 0.42})`;
+        ctx.fillStyle = hi ? `rgba(45,212,191,${alp})` : `rgba(45,212,191,${alp * 0.42})`;
         ctx.fillRect(bx, by, BW, bh);
         ctx.shadowBlur = 0;
 
-        ctx.font      = "500 8px 'IBM Plex Mono', monospace";
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-
-        // probability
+        ctx.font = "500 8px 'IBM Plex Mono', monospace";
+        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
         ctx.fillStyle = hi ? 'rgba(45,212,191,0.90)' : 'rgba(232,236,236,0.28)';
         ctx.fillText((p * 100).toFixed(0) + '%', bx + BW / 2, PY + BH + 6);
-
-        // z index label
         ctx.fillStyle = 'rgba(232,236,236,0.20)';
         ctx.fillText('z' + (i + 1), bx + BW / 2, PY + BH + 18);
       });
 
-      // hint when cursor is outside
       if (!inHero) {
-        ctx.font      = "400 9px 'IBM Plex Mono', monospace";
+        ctx.font = "400 9px 'IBM Plex Mono', monospace";
         ctx.fillStyle = 'rgba(232,236,236,0.16)';
-        ctx.textAlign = 'left';
-        ctx.textBaseline = 'top';
+        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
         ctx.fillText('move cursor ↕ to tune τ', PX, PY + BH + 34);
       }
 
@@ -215,7 +269,7 @@ function MLBackground() {
       st.current.mx = e.clientX - rct.left;
       st.current.my = e.clientY - rct.top;
     };
-    const onLeave  = () => { st.current.mx = -9999; st.current.my = -9999; };
+    const onLeave = () => { st.current.mx = -9999; st.current.my = -9999; };
 
     window.addEventListener('resize', onResize);
     parent.addEventListener('mousemove', onMouse);
