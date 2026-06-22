@@ -2503,8 +2503,8 @@ function PortfolioNav({
       justifyContent: 'space-between',
       padding: '0 clamp(20px, 5vw, 56px)',
       height: 64,
-      background: solid ? 'rgba(7,10,11,0.82)' : 'transparent',
-      backdropFilter: solid ? 'saturate(140%) blur(12px)' : 'none',
+      background: 'rgba(7,10,11,0.92)',
+      backdropFilter: 'saturate(140%) blur(12px)',
       borderBottom: solid ? '1px solid var(--night-line)' : '1px solid transparent',
       transition: 'background 0.3s ease, border-color 0.3s ease'
     }

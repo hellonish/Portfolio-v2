@@ -28,9 +28,9 @@ function PortfolioNav({ onNav, active }) {
       position: 'sticky', top: 0, zIndex: 100,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '0 clamp(20px, 5vw, 56px)', height: 64,
-      background: (solid || menuOpen) ? 'rgba(7,10,11,0.95)' : 'transparent',
-      backdropFilter: (solid || menuOpen) ? 'saturate(140%) blur(12px)' : 'none',
-      borderBottom: (solid || menuOpen) ? '1px solid var(--night-line)' : '1px solid transparent',
+      background: 'rgba(7,10,11,0.92)',
+      backdropFilter: 'saturate(140%) blur(12px)',
+      borderBottom: solid ? '1px solid var(--night-line)' : '1px solid transparent',
       transition: 'background 0.3s ease, border-color 0.3s ease',
     }}>
       <button onClick={() => handleNav('top')} style={{
