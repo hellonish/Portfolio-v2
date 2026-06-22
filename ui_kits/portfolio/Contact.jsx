@@ -6,8 +6,8 @@ function PortfolioContact() {
 
   const timeline = [
     ['2025 — now', 'ML Teaching Assistant', 'NYU Tandon · 400+ students'],
-    ['Sep 2023 — Aug 2024', 'Lead Software Engineer', 'Ingelt Study Abroad · 500+ clients'],
-    ['Jul 2022 — Aug 2023', 'Founding Engineer', 'Macverin Technologies · 1K+ DAU'],
+    ['Sep 2023 — Aug 2024', 'SWE Intern (Backend)', 'Ingelt Study Abroad · 1K+ students'],
+    ['Jul 2022 — Aug 2023', 'SWE Intern', 'Macverin Technologies · 10+ clients'],
   ];
   const socials = [
     ['ineedajob.pro', 'https://ineedajob.pro'],

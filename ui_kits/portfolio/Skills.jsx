@@ -25,8 +25,8 @@ function PortfolioSkills() {
           Not progress bars — a graph. Hover a node to trace what connects to what; the stack is one system, not a list.
         </p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.5fr) minmax(0,1fr)', gap: 'clamp(20px,4vw,48px)', marginTop: 32, alignItems: 'stretch' }}>
-          <div style={{ position: 'relative', height: 440, border: '1px solid var(--night-line)', borderRadius: 'var(--radius-lg)', background: 'var(--night-900)', overflow: 'hidden' }}>
+        <div className="skills-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.5fr) minmax(0,1fr)', gap: 'clamp(20px,4vw,48px)', marginTop: 32, alignItems: 'stretch' }}>
+          <div className="skills-constellation" style={{ position: 'relative', height: 440, border: '1px solid var(--night-line)', borderRadius: 'var(--radius-lg)', background: 'var(--night-900)', overflow: 'hidden' }}>
             <SkillConstellation onSelect={setPicked} zoom={1.3} />
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>

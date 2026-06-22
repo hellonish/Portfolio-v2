@@ -399,7 +399,7 @@ function PortfolioHero({ onNav }) {
       }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 26 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--night-muted)' }}>
-            AI Engineer&nbsp;&nbsp;/&nbsp;&nbsp;2× Founder&nbsp;&nbsp;/&nbsp;&nbsp;New York
+            AI Engineer&nbsp;&nbsp;/&nbsp;&nbsp;New York
           </span>
         </div>
 
@@ -433,19 +433,14 @@ function PortfolioHero({ onNav }) {
         background: 'linear-gradient(180deg, transparent, rgba(7,10,11,0.66))',
         backdropFilter: 'blur(4px)',
       }}>
-        <div style={{
+        <div className="hero-metrics" style={{
           maxWidth: 1180, margin: '0 auto',
           padding: '16px clamp(20px,5vw,56px)',
           display: 'flex', gap: 'clamp(18px,5vw,56px)', flexWrap: 'wrap', alignItems: 'center',
           fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--night-muted)',
         }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#fff' }}>2×</span>
-            <span>Founder</span>
-          </div>
-
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--night-faint)' }}>Dev tools</span>
+            <span className="devtools-label" style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--night-faint)' }}>Dev tools</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span title="Claude Code" style={{ display: 'flex', alignItems: 'center' }}><ClaudeIcon /></span>
               <span title="Cursor"       style={{ display: 'flex', alignItems: 'center' }}><CursorIcon /></span>

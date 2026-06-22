@@ -50,26 +50,30 @@ function PortfolioWork() {
 
   const experience = [
     {
-      company: 'Ingelt Study Abroad',
-      url: 'https://ingelt.com',
-      role: 'Lead Software Engineer',
-      period: 'Sep 2023 — Aug 2024',
-      highlights: [
-        'Designed and scaled a unified multi-tenant backend (Node.js, PostgreSQL, Firebase Auth, AWS) serving 500+ clients and ~10K daily requests',
-        'Implemented automated Jenkins CI/CD pipelines with testing, build, and zero-downtime EC2 deployments; eliminated manual operations',
-      ],
-      stack: ['Node.js', 'PostgreSQL', 'Firebase', 'AWS', 'REST APIs', 'Jenkins', 'WebSockets', 'Redis'],
-    },
-    {
       company: 'Macverin Technologies',
       url: 'https://macverin.io',
-      role: 'Founding Engineer',
+      role: 'Software Engineer Intern',
       period: 'Jul 2022 — Aug 2023',
       highlights: [
-        'Led architecture and delivery of 12 client platforms across transport, visa consulting, and operations domains using Node.js, FastAPI, React, and PostgreSQL',
-        'Built scalable cloud deployments on AWS EC2 and Docker supporting 1K+ daily active users; integrated Stripe, Firebase Auth, and Google Maps',
+        'Developed custom authentication systems and integrated Auth0, Google APIs, Stripe, and Twilio in Node.js, Flask, and Django for 10+ clients.',
+        'Created technical requirements in client meetings, designed SQL/NoSQL schemas and REST APIs for a cab-booking platform (40% business growth in 12 months), internal management tools, and CRMs/CMSs for solopreneurs and small businesses.',
+        'Owned end-to-end API development, third-party integrations, and heavily integrated frontend components in Next.js and Angular for 6 clients.',
+        'Introduced Jenkins CI/CD paired with Docker for high-CLV clients on GCP, AWS, and Hostinger, increasing in-house profits by 25% in the first year.',
       ],
-      stack: ['Node.js', 'React', 'FastAPI', 'PostgreSQL', 'AWS', 'Docker', 'Stripe', 'Google Maps'],
+      stack: ['Node.js', 'Flask', 'Django', 'Next.js', 'Angular', 'Auth0', 'Stripe', 'Twilio', 'Docker', 'Jenkins', 'GCP', 'AWS'],
+    },
+    {
+      company: 'Ingelt Study Abroad',
+      url: 'https://ingelt.com',
+      role: 'Software Engineer Intern (Backend)',
+      period: 'Sep 2023 — Aug 2024',
+      highlights: [
+        'Built a multi-tenant EdTech SaaS backend in FastAPI and Node.js serving 1,000+ active students across 50+ organizations, with Postgres row-level security and a membership-based RBAC model.',
+        'Built a real-time chat and LLM-assist system over WebSockets with Redis pub/sub fan-out, integrating OpenAI API behind per-org token budgets and rate limits sustaining sub-200ms message delivery.',
+        'Designed an append-only financial ledger and Razorpay-backed fee and payout pipeline with idempotent webhook processing, eliminating double-charge errors.',
+        'Reduced p95 API latency from 1.2 s to under 600 ms by offloading video uploads to S3 presigned URLs and moving transcoding, notifications, and invoicing to async Celery workers.',
+      ],
+      stack: ['FastAPI', 'Node.js', 'PostgreSQL', 'Redis', 'WebSockets', 'Celery', 'OpenAI API', 'Razorpay', 'AWS S3'],
     },
   ];
 
@@ -98,13 +102,13 @@ function PortfolioWork() {
 
         {/* ── Other Projects ──────────────────────────────── */}
         <SubLabel>Other Projects</SubLabel>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))', gap: 18 }}>
+        <div className="other-projects-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px,1fr))', gap: 18 }}>
           {otherProjects.map((p, i) => <ProjectCard key={i} {...p} />)}
         </div>
 
         {/* ── Work Experience ─────────────────────────────── */}
         <SubLabel>Work Experience</SubLabel>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px,1fr))', gap: 18 }}>
+        <div className="experience-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px,1fr))', gap: 18 }}>
           {experience.map(({ company, url, role, period, highlights, stack }) => (
             <div key={company} style={{
               padding: '24px 26px',
@@ -120,7 +124,7 @@ function PortfolioWork() {
                   </div>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-muted)', letterSpacing: '0.02em' }}>{role}</span>
                 </div>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', whiteSpace: 'nowrap', flexShrink: 0, paddingTop: 2 }}>{period}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', flexShrink: 0, paddingTop: 2 }}>{period}</span>
               </div>
               <ul style={{ margin: '0 0 14px', paddingLeft: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {highlights.map((h, i) => (

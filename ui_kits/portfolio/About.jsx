@@ -20,8 +20,8 @@ function PortfolioAbout() {
     {
       n: '03',
       title: 'Founder Mindset',
-      body: 'Two-time founder (Macverin Tech, Wort.AI) wrapping up an M.S. in Computer Engineering at NYU Tandon. Bias toward shipping things real people can trust and act on.',
-      tags: ['2× Founder', 'NYU Tandon', 'M.S. CompEng', '\'26'],
+      body: 'Wrapping up an M.S. in Computer Engineering at NYU Tandon. Bias toward shipping things real people can trust and act on.',
+      tags: ['NYU Tandon', 'M.S. CompEng', '\'26'],
     },
   ];
 
@@ -79,7 +79,7 @@ function PortfolioAbout() {
         <SectionHeader index="01" kicker="Profile" title="About" />
 
         {/* lead + photo */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 'clamp(28px,5vw,64px)', marginTop: 40, alignItems: 'start' }}>
+        <div className="about-lead-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 'clamp(28px,5vw,64px)', marginTop: 40, alignItems: 'start' }}>
           <div>
             <p style={{ font: 'var(--text-lead)', color: 'var(--text)', marginBottom: 20, lineHeight: 1.55 }}>
               I build agentic AI frameworks and async backend infrastructure designed to
@@ -92,7 +92,7 @@ function PortfolioAbout() {
             </div>
           </div>
 
-          <div style={{
+          <div className="about-photo" style={{
             borderRadius: 'var(--radius-lg)', overflow: 'hidden',
             border: '1px solid var(--border)',
             aspectRatio: '1 / 1', background: 'var(--surface)',
@@ -103,7 +103,7 @@ function PortfolioAbout() {
         </div>
 
         {/* capability pillars */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 'clamp(32px,5vh,56px)' }}>
+        <div className="about-pillars" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 'clamp(32px,5vh,56px)' }}>
           {pillars.map(p => <Pillar key={p.n} {...p} />)}
         </div>
 
@@ -116,7 +116,7 @@ function PortfolioAbout() {
             // Running infrastructure — not a slide deck
           </div>
           <ArchitectureFlow />
-          <div style={{ display: 'flex', gap: 'clamp(24px,5vw,72px)', flexWrap: 'wrap', borderTop: '1px solid var(--border)', paddingTop: 24, marginTop: 28 }}>
+          <div className="infra-metrics" style={{ display: 'flex', gap: 'clamp(24px,5vw,72px)', flexWrap: 'wrap', borderTop: '1px solid var(--border)', paddingTop: 24, marginTop: 28 }}>
             <MetricStat value="10K" label="Requests / day" accent />
             <MetricStat value="500" label="Concurrent users" />
             <MetricStat value="99.9%" label="Uptime" />
