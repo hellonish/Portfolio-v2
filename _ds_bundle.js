@@ -174,7 +174,8 @@ try { (() => {
  */
 
 // v2 — scramble on viewport entry + hover
-const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@!&%?/\\|~^';
+const CHARS_UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const CHARS_LOWER = 'abcdefghijklmnopqrstuvwxyz';
 function useScramble(target = '') {
   const [text, setText] = React.useState(target);
   const rafRef = React.useRef(null);
@@ -195,7 +196,8 @@ function useScramble(target = '') {
         if (i < resolved || target[i] === ' ' || target[i] === '·' || target[i] === '&' || target[i] === '–' || target[i] === '\'') {
           result += target[i];
         } else {
-          result += CHARS[Math.floor(Math.random() * CHARS.length)];
+          const pool = target[i] === target[i].toUpperCase() ? CHARS_UPPER : CHARS_LOWER;
+          result += pool[Math.floor(Math.random() * pool.length)];
         }
       }
       setText(result);
