@@ -2332,7 +2332,7 @@ function PortfolioHero({
       textTransform: 'uppercase',
       color: 'var(--night-muted)'
     }
-  }, "AI Engineer\xA0\xA0/\xA0\xA02\xD7 Founder\xA0\xA0/\xA0\xA0New York")), /*#__PURE__*/React.createElement("h1", {
+  }, "AI Engineer\xA0\xA0/\xA0\xA0New York")), /*#__PURE__*/React.createElement("h1", {
     style: {
       fontFamily: 'var(--font-display)',
       fontWeight: 700,
@@ -2394,19 +2394,6 @@ function PortfolioHero({
       color: 'var(--night-muted)'
     }
   }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'baseline',
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 700,
-      fontSize: 18,
-      color: '#fff'
-    }
-  }, "2\xD7"), /*#__PURE__*/React.createElement("span", null, "Founder")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       alignItems: 'center',

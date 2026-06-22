@@ -147,8 +147,8 @@ function MLBackground() {
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        // μ label (right half only, away from text content)
-        if (g.muA > 0.44) {
+        // μ label (right half only, away from text content; hidden on mobile)
+        if (W > 640 && g.muA > 0.44) {
           ctx.font         = `${isHov ? 500 : 400} 9px 'IBM Plex Mono', monospace`;
           ctx.fillStyle    = `rgba(${r},${gv},${b},${isHov ? 0.75 : 0.35})`;
           ctx.textAlign    = 'center';
@@ -197,62 +197,63 @@ function MLBackground() {
         ctx.fillText(line2, tx + 12, ty + 27);
       }
 
-      // ── LAYER 2 — Softmax panel ───────────────────────────────────────────
-      const yNorm = inHero ? Math.min(1, Math.max(0, my / H)) : 0.5;
-      const tau   = 0.2 + yNorm * 2.6;
-
-      for (let i = 0; i < logits.length; i++) {
-        ltarget[i] = 0.5 + 2.8 * (0.5 + 0.5 * Math.sin(t * 0.0009 + i * 1.47));
-        logits[i] += (ltarget[i] - logits[i]) * 0.012;
-      }
-      const probs = softmax(logits, tau);
-      const maxP  = Math.max(...probs);
-
-      const BW = 20, BH = 76, GAP_B = 7;
-      const TW2 = logits.length * BW + (logits.length - 1) * GAP_B;
-      const PX  = W - TW2 - 56;
-      const PY  = H * 0.30;
-
-      rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7);
-      ctx.fillStyle = 'rgba(7,10,11,0.58)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(45,212,191,0.11)'; ctx.lineWidth = 1;
-      rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7); ctx.stroke();
-
-      ctx.textBaseline = 'alphabetic';
-      ctx.font         = "500 9.5px 'IBM Plex Mono', monospace";
-      ctx.fillStyle    = 'rgba(45,212,191,0.60)';
-      ctx.textAlign    = 'left';
-      ctx.fillText('softmax(z / τ)', PX, PY - 26);
-
-      const desc = tau < 0.55 ? ' → sharp' : tau > 2.1 ? ' → flat' : '';
-      ctx.fillStyle = 'rgba(232,236,236,0.32)';
-      ctx.fillText(`τ = ${tau.toFixed(2)}${desc}`, PX, PY - 13);
-
-      probs.forEach((p, i) => {
-        const bx = PX + i * (BW + GAP_B);
-        const bh = p * BH;
-        const by = PY + BH - bh;
-        const hi = p === maxP;
-        const alp = 0.22 + p * 0.68;
-
-        if (hi) { ctx.shadowColor = 'rgba(45,212,191,0.55)'; ctx.shadowBlur = 10; }
-        ctx.fillStyle = hi ? `rgba(45,212,191,${alp})` : `rgba(45,212,191,${alp * 0.42})`;
-        ctx.fillRect(bx, by, BW, bh);
-        ctx.shadowBlur = 0;
-
-        ctx.font = "500 8px 'IBM Plex Mono', monospace";
-        ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-        ctx.fillStyle = hi ? 'rgba(45,212,191,0.90)' : 'rgba(232,236,236,0.28)';
-        ctx.fillText((p * 100).toFixed(0) + '%', bx + BW / 2, PY + BH + 6);
-        ctx.fillStyle = 'rgba(232,236,236,0.20)';
-        ctx.fillText('z' + (i + 1), bx + BW / 2, PY + BH + 18);
-      });
-
-      if (!inHero) {
-        ctx.font = "400 9px 'IBM Plex Mono', monospace";
-        ctx.fillStyle = 'rgba(232,236,236,0.16)';
-        ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-        ctx.fillText('move cursor ↕ to tune τ', PX, PY + BH + 34);
+      // Layer 2: Softmax panel (desktop only; hidden on mobile for readability)
+      if (W > 640) {
+        const yNorm = inHero ? Math.min(1, Math.max(0, my / H)) : 0.5;
+        const tau   = 0.2 + yNorm * 2.6;
+  
+        for (let i = 0; i < logits.length; i++) {
+          ltarget[i] = 0.5 + 2.8 * (0.5 + 0.5 * Math.sin(t * 0.0009 + i * 1.47));
+          logits[i] += (ltarget[i] - logits[i]) * 0.012;
+        }
+        const probs = softmax(logits, tau);
+        const maxP  = Math.max(...probs);
+  
+        const BW = 20, BH = 76, GAP_B = 7;
+        const TW2 = logits.length * BW + (logits.length - 1) * GAP_B;
+        const PX  = W - TW2 - 56;
+        const PY  = H * 0.30;
+  
+        rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7);
+        ctx.fillStyle = 'rgba(7,10,11,0.58)'; ctx.fill();
+        ctx.strokeStyle = 'rgba(45,212,191,0.11)'; ctx.lineWidth = 1;
+        rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7); ctx.stroke();
+  
+        ctx.textBaseline = 'alphabetic';
+        ctx.font         = "500 9.5px 'IBM Plex Mono', monospace";
+        ctx.fillStyle    = 'rgba(45,212,191,0.60)';
+        ctx.textAlign    = 'left';
+        ctx.fillText('softmax(z / τ)', PX, PY - 26);
+  
+        const desc = tau < 0.55 ? ' → sharp' : tau > 2.1 ? ' → flat' : '';
+        ctx.fillStyle = 'rgba(232,236,236,0.32)';
+        ctx.fillText(`τ = ${tau.toFixed(2)}${desc}`, PX, PY - 13);
+  
+        probs.forEach((p, i) => {
+          const bx = PX + i * (BW + GAP_B);
+          const bh = p * BH;
+          const by = PY + BH - bh;
+          const hi = p === maxP;
+          const alp = 0.22 + p * 0.68;
+  
+          if (hi) { ctx.shadowColor = 'rgba(45,212,191,0.55)'; ctx.shadowBlur = 10; }
+          ctx.fillStyle = hi ? `rgba(45,212,191,${alp})` : `rgba(45,212,191,${alp * 0.42})`;
+          ctx.fillRect(bx, by, BW, bh);
+          ctx.shadowBlur = 0;
+  
+          ctx.font = "500 8px 'IBM Plex Mono', monospace";
+          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+          ctx.fillStyle = hi ? 'rgba(45,212,191,0.90)' : 'rgba(232,236,236,0.28)';
+          ctx.fillText((p * 100).toFixed(0) + '%', bx + BW / 2, PY + BH + 6);
+          ctx.fillStyle = 'rgba(232,236,236,0.20)';
+          ctx.fillText('z' + (i + 1), bx + BW / 2, PY + BH + 18);
+        });
+  
+        if (!inHero) {
+          ctx.font = "400 9px 'IBM Plex Mono', monospace";
+          ctx.fillStyle = 'rgba(232,236,236,0.16)';
+          ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+          ctx.fillText('move cursor ↕ to tune τ', PX, PY + BH + 34);
       }
 
       st.current.t++;
