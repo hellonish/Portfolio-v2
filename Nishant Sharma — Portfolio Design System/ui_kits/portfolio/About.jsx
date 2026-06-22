@@ -79,7 +79,7 @@ function PortfolioAbout() {
         <SectionHeader index="01" kicker="Profile" title="About" />
 
         {/* lead + photo */}
-        <div className="about-lead-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 'clamp(28px,5vw,64px)', marginTop: 40, alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.6fr) minmax(0,1fr)', gap: 'clamp(28px,5vw,64px)', marginTop: 40, alignItems: 'start' }}>
           <div>
             <p style={{ font: 'var(--text-lead)', color: 'var(--text)', marginBottom: 20, lineHeight: 1.55 }}>
               I build agentic AI frameworks and async backend infrastructure designed to
@@ -92,18 +92,18 @@ function PortfolioAbout() {
             </div>
           </div>
 
-          <div className="about-photo" style={{
+          <div style={{
             borderRadius: 'var(--radius-lg)', overflow: 'hidden',
             border: '1px solid var(--border)',
             aspectRatio: '1 / 1', background: 'var(--surface)',
           }}>
-            <img src="profile.png" alt="Nishant Sharma"
+            <img src="../../assets/profile.png" alt="Nishant Sharma"
               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'grayscale(0.12) contrast(1.02)' }} />
           </div>
         </div>
 
         {/* capability pillars */}
-        <div className="about-pillars" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 'clamp(32px,5vh,56px)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginTop: 'clamp(32px,5vh,56px)' }}>
           {pillars.map(p => <Pillar key={p.n} {...p} />)}
         </div>
 
@@ -116,7 +116,7 @@ function PortfolioAbout() {
             // Running infrastructure — not a slide deck
           </div>
           <ArchitectureFlow />
-          <div className="infra-metrics" style={{ display: 'flex', gap: 'clamp(24px,5vw,72px)', flexWrap: 'wrap', borderTop: '1px solid var(--border)', paddingTop: 24, marginTop: 28 }}>
+          <div style={{ display: 'flex', gap: 'clamp(24px,5vw,72px)', flexWrap: 'wrap', borderTop: '1px solid var(--border)', paddingTop: 24, marginTop: 28 }}>
             <MetricStat value="10K" label="Requests / day" accent />
             <MetricStat value="500" label="Concurrent users" />
             <MetricStat value="99.9%" label="Uptime" />
