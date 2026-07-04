@@ -70,7 +70,7 @@ function PortfolioResearch() {
     <section id="research" className="snap-section" data-theme="night" style={{ 
       background: 'var(--night-900)', 
       display: 'flex', alignItems: 'center', 
-      padding: '0 clamp(20px,5vw,56px)',
+      padding: '80px clamp(20px,5vw,56px) 20px',
       position: 'relative', overflow: 'hidden'
     }}>
       {/* Background Topographic Wireframe */}
@@ -88,8 +88,8 @@ function PortfolioResearch() {
         })}
       </svg>
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1180, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ marginBottom: '4vh' }}>
-          <SectionHeader index="04" kicker="Papers & experiments" title="Research" />
+        <div style={{ marginBottom: '4vh', whiteSpace: 'nowrap' }}>
+          <SectionHeader index="04" kicker="Publications" title="Research" />
         </div>
 
         <div className="ledger-layout" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1fr) minmax(0,1.5fr)', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>

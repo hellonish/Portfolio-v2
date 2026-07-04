@@ -73,7 +73,7 @@ function PortfolioGithub() {
             <p style={{ font: 'var(--text-body)', color: 'var(--night-muted)', maxWidth: 460, marginBottom: 16 }}>
               Most of my core research, tooling, and system architectures are built in public.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: isMobile ? 16 : 24 }}>
               {stats.map((s, i) => (
                 <div key={i} style={{ gridColumn: (i === 3 && !isMobile) ? '1 / -1' : 'auto' }}>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>

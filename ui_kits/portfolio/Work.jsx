@@ -118,7 +118,7 @@ function PortfolioWork() {
       <section id="projects" className="snap-section" data-theme="night" style={{ 
         background: 'var(--night-800)', 
         display: 'flex', alignItems: 'center', 
-        padding: '0 clamp(20px,5vw,56px)',
+        padding: '80px clamp(20px,5vw,56px) 20px',
         position: 'relative', overflow: 'hidden'
       }}>
         {/* Background Git Diff */}
@@ -148,7 +148,7 @@ function PortfolioWork() {
  }`}
         </div>
         <div style={{ position: 'relative', zIndex: 1, maxWidth: 1180, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ marginBottom: '4vh' }}>
+          <div style={{ marginBottom: '4vh', whiteSpace: 'nowrap' }}>
             <SectionHeader index="02" kicker="Selected work" title="Projects" />
           </div>
 
@@ -209,10 +209,10 @@ function PortfolioWork() {
       <section id="work" className="snap-section" data-theme="night" style={{ 
         background: 'var(--night-900)', 
         display: 'flex', alignItems: 'center', 
-        padding: '0 clamp(20px,5vw,56px)' 
+        padding: '80px clamp(20px,5vw,56px) 20px' 
       }}>
         <div style={{ maxWidth: 1180, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ marginBottom: '4vh' }}>
+          <div style={{ marginBottom: '4vh', whiteSpace: 'nowrap' }}>
             <SectionHeader index="03" kicker="Trajectory" title="Work Experience" />
           </div>
 

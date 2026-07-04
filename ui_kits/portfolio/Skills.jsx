@@ -117,14 +117,13 @@ function PortfolioSkills() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return (
-    <section id="skills" className="snap-section" data-theme="night" style={{ 
-      background: 'var(--night-800)', 
-      display: 'flex', alignItems: 'center', 
-      padding: '0 clamp(20px,5vw,56px)' 
-    }}>
-      <div style={{ maxWidth: 1180, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-        <div style={{ marginBottom: '4vh' }}>
+  return <section id="skills" className="snap-section" data-theme="night" style={{ 
+        background: 'var(--night-800)', 
+        display: 'flex', alignItems: 'center', 
+        padding: '80px clamp(20px,5vw,56px) 20px',
+        position: 'relative'
+      }}><div style={{ maxWidth: 1180, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '4vh', whiteSpace: 'nowrap' }}>
           <SectionHeader index="05" kicker="Stack Output" title="Skills" />
         </div>
         <p style={{ font: 'var(--text-body)', color: 'var(--night-muted)', maxWidth: 520 }}>
