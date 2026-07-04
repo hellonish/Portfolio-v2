@@ -1,39 +1,153 @@
-/* Portfolio UI kit — Skills. Night surface with the interactive
-   SkillConstellation; clicking a node updates a mono readout. */
+/* Portfolio UI kit — Skills. Agentic Terminal replacing the Knowledge Graph. */
+function AgenticTerminal({ activeCategory, groups }) {
+  const [logs, setLogs] = React.useState([]);
+  const termRef = React.useRef(null);
+  const isFirstRender = React.useRef(true);
+
+  React.useEffect(() => {
+    let timeoutIds = [];
+    const pushLog = (msg, delay) => {
+      const id = setTimeout(() => {
+        setLogs(prev => [...prev, msg]);
+      }, delay);
+      timeoutIds.push(id);
+    };
+
+    if (isFirstRender.current) {
+       isFirstRender.current = false;
+       setLogs([]);
+       pushLog({ type: 'system', text: '[SYSTEM] Booting interactive shell...' }, 100);
+       pushLog({ type: 'system', text: '[OK] Establishing secure connection' }, 400);
+       pushLog({ type: 'system', text: '[OK] Loading neural pathways' }, 700);
+       pushLog({ type: 'info', text: 'Type a command or select a category to inspect the stack.' }, 1200);
+       pushLog({ type: 'prompt', text: '_' }, 1300);
+       return () => timeoutIds.forEach(clearTimeout);
+    }
+
+    if (activeCategory !== null) {
+       const [title, body] = groups[activeCategory];
+       
+       setLogs(prev => {
+         const filtered = prev.filter(l => l.text !== '_');
+         return [...filtered, { type: 'command', text: `> fetch stack --layer="${title}"` }];
+       });
+       
+       pushLog({ type: 'system', text: `[EXEC] Querying knowledge base for ${title}...` }, 400);
+       
+       const skills = body.split('·').map(s => s.trim());
+       
+       skills.forEach((skill, idx) => {
+         pushLog({ type: 'data', text: `  ↳ ${skill}` }, 800 + (idx * 150));
+       });
+
+       pushLog({ type: 'success', text: `[OK] 200 OK — ${skills.length} nodes loaded.` }, 800 + (skills.length * 150) + 300);
+       pushLog({ type: 'prompt', text: '_' }, 800 + (skills.length * 150) + 600);
+    }
+
+    return () => timeoutIds.forEach(clearTimeout);
+  }, [activeCategory, groups]);
+
+  React.useEffect(() => {
+    if (termRef.current) {
+      termRef.current.scrollTo({ top: termRef.current.scrollHeight, behavior: 'smooth' });
+    }
+  }, [logs]);
+
+  return (
+    <div style={{
+      fontFamily: 'var(--font-mono)', fontSize: 13, lineHeight: 1.6,
+      color: '#a9b1d6', padding: '24px 0',
+      background: '#1a1b26', border: '1px solid var(--night-line)',
+      borderRadius: 'var(--radius-lg)', height: '100%',
+      display: 'flex', flexDirection: 'column',
+      boxShadow: 'inset 0 2px 10px rgba(0,0,0,0.2)'
+    }}>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 16, padding: '0 28px', flexShrink: 0 }}>
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f56' }} />
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffbd2e' }} />
+        <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27c93f' }} />
+      </div>
+      
+      <div ref={termRef} className="term-scroll" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4, overflowY: 'auto', padding: '0 28px' }}>
+        {logs.map((log, i) => {
+          let color = '#a9b1d6'; 
+          if (log.type === 'system') color = '#9ece6a'; 
+          if (log.type === 'command') color = '#7aa2f7'; 
+          if (log.type === 'success') color = '#7dcfff'; 
+          if (log.type === 'prompt') color = '#bb9af7'; 
+          
+          return (
+            <div key={i} style={{ color, opacity: log.type === 'prompt' ? 0.8 : 1, animation: log.type === 'prompt' ? 'blink 1s step-end infinite' : 'none' }}>
+              {log.text}
+            </div>
+          );
+        })}
+      </div>
+
+      <style>{`
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      `}</style>
+    </div>
+  );
+}
+
 function PortfolioSkills() {
   const DS = window.NishantSharmaPortfolioDesignSystem_acfe10;
-  const { SkillConstellation } = DS;
-  const [picked, setPicked] = React.useState(null);
+  const { SectionHeader } = DS;
+  const [activeCategory, setActiveCategory] = React.useState(null);
 
   const groups = [
-    ['AI / ML', 'RAG · Multi-agent orchestration · LoRA/QLoRA · RLHF · LangGraph · DSPy · Qdrant · fastembed/ONNX'],
-    ['Backend', 'FastAPI · PostgreSQL · Redis · ARQ · Celery · WebSockets · SSE · gRPC · Node.js'],
-    ['Infra', 'Docker · Kubernetes · AWS (EC2/S3/RDS/CloudFront) · Terraform · Ansible · Prometheus · Grafana'],
-    ['Research', 'PyTorch · HuggingFace PEFT · Robustness · Adversarial ML · MLflow'],
+    ['Languages', 'Python · Go · Java · Typescript · C++'],
+    ['Core ML', 'LoRA · Quantization · RLHF · RLVR · PEFT · SLMs · Transformers'],
+    ['Agentic AI', 'RAG · Langchain · Fastembed · Vector Store · Huggingface'],
+    ['Backend', 'FastAPI · NodeJS · REST · Websockets · SSE · gRPC · Redis · Celery · ARQ'],
+    ['Frontend', 'NextJS · Tailwind · FramerMotion · ThreeJS'],
+    ['Security', 'OAuth2 · JWT · Threat Modeling · Rate Limiting · SSRF · Fernet Encryption'],
+    ['Databases', 'PostgreSQL · MySQL · MongoDB · GraphQL · Supabase'],
+    ['Infrastructure', 'Prometheus · MLFlow · Kubernetes · Docker · Linux · Terraform · Ansible · Jenkins · Github Actions · Caddy/Nginx'],
+    ['Cloud', 'AWS · GCP · Hostinger'],
+    ['Dev Tools', 'Cursor · Codex · OpenCode · Claude Code'],
   ];
 
   return (
-    <section id="skills" data-theme="night" style={{ background: 'var(--night-800)', padding: 'clamp(56px,9vh,104px) clamp(20px,5vw,56px)' }}>
-      <div style={{ maxWidth: 1180, margin: '0 auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 8 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 600, color: 'var(--teal-400)' }}>04</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--night-faint)' }}>Knowledge graph</span>
-          <span style={{ flex: 1, height: 1, background: 'var(--night-line)' }} />
+    <section id="skills" className="snap-section" data-theme="night" style={{ 
+      background: 'var(--night-800)', 
+      display: 'flex', alignItems: 'center', 
+      padding: '0 clamp(20px,5vw,56px)' 
+    }}>
+      <div style={{ maxWidth: 1180, width: '100%', margin: '0 auto', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '4vh' }}>
+          <SectionHeader index="05" kicker="Stack Output" title="Skills" />
         </div>
-        <h2 style={{ font: 'var(--text-title)', color: '#fff', margin: '0 0 6px' }}>Skills</h2>
         <p style={{ font: 'var(--text-body)', color: 'var(--night-muted)', maxWidth: 520 }}>
-          Not progress bars — a graph. Hover a node to trace what connects to what; the stack is one system, not a list.
+          Interactive terminal session. Select a subsystem to execute a diagnostic fetch across the stack.
         </p>
 
         <div className="skills-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.5fr) minmax(0,1fr)', gap: 'clamp(20px,4vw,48px)', marginTop: 32, alignItems: 'stretch' }}>
-          <div className="skills-constellation" style={{ position: 'relative', height: 440, border: '1px solid var(--night-line)', borderRadius: 'var(--radius-lg)', background: 'var(--night-900)', overflow: 'hidden' }}>
-            <SkillConstellation onSelect={setPicked} zoom={1.3} />
+          <div style={{ position: 'relative', height: '55vh' }}>
+            <AgenticTerminal activeCategory={activeCategory} groups={groups} />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {groups.map(([title, body]) => (
-              <div key={title} style={{ padding: '16px 18px', border: '1px solid var(--night-line)', borderRadius: 'var(--radius-md)', background: 'var(--night-700)' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--teal-400)', marginBottom: 8 }}>{title}</div>
-                <div style={{ font: 'var(--text-body)', fontSize: 13, color: 'var(--night-muted)', lineHeight: 1.7 }}>{body}</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, overflowY: 'auto', height: '55vh', paddingRight: 12 }}>
+            {groups.map(([title, body], i) => (
+              <div key={title} onClick={() => setActiveCategory(i)} style={{ 
+                padding: '12px 16px', 
+                border: `1px solid ${i === activeCategory ? 'var(--accent)' : 'var(--night-line)'}`, 
+                borderRadius: 'var(--radius-md)', 
+                background: i === activeCategory ? 'rgba(255,255,255,0.04)' : 'var(--night-700)',
+                cursor: 'pointer',
+                transition: 'border-color 0.2s, background 0.2s'
+              }}
+              onMouseEnter={(e) => { if (i !== activeCategory) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+              onMouseLeave={(e) => { if (i !== activeCategory) e.currentTarget.style.background = 'var(--night-700)'; }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                  <span style={{ color: i === activeCategory ? 'var(--accent)' : 'var(--night-muted)', fontSize: 13, fontFamily: 'var(--font-mono)' }}>$</span>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: i === activeCategory ? '#fff' : 'var(--night-fg)' }}>
+                    {title}
+                  </div>
+                </div>
+                <div style={{ font: 'var(--text-body)', fontSize: 13, color: 'var(--night-muted)', lineHeight: 1.7 }}>
+                  {body.split('·').slice(0, 3).join('·')} {body.split('·').length > 3 ? '...' : ''}
+                </div>
               </div>
             ))}
           </div>
@@ -42,4 +156,5 @@ function PortfolioSkills() {
     </section>
   );
 }
+
 Object.assign(window, { PortfolioSkills });

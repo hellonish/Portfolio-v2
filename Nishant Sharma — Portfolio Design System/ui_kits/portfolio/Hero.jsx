@@ -1,100 +1,225 @@
 /* Portfolio UI kit — hero. Deep night surface with an interactive
-   dot-matrix data field, accurate dev-tool marks, sharp CTAs, status strip. */
+   WebGL particle sphere rendered in Three.js. */
 
-// ─── Dot-Matrix Data Field ──────────────────────────────────────────────────
-// A structured grid of points whose brightness flows on a travelling wave,
-// crossed by a slow diagnostic scan band and bloomed under the cursor.
-function DotMatrix() {
-  const cvRef = React.useRef(null);
-  const st = React.useRef({ mx: -9999, my: -9999, t: 0 });
+// ─── Interactive Particle Sphere ─────────────────────────────────────────────
+function ParticleSphereBackground() {
+  const mountRef = React.useRef(null);
+  const pointer = React.useRef({ x: 0, y: 0 });
 
   React.useEffect(() => {
-    const cv = cvRef.current;
-    const ctx = cv.getContext('2d');
-    let W, H, cols, rows, raf, dpr;
-    const GAP = 26;
+    const THREE = window.THREE;
+    const mount = mountRef.current;
+    if (!THREE || !mount) return;
+
+    let W = 1, H = 1, raf = 0;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0, 7.8);
+
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.inset = '0';
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.style.pointerEvents = 'none';
+    mount.appendChild(renderer.domElement);
+
+    const root = new THREE.Group();
+    scene.add(root);
+
+    const count = 1800;
+    const positions = new Float32Array(count * 3);
+    const basePositions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const phases = new Float32Array(count);
+    const colorA = new THREE.Color(0x5eead4);
+    const colorB = new THREE.Color(0x8b5cf6);
+    const colorC = new THREE.Color(0xe8ecec);
+
+    for (let i = 0; i < count; i++) {
+      const t = i / count;
+      const y = 1 - 2 * t;
+      const radius = Math.sqrt(Math.max(0, 1 - y * y));
+      const theta = i * 2.399963229728653;
+      const shell = 1.55 + Math.sin(i * 12.9898) * 0.08;
+      const x = Math.cos(theta) * radius * shell;
+      const z = Math.sin(theta) * radius * shell;
+      const iy = y * shell;
+      basePositions[i * 3] = positions[i * 3] = x;
+      basePositions[i * 3 + 1] = positions[i * 3 + 1] = iy;
+      basePositions[i * 3 + 2] = positions[i * 3 + 2] = z;
+      phases[i] = Math.sin(i * 78.233) * Math.PI;
+
+      const color = t < 0.55 ? colorA.clone().lerp(colorB, t / 0.55) : colorB.clone().lerp(colorC, (t - 0.55) / 0.45);
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
+    }
+
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.026,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.86,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    });
+
+    const particleSphere = new THREE.Points(particleGeometry, particleMaterial);
+    root.add(particleSphere);
+
+    const core = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.58, 2),
+      new THREE.MeshBasicMaterial({
+        color: 0x2dd4bf,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.1,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    root.add(core);
+
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      color: 0x5eead4,
+      transparent: true,
+      opacity: 0.18,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    const rings = [];
+    [
+      { radius: 1.86, tube: 0.006, x: Math.PI / 2.7, y: 0.2, z: -0.2 },
+      { radius: 1.7, tube: 0.005, x: Math.PI / 2, y: 0.65, z: 0.35 },
+      { radius: 1.46, tube: 0.004, x: Math.PI / 1.9, y: -0.55, z: -0.1 },
+    ].forEach(spec => {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(spec.radius, spec.tube, 8, 180), ringMaterial.clone());
+      ring.rotation.set(spec.x, spec.y, spec.z);
+      root.add(ring);
+      rings.push(ring);
+    });
+
+    const linkMaterial = new THREE.LineBasicMaterial({
+      color: 0x5eead4,
+      transparent: true,
+      opacity: 0.14,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const linkGeometry = new THREE.BufferGeometry();
+    const linkPositions = [];
+    for (let i = 0; i < 190; i += 2) {
+      const a = i * 7;
+      const b = (a + 37 + (i % 11)) % count;
+      linkPositions.push(
+        basePositions[a * 3], basePositions[a * 3 + 1], basePositions[a * 3 + 2],
+        basePositions[b * 3], basePositions[b * 3 + 1], basePositions[b * 3 + 2]
+      );
+    }
+    linkGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linkPositions, 3));
+    const links = new THREE.LineSegments(linkGeometry, linkMaterial);
+    root.add(links);
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = cv.offsetWidth; H = cv.offsetHeight;
-      cv.width = Math.round(W * dpr);
-      cv.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.ceil(W / GAP) + 1;
-      rows = Math.ceil(H / GAP) + 1;
+      const rect = mount.getBoundingClientRect();
+      W = Math.max(1, rect.width);
+      H = Math.max(1, rect.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.8);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(W, H, false);
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+      const mobile = W < 760;
+      root.position.set(mobile ? 2.05 : 1.62, mobile ? -1.2 : -0.05, 0);
+      root.scale.setScalar(mobile ? 0.64 : 1.06);
     };
 
+    const onPointer = (e) => {
+      const rect = mount.getBoundingClientRect();
+      pointer.current.x = ((e.clientX - rect.left) / rect.width - 0.5) || 0;
+      pointer.current.y = ((e.clientY - rect.top) / rect.height - 0.5) || 0;
+    };
+
+    const clock = new THREE.Clock();
     const frame = () => {
-      const { mx, my, t } = st.current;
-      ctx.clearRect(0, 0, W, H);
-
-      // diagonal diagnostic scan position
-      const span = W + H + 400;
-      const scan = ((t * 1.4) % span) - 200;
-
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          const x = i * GAP;
-          const y = j * GAP;
-
-          // travelling interference wave → base brightness
-          let v = 0.5 + 0.5 * Math.sin(x * 0.010 + y * 0.006 + t * 0.020)
-                            * Math.cos(y * 0.011 - x * 0.004 - t * 0.014);
-          v *= 0.5;
-
-          // scan band highlight
-          const sd = Math.abs((x + y) - scan);
-          if (sd < 100) v += (1 - sd / 100) * 0.28;
-
-          // cursor bloom
-          const dx = x - mx, dy = y - my;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 175) v += (1 - d / 175) * 0.95;
-
-          v = v < 0 ? 0 : v > 1 ? 1 : v;
-
-          const r = 0.5 + v * 2.2;
-          const a = 0.05 + v * 0.55;
-          const w = v > 0.6 ? (v - 0.6) / 0.4 : 0;   // mix toward white at peaks
-          const cr = (52 + w * 200) | 0;
-          const cg = (184 + w * 71) | 0;
-          const cb = (112 + w * 143) | 0;
-
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, 6.2832);
-          ctx.fillStyle = `rgba(${cr},${cg},${cb},${a})`;
-          ctx.fill();
-        }
+      const elapsed = clock.getElapsedTime();
+      const px = pointer.current.x;
+      const py = pointer.current.y;
+      const attr = particleGeometry.attributes.position;
+      for (let i = 0; i < count; i++) {
+        const ix = i * 3;
+        const bx = basePositions[ix];
+        const by = basePositions[ix + 1];
+        const bz = basePositions[ix + 2];
+        const side = bx * px - by * py;
+        const pulse = 1 + Math.sin(elapsed * 1.6 + phases[i] + side * 1.7) * 0.035;
+        const cursorPush = Math.max(0, 1 - Math.hypot(bx / 1.8 - px * 1.2, by / 1.8 + py * 1.2)) * 0.12;
+        const scale = pulse + cursorPush;
+        positions[ix] = bx * scale;
+        positions[ix + 1] = by * scale;
+        positions[ix + 2] = bz * scale;
       }
+      attr.needsUpdate = true;
 
-      st.current.t++;
+      root.rotation.x = -0.1 - py * 0.16 + Math.sin(elapsed * 0.25) * 0.025;
+      root.rotation.y = elapsed * 0.12 + px * 0.32;
+      root.rotation.z = Math.sin(elapsed * 0.18) * 0.04;
+      core.rotation.x = elapsed * 0.18;
+      core.rotation.y = -elapsed * 0.24;
+      rings.forEach((ring, i) => {
+        ring.rotation.z += 0.0015 + i * 0.0006;
+      });
+
+      renderer.render(scene, camera);
       raf = requestAnimationFrame(frame);
     };
 
     resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', onPointer, { passive: true });
     frame();
 
-    const parent = cv.parentElement;
-    const onResize = () => resize();
-    const onMouse = (e) => {
-      const rct = cv.getBoundingClientRect();
-      st.current.mx = e.clientX - rct.left;
-      st.current.my = e.clientY - rct.top;
-    };
-    const onLeave = () => { st.current.mx = -9999; st.current.my = -9999; };
-
-    window.addEventListener('resize', onResize);
-    parent.addEventListener('mousemove', onMouse);
-    parent.addEventListener('mouseleave', onLeave);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('resize', onResize);
-      parent.removeEventListener('mousemove', onMouse);
-      parent.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', onPointer);
+      scene.traverse(obj => {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+          const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+          materials.forEach(mat => {
+            if (mat.map) mat.map.dispose();
+            mat.dispose();
+          });
+        }
+        if (obj.userData && obj.userData.dispose) obj.userData.dispose();
+      });
+      renderer.dispose();
+      if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
     };
   }, []);
 
-  return <canvas ref={cvRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />;
+  return (
+    <div
+      ref={mountRef}
+      data-particle-sphere
+      aria-hidden="true"
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}
+    />
+  );
 }
 
 // ─── Sharp CTA Buttons ──────────────────────────────────────────────────────
@@ -133,7 +258,7 @@ function SharpCTA({ children, onClick, href, variant }) {
         border: `1px solid ${hov ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)'}`,
         borderRadius: 2,
         background: hov ? '#fff' : 'rgba(255,255,255,0.05)',
-        color: hov ? '#070a0b' : '#fff',
+        color: hov ? '#000000' : '#fff',
         fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.09em',
         textTransform: 'uppercase', fontWeight: 500,
         transition: 'background 0.22s ease, color 0.22s, border-color 0.22s',
@@ -189,8 +314,8 @@ const CodexIcon = () => (
 // ─── Hero ────────────────────────────────────────────────────────────────────
 function PortfolioHero({ onNav }) {
   return (
-    <header style={{ position: 'relative', minHeight: '92vh', overflow: 'hidden', background: 'var(--night-800)' }}>
-      <DotMatrix />
+    <header style={{ position: 'relative', minHeight: '100svh', overflow: 'hidden', background: 'var(--night-800)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+      <ParticleSphereBackground />
       {/* legibility scrims */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
@@ -202,11 +327,12 @@ function PortfolioHero({ onNav }) {
       }} />
 
       <div style={{
-        position: 'relative', zIndex: 2, maxWidth: 1180, margin: '0 auto',
-        padding: 'clamp(40px,8vh,100px) clamp(20px,5vw,56px) 160px',
+        position: 'relative', zIndex: 2, maxWidth: 1240, width: '100%', margin: '0 auto',
+        padding: 'clamp(40px,8vh,100px) clamp(20px,4vw,40px) 160px',
         pointerEvents: 'none',
+        display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
       }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 26 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 26 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--night-muted)' }}>
             AI Engineer&nbsp;&nbsp;/&nbsp;&nbsp;New York
           </span>
@@ -214,8 +340,9 @@ function PortfolioHero({ onNav }) {
 
         <h1 style={{
           fontFamily: 'var(--font-display)', fontWeight: 700,
-          fontSize: 'clamp(40px, 8vw, 88px)', lineHeight: 0.98, letterSpacing: '-0.035em',
-          color: '#fff', margin: 0, maxWidth: '14ch',
+          fontSize: 'clamp(40px, 8.8vw, 96px)', lineHeight: 0.98, letterSpacing: 0,
+          color: '#fff', margin: 0, maxWidth: '15ch',
+          display: 'inline-block', transform: 'scaleX(1.08)', transformOrigin: 'left center',
         }}>
           Nishant<br />Sharma
         </h1>
@@ -224,9 +351,7 @@ function PortfolioHero({ onNav }) {
           fontFamily: 'var(--font-sans)', fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.6,
           color: 'var(--night-fg)', margin: '26px 0 0', maxWidth: 560,
         }}>
-          AI engineer building production multi-agent systems — and studying exactly
-          where they fail, so they fail less.{' '}
-          <span style={{ color: 'var(--night-muted)' }}>M.S. Computer Engineering, NYU Tandon &rsquo;26.</span>
+          AI Engineer developing Production agent systems, grounded in ML Research.
         </p>
 
         <div style={{ display: 'flex', gap: 18, marginTop: 38, flexWrap: 'wrap', pointerEvents: 'auto' }}>
@@ -242,14 +367,14 @@ function PortfolioHero({ onNav }) {
         background: 'linear-gradient(180deg, transparent, rgba(7,10,11,0.66))',
         backdropFilter: 'blur(4px)',
       }}>
-        <div style={{
+        <div className="hero-metrics" style={{
           maxWidth: 1180, margin: '0 auto',
           padding: '16px clamp(20px,5vw,56px)',
           display: 'flex', gap: 'clamp(18px,5vw,56px)', flexWrap: 'wrap', alignItems: 'center',
           fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--night-muted)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--night-faint)' }}>Dev tools</span>
+            <span className="devtools-label" style={{ fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--night-faint)' }}>Dev tools</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span title="Claude Code" style={{ display: 'flex', alignItems: 'center' }}><ClaudeIcon /></span>
               <span title="Cursor"       style={{ display: 'flex', alignItems: 'center' }}><CursorIcon /></span>

@@ -53,7 +53,7 @@ function PortfolioAbout() {
 
         <h3 style={{
           fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 16,
-          color: 'var(--text-strong)', letterSpacing: '-0.02em', margin: '0 0 10px',
+          color: 'var(--text-strong)', letterSpacing: 0, margin: '0 0 10px',
         }}>{title}</h3>
 
         <p style={{

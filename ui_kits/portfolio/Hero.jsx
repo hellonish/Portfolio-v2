@@ -1,291 +1,224 @@
-/* Portfolio UI kit — hero. Deep night surface with ML-visualisation background:
-   Mixture of Gaussian bell curves (drifting, glowing) + interactive softmax
-   temperature panel whose τ is driven by cursor Y. */
+/* Portfolio UI kit — hero. Deep night surface with an interactive
+   WebGL particle sphere rendered in Three.js. */
 
-// ─── ML Background ───────────────────────────────────────────────────────────
-// Layer 1: 6 Gaussian bell curves — cursor X attracts them, cursor Y near a
-//          curve boosts its amplitude. Hover a curve → equation tooltip.
-// Layer 2: Softmax panel — cursor Y tunes temperature τ.
-function MLBackground() {
-  const cvRef = React.useRef(null);
-  const st    = React.useRef({ mx: -9999, my: -9999, t: 0 });
+// ─── Interactive Particle Sphere ─────────────────────────────────────────────
+function ParticleSphereBackground() {
+  const mountRef = React.useRef(null);
+  const pointer = React.useRef({ x: 0, y: 0 });
 
   React.useEffect(() => {
-    const cv  = cvRef.current;
-    const ctx = cv.getContext('2d');
-    let W, H, raf, dpr;
+    const THREE = window.THREE;
+    const mount = mountRef.current;
+    if (!THREE || !mount) return;
 
-    // ── Gaussian definitions ─────────────────────────────────────────────────
-    // Each object carries live state: muA (actual μ), sigA (actual σ), ampA (actual amp)
-    const GS = [
-      { cy:0.18, sx:0.14, amp:0.72, ph:0.0,  spd: 0.00016, c:[45,212,191],  muA:0.50, sigA:0.14, ampA:0.72 },
-      { cy:0.40, sx:0.20, amp:0.48, ph:2.1,  spd:-0.00013, c:[139,92,246],  muA:0.55, sigA:0.20, ampA:0.48 },
-      { cy:0.60, sx:0.11, amp:0.82, ph:4.3,  spd: 0.00021, c:[45,212,191],  muA:0.45, sigA:0.11, ampA:0.82 },
-      { cy:0.28, sx:0.24, amp:0.38, ph:1.5,  spd:-0.00017, c:[94,234,212],  muA:0.60, sigA:0.24, ampA:0.38 },
-      { cy:0.74, sx:0.16, amp:0.60, ph:3.7,  spd: 0.00014, c:[139,92,246],  muA:0.40, sigA:0.16, ampA:0.60 },
-      { cy:0.50, sx:0.18, amp:0.44, ph:5.0,  spd:-0.00020, c:[45,212,191],  muA:0.50, sigA:0.18, ampA:0.44 },
-    ];
+    let W = 1, H = 1, raf = 0;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0, 7.8);
 
-    // ── Softmax state ────────────────────────────────────────────────────────
-    const logits  = [1.8, 2.4, 0.9, 3.0, 1.5, 2.1];
-    const ltarget = [...logits];
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: 'high-performance',
+    });
+    renderer.setClearColor(0x000000, 0);
+    renderer.domElement.style.position = 'absolute';
+    renderer.domElement.style.inset = '0';
+    renderer.domElement.style.width = '100%';
+    renderer.domElement.style.height = '100%';
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.style.pointerEvents = 'none';
+    mount.appendChild(renderer.domElement);
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
-    const gauss = (x, mu, sig) => Math.exp(-0.5 * ((x - mu) / sig) ** 2);
+    const root = new THREE.Group();
+    scene.add(root);
 
-    function softmax(z, tau) {
-      const s  = z.map(v => v / tau);
-      const m  = Math.max(...s);
-      const ex = s.map(v => Math.exp(v - m));
-      const sm = ex.reduce((a, b) => a + b, 0);
-      return ex.map(e => e / sm);
+    const count = 1800;
+    const positions = new Float32Array(count * 3);
+    const basePositions = new Float32Array(count * 3);
+    const colors = new Float32Array(count * 3);
+    const phases = new Float32Array(count);
+    const colorA = new THREE.Color(0x5eead4);
+    const colorB = new THREE.Color(0x8b5cf6);
+    const colorC = new THREE.Color(0xe8ecec);
+
+    for (let i = 0; i < count; i++) {
+      const t = i / count;
+      const y = 1 - 2 * t;
+      const radius = Math.sqrt(Math.max(0, 1 - y * y));
+      const theta = i * 2.399963229728653;
+      const shell = 1.55 + Math.sin(i * 12.9898) * 0.08;
+      const x = Math.cos(theta) * radius * shell;
+      const z = Math.sin(theta) * radius * shell;
+      const iy = y * shell;
+      basePositions[i * 3] = positions[i * 3] = x;
+      basePositions[i * 3 + 1] = positions[i * 3 + 1] = iy;
+      basePositions[i * 3 + 2] = positions[i * 3 + 2] = z;
+      phases[i] = Math.sin(i * 78.233) * Math.PI;
+
+      const color = t < 0.55 ? colorA.clone().lerp(colorB, t / 0.55) : colorB.clone().lerp(colorC, (t - 0.55) / 0.45);
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
     }
 
-    function rrect(x, y, w, h, r) {
-      ctx.beginPath();
-      ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.arcTo(x+w,y,x+w,y+r,r);
-      ctx.lineTo(x+w,y+h-r); ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
-      ctx.lineTo(x+r,y+h); ctx.arcTo(x,y+h,x,y+h-r,r);
-      ctx.lineTo(x,y+r); ctx.arcTo(x,y,x+r,y,r);
-      ctx.closePath();
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const particleMaterial = new THREE.PointsMaterial({
+      size: 0.026,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.86,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    });
+
+    const particleSphere = new THREE.Points(particleGeometry, particleMaterial);
+    root.add(particleSphere);
+
+    const core = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(0.58, 2),
+      new THREE.MeshBasicMaterial({
+        color: 0x2dd4bf,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.1,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      })
+    );
+    root.add(core);
+
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      color: 0x5eead4,
+      transparent: true,
+      opacity: 0.18,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    const rings = [];
+    [
+      { radius: 1.86, tube: 0.006, x: Math.PI / 2.7, y: 0.2, z: -0.2 },
+      { radius: 1.7, tube: 0.005, x: Math.PI / 2, y: 0.65, z: 0.35 },
+      { radius: 1.46, tube: 0.004, x: Math.PI / 1.9, y: -0.55, z: -0.1 },
+    ].forEach(spec => {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(spec.radius, spec.tube, 8, 180), ringMaterial.clone());
+      ring.rotation.set(spec.x, spec.y, spec.z);
+      root.add(ring);
+      rings.push(ring);
+    });
+
+    const linkMaterial = new THREE.LineBasicMaterial({
+      color: 0x5eead4,
+      transparent: true,
+      opacity: 0.14,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const linkGeometry = new THREE.BufferGeometry();
+    const linkPositions = [];
+    for (let i = 0; i < 190; i += 2) {
+      const a = i * 7;
+      const b = (a + 37 + (i % 11)) % count;
+      linkPositions.push(
+        basePositions[a * 3], basePositions[a * 3 + 1], basePositions[a * 3 + 2],
+        basePositions[b * 3], basePositions[b * 3 + 1], basePositions[b * 3 + 2]
+      );
     }
+    linkGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linkPositions, 3));
+    const links = new THREE.LineSegments(linkGeometry, linkMaterial);
+    root.add(links);
 
     const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W   = cv.offsetWidth;  H = cv.offsetHeight;
-      cv.width  = Math.round(W * dpr);
-      cv.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const rect = mount.getBoundingClientRect();
+      W = Math.max(1, rect.width);
+      H = Math.max(1, rect.height);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.8);
+      renderer.setPixelRatio(dpr);
+      renderer.setSize(W, H, false);
+      camera.aspect = W / H;
+      camera.updateProjectionMatrix();
+      const mobile = W < 760;
+      root.position.set(mobile ? 2.05 : 1.62, mobile ? -1.2 : -0.05, 0);
+      root.scale.setScalar(mobile ? 0.64 : 1.06);
     };
 
-    const STEPS = 200;
+    const onPointer = (e) => {
+      const rect = mount.getBoundingClientRect();
+      pointer.current.x = ((e.clientX - rect.left) / rect.width - 0.5) || 0;
+      pointer.current.y = ((e.clientY - rect.top) / rect.height - 0.5) || 0;
+    };
 
+    const clock = new THREE.Clock();
     const frame = () => {
-      const { mx, my, t } = st.current;
-      ctx.clearRect(0, 0, W, H);
+      const elapsed = clock.getElapsedTime();
+      const px = pointer.current.x;
+      const py = pointer.current.y;
+      const attr = particleGeometry.attributes.position;
+      for (let i = 0; i < count; i++) {
+        const ix = i * 3;
+        const bx = basePositions[ix];
+        const by = basePositions[ix + 1];
+        const bz = basePositions[ix + 2];
+        const side = bx * px - by * py;
+        const pulse = 1 + Math.sin(elapsed * 1.6 + phases[i] + side * 1.7) * 0.035;
+        const cursorPush = Math.max(0, 1 - Math.hypot(bx / 1.8 - px * 1.2, by / 1.8 + py * 1.2)) * 0.12;
+        const scale = pulse + cursorPush;
+        positions[ix] = bx * scale;
+        positions[ix + 1] = by * scale;
+        positions[ix + 2] = bz * scale;
+      }
+      attr.needsUpdate = true;
 
-      const inHero   = mx > 0 && mx < W && my > 0 && my < H;
-      const cxNorm   = inHero ? mx / W : -1;
-      const cyNorm   = inHero ? my / H : -1;
-
-      // ── Update Gaussian live state + find hover ───────────────────────────
-      let hovIdx  = -1;
-      let hovDist = 28;  // px threshold to "hit" a curve
-
-      GS.forEach((g, gi) => {
-        // Natural drift targets
-        const muNat  = 0.5 + 0.38 * Math.sin(t * g.spd + g.ph);
-        const sigNat = g.sx * (1 + 0.12 * Math.sin(t * g.spd * 1.9 + g.ph + 1));
-
-        // Cursor attraction: pull μ gently toward cursor X
-        // Influence fades with distance so only the nearest curves react most
-        let muTarget = muNat;
-        if (inHero) {
-          const pull = Math.max(0, 1 - Math.abs(g.muA - cxNorm) / 0.55);
-          muTarget   = muNat + (cxNorm - muNat) * pull * 0.38;
-        }
-        g.muA  += (muTarget  - g.muA)  * 0.032;
-        g.sigA += (sigNat    - g.sigA) * 0.07;
-
-        // Amplitude boost: curve near cursor Y blooms taller
-        const cyDelta  = inHero ? Math.abs(cyNorm - g.cy) : 1;
-        const ampBoost = cyDelta < 0.18 ? (1 - cyDelta / 0.18) * 0.35 : 0;
-        g.ampA += (g.amp * (1 + ampBoost) - g.ampA) * 0.06;
-
-        // Hover detection: is the cursor sitting on this curve?
-        if (inHero) {
-          const baseY = g.cy * H;
-          const maxH  = H * 0.26 * g.ampA;
-          const gVal  = gauss(cxNorm, g.muA, g.sigA);
-          const curveY = baseY - gVal * maxH;
-          const dist   = Math.abs(my - curveY);
-          if (dist < hovDist && gVal > 0.12) { hovDist = dist; hovIdx = gi; }
-        }
+      root.rotation.x = -0.1 - py * 0.16 + Math.sin(elapsed * 0.25) * 0.025;
+      root.rotation.y = elapsed * 0.12 + px * 0.32;
+      root.rotation.z = Math.sin(elapsed * 0.18) * 0.04;
+      core.rotation.x = elapsed * 0.18;
+      core.rotation.y = -elapsed * 0.24;
+      rings.forEach((ring, i) => {
+        ring.rotation.z += 0.0015 + i * 0.0006;
       });
 
-      // ── LAYER 1 — Draw Gaussian bell curves ──────────────────────────────
-      GS.forEach((g, gi) => {
-        const isHov  = gi === hovIdx;
-        const [r, gv, b] = g.c;
-        const baseY  = g.cy * H;
-        const maxH   = H * 0.26 * g.ampA;
-
-        const pts = [];
-        for (let i = 0; i <= STEPS; i++) {
-          const xn = i / STEPS;
-          pts.push({ x: xn * W, y: baseY - gauss(xn, g.muA, g.sigA) * maxH });
-        }
-
-        // filled area
-        ctx.beginPath();
-        pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.lineTo(W, baseY); ctx.lineTo(0, baseY); ctx.closePath();
-        const fill = ctx.createLinearGradient(0, baseY - maxH, 0, baseY);
-        fill.addColorStop(0, `rgba(${r},${gv},${b},${isHov ? 0.20 : 0.11})`);
-        fill.addColorStop(1, `rgba(${r},${gv},${b},0.00)`);
-        ctx.fillStyle = fill;
-        ctx.fill();
-
-        // glowing stroke
-        ctx.beginPath();
-        pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
-        ctx.shadowColor = `rgba(${r},${gv},${b},0.75)`;
-        ctx.shadowBlur  = isHov ? 16 : 7;
-        ctx.strokeStyle = `rgba(${r},${gv},${b},${isHov ? 0.80 : 0.42})`;
-        ctx.lineWidth   = isHov ? 2.0 : 1.3;
-        ctx.stroke();
-        ctx.shadowBlur  = 0;
-
-        // μ peak dot — pulses larger on hover
-        const peakX = g.muA * W;
-        const peakY = baseY - maxH;
-        ctx.shadowColor = `rgba(${r},${gv},${b},0.9)`;
-        ctx.shadowBlur  = isHov ? 20 : 12;
-        ctx.beginPath();
-        ctx.arc(peakX, peakY, isHov ? 4.0 : 2.4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r},${gv},${b},${isHov ? 1 : 0.9})`;
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        // μ label (right half only, away from text content; hidden on mobile)
-        if (W > 640 && g.muA > 0.44) {
-          ctx.font         = `${isHov ? 500 : 400} 9px 'IBM Plex Mono', monospace`;
-          ctx.fillStyle    = `rgba(${r},${gv},${b},${isHov ? 0.75 : 0.35})`;
-          ctx.textAlign    = 'center';
-          ctx.textBaseline = 'bottom';
-          ctx.fillText('μ', peakX, peakY - 6);
-        }
-      });
-
-      // ── Equation tooltip for hovered curve ───────────────────────────────
-      if (hovIdx >= 0 && inHero) {
-        const g    = GS[hovIdx];
-        const [r, gv, b] = g.c;
-        const fVal = gauss(cxNorm, g.muA, g.sigA);
-        const line1 = `\u{1D4A9}(μ = ${g.muA.toFixed(2)}, σ = ${g.sigA.toFixed(2)})`;
-        const line2 = `f(x) = ${fVal.toFixed(3)}`;
-
-        const TW = 172, TH = 48;
-        let tx = mx + 18, ty = my - 58;
-        if (tx + TW > W - 12) tx = mx - TW - 12;
-        if (ty < 12)          ty = my + 18;
-
-        // bg panel
-        rrect(tx, ty, TW, TH, 5);
-        ctx.fillStyle   = 'rgba(7,10,11,0.90)';
-        ctx.fill();
-        ctx.strokeStyle = `rgba(${r},${gv},${b},0.38)`;
-        ctx.lineWidth   = 1;
-        rrect(tx, ty, TW, TH, 5);
-        ctx.stroke();
-
-        // left accent bar
-        ctx.fillStyle = `rgba(${r},${gv},${b},0.6)`;
-        ctx.fillRect(tx, ty + 6, 2, TH - 12);
-
-        ctx.textAlign    = 'left';
-        ctx.textBaseline = 'top';
-
-        // equation line
-        ctx.font      = `600 10px 'IBM Plex Mono', monospace`;
-        ctx.fillStyle = `rgba(${r},${gv},${b},0.95)`;
-        ctx.fillText(line1, tx + 12, ty + 10);
-
-        // f(x) value line
-        ctx.font      = `400 9.5px 'IBM Plex Mono', monospace`;
-        ctx.fillStyle = 'rgba(232,236,236,0.55)';
-        ctx.fillText(line2, tx + 12, ty + 27);
-      }
-
-      // Layer 2: Softmax panel (desktop only; hidden on mobile for readability)
-      if (W > 640) {
-        const yNorm = inHero ? Math.min(1, Math.max(0, my / H)) : 0.5;
-        const tau   = 0.2 + yNorm * 2.6;
-  
-        for (let i = 0; i < logits.length; i++) {
-          ltarget[i] = 0.5 + 2.8 * (0.5 + 0.5 * Math.sin(t * 0.0009 + i * 1.47));
-          logits[i] += (ltarget[i] - logits[i]) * 0.012;
-        }
-        const probs = softmax(logits, tau);
-        const maxP  = Math.max(...probs);
-  
-        const BW = 20, BH = 76, GAP_B = 7;
-        const TW2 = logits.length * BW + (logits.length - 1) * GAP_B;
-        const PX  = W - TW2 - 56;
-        const PY  = H * 0.30;
-  
-        rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7);
-        ctx.fillStyle = 'rgba(7,10,11,0.58)'; ctx.fill();
-        ctx.strokeStyle = 'rgba(45,212,191,0.11)'; ctx.lineWidth = 1;
-        rrect(PX - 18, PY - 44, TW2 + 36, BH + 78, 7); ctx.stroke();
-  
-        ctx.textBaseline = 'alphabetic';
-        ctx.font         = "500 9.5px 'IBM Plex Mono', monospace";
-        ctx.fillStyle    = 'rgba(45,212,191,0.60)';
-        ctx.textAlign    = 'left';
-        ctx.fillText('softmax(z / τ)', PX, PY - 26);
-  
-        const desc = tau < 0.55 ? ' → sharp' : tau > 2.1 ? ' → flat' : '';
-        ctx.fillStyle = 'rgba(232,236,236,0.32)';
-        ctx.fillText(`τ = ${tau.toFixed(2)}${desc}`, PX, PY - 13);
-  
-        probs.forEach((p, i) => {
-          const bx = PX + i * (BW + GAP_B);
-          const bh = p * BH;
-          const by = PY + BH - bh;
-          const hi = p === maxP;
-          const alp = 0.22 + p * 0.68;
-  
-          if (hi) { ctx.shadowColor = 'rgba(45,212,191,0.55)'; ctx.shadowBlur = 10; }
-          ctx.fillStyle = hi ? `rgba(45,212,191,${alp})` : `rgba(45,212,191,${alp * 0.42})`;
-          ctx.fillRect(bx, by, BW, bh);
-          ctx.shadowBlur = 0;
-  
-          ctx.font = "500 8px 'IBM Plex Mono', monospace";
-          ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-          ctx.fillStyle = hi ? 'rgba(45,212,191,0.90)' : 'rgba(232,236,236,0.28)';
-          ctx.fillText((p * 100).toFixed(0) + '%', bx + BW / 2, PY + BH + 6);
-          ctx.fillStyle = 'rgba(232,236,236,0.20)';
-          ctx.fillText('z' + (i + 1), bx + BW / 2, PY + BH + 18);
-        });
-  
-        if (!inHero) {
-          ctx.font = "400 9px 'IBM Plex Mono', monospace";
-          ctx.fillStyle = 'rgba(232,236,236,0.16)';
-          ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-          ctx.fillText('move cursor ↕ to tune τ', PX, PY + BH + 34);
-      }
-
-      st.current.t++;
+      renderer.render(scene, camera);
       raf = requestAnimationFrame(frame);
     };
 
     resize();
+    window.addEventListener('resize', resize);
+    window.addEventListener('pointermove', onPointer, { passive: true });
     frame();
 
-    const parent   = cv.parentElement;
-    const onResize = () => resize();
-    const onMouse  = e => {
-      const rct = cv.getBoundingClientRect();
-      st.current.mx = e.clientX - rct.left;
-      st.current.my = e.clientY - rct.top;
-    };
-    const onLeave = () => { st.current.mx = -9999; st.current.my = -9999; };
-
-    window.addEventListener('resize', onResize);
-    parent.addEventListener('mousemove', onMouse);
-    parent.addEventListener('mouseleave', onLeave);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('resize', onResize);
-      parent.removeEventListener('mousemove', onMouse);
-      parent.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', onPointer);
+      scene.traverse(obj => {
+        if (obj.geometry) obj.geometry.dispose();
+        if (obj.material) {
+          const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+          materials.forEach(mat => {
+            if (mat.map) mat.map.dispose();
+            mat.dispose();
+          });
+        }
+        if (obj.userData && obj.userData.dispose) obj.userData.dispose();
+      });
+      renderer.dispose();
+      if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
     };
   }, []);
 
   return (
-    <canvas ref={cvRef}
-      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', display: 'block' }} />
+    <div
+      ref={mountRef}
+      data-particle-sphere
+      aria-hidden="true"
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' }}
+    />
   );
 }
 
@@ -325,7 +258,7 @@ function SharpCTA({ children, onClick, href, variant }) {
         border: `1px solid ${hov ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)'}`,
         borderRadius: 2,
         background: hov ? '#fff' : 'rgba(255,255,255,0.05)',
-        color: hov ? '#070a0b' : '#fff',
+        color: hov ? '#000000' : '#fff',
         fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.09em',
         textTransform: 'uppercase', fontWeight: 500,
         transition: 'background 0.22s ease, color 0.22s, border-color 0.22s',
@@ -381,8 +314,12 @@ const CodexIcon = () => (
 // ─── Hero ────────────────────────────────────────────────────────────────────
 function PortfolioHero({ onNav }) {
   return (
-    <header style={{ position: 'relative', minHeight: '92vh', overflow: 'hidden', background: 'var(--night-800)' }}>
-      <MLBackground />
+    <section id="top" className="snap-section" data-theme="night" style={{ 
+      position: 'relative', minHeight: '100svh', overflow: 'hidden', 
+      background: 'var(--night-900)',
+      display: 'flex', flexDirection: 'column'
+    }}>
+      <ParticleSphereBackground />
       {/* legibility scrims */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
@@ -394,11 +331,12 @@ function PortfolioHero({ onNav }) {
       }} />
 
       <div style={{
-        position: 'relative', zIndex: 2, maxWidth: 1180, margin: '0 auto',
-        padding: 'clamp(40px,8vh,100px) clamp(20px,5vw,56px) 160px',
+        position: 'relative', zIndex: 2, maxWidth: 1240, width: '100%', margin: '0 auto',
+        padding: '0 clamp(20px,4vw,40px)',
         pointerEvents: 'none',
+        flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center',
       }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, marginBottom: 26 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 26 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--night-muted)' }}>
             AI Engineer&nbsp;&nbsp;/&nbsp;&nbsp;New York
           </span>
@@ -406,8 +344,9 @@ function PortfolioHero({ onNav }) {
 
         <h1 style={{
           fontFamily: 'var(--font-display)', fontWeight: 700,
-          fontSize: 'clamp(40px, 8vw, 88px)', lineHeight: 0.98, letterSpacing: '-0.035em',
-          color: '#fff', margin: 0, maxWidth: '14ch',
+          fontSize: 'clamp(40px, 8.8vw, 96px)', lineHeight: 0.98, letterSpacing: 0,
+          color: '#fff', margin: 0, maxWidth: '15ch',
+          display: 'inline-block', transform: 'scaleX(1.08)', transformOrigin: 'left center',
         }}>
           Nishant<br />Sharma
         </h1>
@@ -416,9 +355,7 @@ function PortfolioHero({ onNav }) {
           fontFamily: 'var(--font-sans)', fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.6,
           color: 'var(--night-fg)', margin: '26px 0 0', maxWidth: 560,
         }}>
-          AI engineer building production multi-agent systems — and studying exactly
-          where they fail, so they fail less.{' '}
-          <span style={{ color: 'var(--night-muted)' }}>M.S. Computer Engineering, NYU Tandon &rsquo;26.</span>
+          AI Engineer developing Production agent systems, grounded in ML Research.
         </p>
 
         <div style={{ display: 'flex', gap: 18, marginTop: 38, flexWrap: 'wrap', pointerEvents: 'auto' }}>
@@ -456,11 +393,6 @@ function PortfolioHero({ onNav }) {
             <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#fff' }}>400+</span>
             <span>Students mentored</span>
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
-            <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#fff' }}>99.9%</span>
-            <span>Uptime shipped</span>
-          </div>
         </div>
       </div>
 
@@ -470,7 +402,7 @@ function PortfolioHero({ onNav }) {
           50%      { opacity:.4; transform:scale(.8); }
         }
       `}</style>
-    </header>
+    </section>
   );
 }
 

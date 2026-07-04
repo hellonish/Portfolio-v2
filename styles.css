@@ -3,7 +3,7 @@
    Nishant Sharma Portfolio v2
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800&display=swap');
 
 /* ── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after {
@@ -16,9 +16,9 @@
 :root {
 
   /* Fonts */
-  --font-display: 'Space Grotesk', sans-serif;
-  --font-sans:    'IBM Plex Sans', sans-serif;
-  --font-mono:    'IBM Plex Mono', monospace;
+  --font-display: 'Halvar Breitschrift', 'Halvar', 'Eurostile Extended', 'Orbitron', sans-serif;
+  --font-sans:    'Halvar Mono', 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  --font-mono:    'Halvar Mono', 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 
   /* Type scale (font shorthand) */
   --text-display: 700 52px/1.0 var(--font-display);
@@ -29,27 +29,27 @@
   --text-eyebrow: 500 11px/1.2 var(--font-mono);
 
   /* Letter-spacing */
-  --ls-tight: -0.03em;
-  --ls-snug:  -0.02em;
+  --ls-tight: 0;
+  --ls-snug:  0;
   --ls-mono:   0.12em;
 
-  /* ── Night palette ─────────────────────────── */
-  --night-900: #070a0b;
-  --night-800: #0a0e0f;
-  --night-700: #11171a;
-  --night-600: #182024;
-  --night-line: rgba(255, 255, 255, 0.09);
-  --night-fg:   #e8ecec;
-  --night-muted: rgba(232, 236, 236, 0.55);
-  --night-faint: rgba(232, 236, 236, 0.30);
+  /* ── Night palette (Nord Terminal + Black) ─── */
+  --night-900: #000000;
+  --night-800: #000000;
+  --night-700: transparent;
+  --night-600: transparent;
+  --night-line: #4c566a;
+  --night-fg:   #d8dee9;
+  --night-muted: rgba(216, 222, 233, 0.7);
+  --night-faint: rgba(216, 222, 233, 0.4);
 
-  /* ── Teal palette ──────────────────────────── */
-  --teal-700: #0b6b62;
-  --teal-600: #0d9488;
-  --teal-500: #14b8a6;
-  --teal-400: #2dd4bf;
-  --teal-300: #5eead4;
-  --teal-tint: #e3f5f2;
+  /* ── Teal palette (Mapped to Nord Accents) ─── */
+  --teal-700: #81a1c1;
+  --teal-600: #bf616a;
+  --teal-500: #a3be8c;
+  --teal-400: #81a1c1;
+  --teal-300: #ebcb8b;
+  --teal-tint: #e5e9f0;
 
   /* ── Paper / Ink palette ───────────────────── */
   --ink-900:  #0a0e0f;
@@ -205,7 +205,235 @@ html, body {
     flex-wrap: wrap !important;
     font-size: 11px !important;
   }
-  .devtools-label {
-    display: none !important;
-  }
+}
+
+/* ── 2026 Terminal Themes ───────────────────────────────── */
+/* 1. Cyber Neon */
+[data-theme="cyber-neon"] {
+  --surface:        #000000;
+  --surface-raised: #080808;
+  --border:         rgba(0, 255, 65, 0.2);
+  --border-soft:    rgba(0, 255, 65, 0.1);
+  --text:           #ff003c;
+  --text-strong:    #00f0ff;
+  --text-muted:     rgba(255, 0, 60, 0.7);
+  --text-faint:     rgba(255, 0, 60, 0.4);
+  --accent:         #00f0ff;
+  --accent-hover:   #00ff41;
+}
+
+/* 2. Matrix Phosphor */
+[data-theme="matrix-phosphor"] {
+  --surface:        #020a04;
+  --surface-raised: #051409;
+  --border:         rgba(74, 246, 38, 0.2);
+  --border-soft:    rgba(74, 246, 38, 0.1);
+  --text:           #4af626;
+  --text-strong:    #ffffff;
+  --text-muted:     rgba(74, 246, 38, 0.6);
+  --text-faint:     rgba(74, 246, 38, 0.3);
+  --accent:         #4af626;
+  --accent-hover:   #ffffff;
+}
+
+/* 3. Solarized Hacker */
+[data-theme="solarized-hacker"] {
+  --surface:        #002b36;
+  --surface-raised: #073642;
+  --border:         #586e75;
+  --border-soft:    rgba(88, 110, 117, 0.3);
+  --text:           #839496;
+  --text-strong:    #2aa198;
+  --text-muted:     rgba(131, 148, 150, 0.7);
+  --text-faint:     rgba(131, 148, 150, 0.4);
+  --accent:         #b58900;
+  --accent-hover:   #d33682;
+}
+
+/* 4. Nord Terminal */
+[data-theme="nord-terminal"] {
+  --surface:        transparent;
+  --surface-raised: transparent;
+  --border:         #4c566a;
+  --border-soft:    rgba(76, 86, 106, 0.3);
+  --text:           #d8dee9;
+  --text-strong:    #81a1c1;
+  --text-muted:     rgba(216, 222, 233, 0.7);
+  --text-faint:     rgba(216, 222, 233, 0.4);
+  --accent:         #bf616a;
+  --accent-hover:   #a3be8c;
+}
+
+/* 5. Blood Moon */
+[data-theme="blood-moon"] {
+  --surface:        #0a0000;
+  --surface-raised: #140505;
+  --border:         rgba(255, 51, 51, 0.3);
+  --border-soft:    rgba(255, 51, 51, 0.1);
+  --text:           #d17979;
+  --text-strong:    #ff3333;
+  --text-muted:     rgba(209, 121, 121, 0.7);
+  --text-faint:     rgba(209, 121, 121, 0.4);
+  --accent:         #ff3333;
+  --accent-hover:   #ffd700;
+}
+
+/* ── Theme Switcher UI ──────────────────────────────────── */
+#theme-switcher-widget {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 9999;
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+}
+#theme-switcher-widget .ts-title {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-mono);
+  margin-bottom: 4px;
+}
+.ts-btn {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  transition: all 0.2s ease;
+  text-align: left;
+}
+.ts-btn:hover {
+  background: var(--accent);
+  color: var(--surface);
+  border-color: var(--accent);
+}
+
+/* ── Button Hover Effects ─────────────────────── */
+.btn-fill-hover {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+.btn-fill-hover::before {
+  content: "";
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 0%;
+  background: var(--accent);
+  z-index: -1;
+  transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.btn-fill-hover:hover::before {
+  height: 100%;
+}
+.btn-fill-hover:hover {
+  color: var(--night-900) !important;
+}
+
+/* ── Custom Selection ─────────────────────── */
+::selection {
+  background-color: #fff;
+  color: #000;
+}
+::-moz-selection {
+  background-color: #fff;
+  color: #000;
+}
+
+/* ── CRT Monitor Overlay ─────────────────────── */
+.crt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Static Grain */
+.crt-overlay::before {
+  content: "";
+  position: absolute;
+  inset: -100%;
+  background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)"/></svg>');
+  opacity: 0.04;
+  mix-blend-mode: overlay;
+  animation: crt-noise 0.2s infinite steps(2);
+}
+
+@keyframes crt-noise {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -5%); }
+  20% { transform: translate(-10%, 5%); }
+  30% { transform: translate(5%, -10%); }
+  40% { transform: translate(-5%, 15%); }
+  50% { transform: translate(-10%, 5%); }
+  60% { transform: translate(15%, 0); }
+  70% { transform: translate(0, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+/* Horizontal scanlines */
+.crt-overlay::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.15) 51%
+  );
+  background-size: 100% 4px;
+}
+
+/* Sweeping thick scanline */
+.crt-sweep {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15vh;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent
+  );
+  animation: scanline-sweep 10s linear infinite;
+}
+
+@keyframes scanline-sweep {
+  0% { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+
+/* ── Global Custom Scrollbars ────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.35) rgba(0, 0, 0, 0.2);
 }

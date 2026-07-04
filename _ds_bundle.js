@@ -33,17 +33,17 @@ function Button({
 }) {
   const sizes = {
     sm: {
-      padding: '7px 14px',
+      padding: '5px 24px',
       fontSize: 13,
       gap: 7
     },
     md: {
-      padding: '10px 20px',
+      padding: '8px 32px',
       fontSize: 14,
       gap: 8
     },
     lg: {
-      padding: '14px 28px',
+      padding: '10px 48px',
       fontSize: 15,
       gap: 10
     }
@@ -59,8 +59,8 @@ function Button({
     fontSize: s.fontSize,
     fontWeight: 600,
     lineHeight: 1,
-    letterSpacing: '-0.005em',
-    borderRadius: 'var(--radius-sm)',
+    letterSpacing: 0,
+    borderRadius: '4px',
     border: '1px solid transparent',
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.45 : 1,
@@ -70,36 +70,29 @@ function Button({
   };
   const variants = {
     primary: {
-      background: 'var(--accent)',
-      color: '#fff',
-      boxShadow: 'var(--shadow-xs)'
+      background: 'transparent',
+      color: 'var(--accent)',
+      borderColor: 'var(--accent)',
+      boxShadow: 'none'
     },
     outline: {
       background: 'transparent',
       color: 'var(--accent)',
-      borderColor: 'var(--accent)'
+      borderColor: 'var(--accent)',
+      boxShadow: 'none'
     },
     ghost: {
       background: 'transparent',
-      color: 'var(--text)'
+      color: 'var(--accent)',
+      borderColor: 'var(--accent)',
+      boxShadow: 'none'
     }
   };
-  const hoverEnter = e => {
-    if (disabled) return;
-    e.currentTarget.style.transform = 'translateY(-1px)';
-    if (variant === 'primary') e.currentTarget.style.background = 'var(--accent-hover)';
-    if (variant === 'outline') {
-      e.currentTarget.style.background = 'var(--accent-tint)';
-    }
-    if (variant === 'ghost') e.currentTarget.style.background = 'var(--accent-tint)';
-  };
-  const hoverLeave = e => {
-    if (disabled) return;
-    e.currentTarget.style.transform = 'translateY(0)';
-    e.currentTarget.style.background = variants[variant].background;
-  };
+  const hoverEnter = e => {};
+  const hoverLeave = e => {};
   const Tag = href ? 'a' : as;
   return /*#__PURE__*/React.createElement(Tag, _extends({
+    className: 'btn-fill-hover',
     href: href,
     disabled: href ? undefined : disabled,
     style: {
@@ -141,7 +134,7 @@ function MetricStat({
       fontWeight: 700,
       fontSize: 'clamp(32px, 4vw, 44px)',
       lineHeight: 1,
-      letterSpacing: '-0.03em',
+      letterSpacing: 0,
       color: accent ? 'var(--accent)' : 'var(--text-strong)',
       fontVariantNumeric: 'tabular-nums'
     }
@@ -222,7 +215,6 @@ function SectionHeader({
   style = {}
 }) {
   const containerRef = React.useRef(null);
-  const triggeredRef = React.useRef(false);
   const hoverCooldown = React.useRef(false);
   const [indexText, runIndex] = useScramble(index ?? '');
   const [kickerText, runKicker] = useScramble(kicker ?? '');
@@ -238,9 +230,7 @@ function SectionHeader({
     const el = containerRef.current;
     if (!el) return;
     const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !triggeredRef.current) {
-        triggeredRef.current = true;
-        obs.disconnect();
+      if (entry.isIntersecting) {
         trigger();
       }
     }, {
@@ -474,7 +464,7 @@ function ProjectCard({
       fontSize: 24,
       color: 'var(--text-strong)',
       lineHeight: 1,
-      letterSpacing: '-0.02em',
+      letterSpacing: 0,
       fontVariantNumeric: 'tabular-nums'
     }
   }, m.value), /*#__PURE__*/React.createElement("div", {
@@ -530,23 +520,23 @@ Object.assign(__ds_scope, { ProjectCard });
 // components/interactive/ArchitectureFlow.jsx
 try { (() => {
 const DEFAULT_STAGES = [{
-  label: 'User',
-  sub: '10K req/day'
+  label: 'Intent',
+  sub: 'User Query'
 }, {
-  label: 'ALB',
-  sub: 'CloudFront'
+  label: 'Router',
+  sub: 'LangGraph'
 }, {
-  label: 'API',
-  sub: 'FastAPI'
+  label: 'Context',
+  sub: 'Qdrant RAG'
 }, {
-  label: 'Queue',
-  sub: 'ARQ · Redis'
+  label: 'Reasoning',
+  sub: 'LLM Agent'
 }, {
-  label: 'Workers',
-  sub: 'async'
+  label: 'Action',
+  sub: 'Tool Exec'
 }, {
-  label: 'DB',
-  sub: 'Postgres 16'
+  label: 'Synthesis',
+  sub: 'Final Output'
 }];
 
 /**
@@ -832,19 +822,19 @@ function MagneticButton({
       alignItems: 'center',
       justifyContent: 'center',
       gap: 8,
-      padding: '14px 28px',
+      padding: '10px 48px',
       fontFamily: 'var(--font-sans)',
       fontSize: 15,
       fontWeight: 600,
-      borderRadius: 'var(--radius-pill)',
+      borderRadius: '4px',
       cursor: 'pointer',
       textDecoration: 'none',
-      border: isSolid ? '1px solid transparent' : '1px solid var(--accent)',
-      background: isSolid ? 'var(--accent)' : 'transparent',
-      color: isSolid ? '#fff' : 'var(--accent)',
-      transform: `translate(${t.x}px, ${t.y}px)`,
-      transition: 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s, box-shadow 0.25s',
-      boxShadow: t.x || t.y ? '0 10px 30px var(--glow-teal)' : 'none',
+      border: '1px solid var(--accent)',
+      background: 'transparent',
+      color: 'var(--accent)',
+      transform: 'none',
+      transition: 'background 0.2s, box-shadow 0.25s',
+      boxShadow: 'none',
       willChange: 'transform',
       ...style
     }
@@ -1291,7 +1281,7 @@ function SkillConstellation({
         // label
         if (isHover || a.size >= 13) {
           const fs = Math.round((isHover ? 13 : 11) * zoom);
-          ctx.font = `${isHover ? 600 : 500} ${fs}px 'IBM Plex Mono', monospace`;
+          ctx.font = `${isHover ? 600 : 500} ${fs}px 'Halvar Mono', 'IBM Plex Mono', monospace`;
           ctx.fillStyle = isHover ? '#e8ecec' : 'rgba(232,236,236,0.6)';
           ctx.globalAlpha = dim ? 0.3 : 1;
           ctx.textAlign = 'center';
@@ -1512,7 +1502,7 @@ function PortfolioAbout() {
         fontWeight: 700,
         fontSize: 16,
         color: 'var(--text-strong)',
-        letterSpacing: '-0.02em',
+        letterSpacing: 0,
         margin: '0 0 10px'
       }
     }, title), /*#__PURE__*/React.createElement("p", {
@@ -1754,7 +1744,7 @@ function PortfolioContact() {
       fontWeight: 700,
       fontSize: 'clamp(34px,6vw,68px)',
       lineHeight: 1.02,
-      letterSpacing: '-0.03em',
+      letterSpacing: 0,
       color: '#fff',
       margin: '0 0 32px',
       maxWidth: '16ch'
@@ -2025,455 +2015,321 @@ Object.assign(window, {
 // ui_kits/portfolio/Hero.jsx
 try { (() => {
 /* Portfolio UI kit — hero. Deep night surface with an interactive
-   dot-matrix data field, accurate dev-tool marks, sharp CTAs, status strip. */
-
-// ─── Dot-Matrix Data Field ──────────────────────────────────────────────────
-// A structured grid of points whose brightness flows on a travelling wave,
-// crossed by a slow diagnostic scan band and bloomed under the cursor.
-function DotMatrix() {
-  const cvRef = React.useRef(null);
-  const st = React.useRef({
-    mx: -9999,
-    my: -9999,
-    t: 0
-  });
-  React.useEffect(() => {
-    const cv = cvRef.current;
-    const ctx = cv.getContext('2d');
-    let W, H, cols, rows, raf, dpr;
-    const GAP = 26;
-    const resize = () => {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      W = cv.offsetWidth;
-      H = cv.offsetHeight;
-      cv.width = Math.round(W * dpr);
-      cv.height = Math.round(H * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      cols = Math.ceil(W / GAP) + 1;
-      rows = Math.ceil(H / GAP) + 1;
-    };
-    const frame = () => {
-      const {
-        mx,
-        my,
-        t
-      } = st.current;
-      ctx.clearRect(0, 0, W, H);
-
-      // diagonal diagnostic scan position
-      const span = W + H + 400;
-      const scan = t * 1.4 % span - 200;
-      for (let i = 0; i < cols; i++) {
-        for (let j = 0; j < rows; j++) {
-          const x = i * GAP;
-          const y = j * GAP;
-
-          // travelling interference wave → base brightness
-          let v = 0.5 + 0.5 * Math.sin(x * 0.010 + y * 0.006 + t * 0.020) * Math.cos(y * 0.011 - x * 0.004 - t * 0.014);
-          v *= 0.5;
-
-          // scan band highlight
-          const sd = Math.abs(x + y - scan);
-          if (sd < 100) v += (1 - sd / 100) * 0.28;
-
-          // cursor bloom
-          const dx = x - mx,
-            dy = y - my;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 175) v += (1 - d / 175) * 0.95;
-          v = v < 0 ? 0 : v > 1 ? 1 : v;
-          const r = 0.5 + v * 2.2;
-          const a = 0.05 + v * 0.55;
-          const w = v > 0.6 ? (v - 0.6) / 0.4 : 0; // mix toward white at peaks
-          const cr = 52 + w * 200 | 0;
-          const cg = 184 + w * 71 | 0;
-          const cb = 112 + w * 143 | 0;
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, 6.2832);
-          ctx.fillStyle = `rgba(${cr},${cg},${cb},${a})`;
-          ctx.fill();
+   WebGL particle sphere rendered in Three.js. */
+// ─── Interactive Particle Sphere ─────────────────────────────────────────────
+function ParticleSphereBackground() {
+    const mountRef = React.useRef(null);
+    const pointer = React.useRef({ x: 0, y: 0 });
+    React.useEffect(() => {
+        const THREE = window.THREE;
+        const mount = mountRef.current;
+        if (!THREE || !mount)
+            return;
+        let W = 1, H = 1, raf = 0;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+        camera.position.set(0, 0, 7.8);
+        const renderer = new THREE.WebGLRenderer({
+            alpha: true,
+            antialias: true,
+            powerPreference: 'high-performance',
+        });
+        renderer.setClearColor(0x000000, 0);
+        renderer.domElement.style.position = 'absolute';
+        renderer.domElement.style.inset = '0';
+        renderer.domElement.style.width = '100%';
+        renderer.domElement.style.height = '100%';
+        renderer.domElement.style.display = 'block';
+        renderer.domElement.style.pointerEvents = 'none';
+        mount.appendChild(renderer.domElement);
+        const root = new THREE.Group();
+        scene.add(root);
+        const count = 1800;
+        const positions = new Float32Array(count * 3);
+        const basePositions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+        const phases = new Float32Array(count);
+        const colorA = new THREE.Color(0xbf616a);
+        const colorB = new THREE.Color(0xd08770);
+        const colorC = new THREE.Color(0xebcb8b);
+        for (let i = 0; i < count; i++) {
+            const t = i / count;
+            const y = 1 - 2 * t;
+            const radius = Math.sqrt(Math.max(0, 1 - y * y));
+            const theta = i * 2.399963229728653;
+            const shell = 1.55 + Math.sin(i * 12.9898) * 0.08;
+            const x = Math.cos(theta) * radius * shell;
+            const z = Math.sin(theta) * radius * shell;
+            const iy = y * shell;
+            basePositions[i * 3] = positions[i * 3] = x;
+            basePositions[i * 3 + 1] = positions[i * 3 + 1] = iy;
+            basePositions[i * 3 + 2] = positions[i * 3 + 2] = z;
+            phases[i] = Math.sin(i * 78.233) * Math.PI;
+            const color = t < 0.55 ? colorA.clone().lerp(colorB, t / 0.55) : colorB.clone().lerp(colorC, (t - 0.55) / 0.45);
+            colors[i * 3] = color.r;
+            colors[i * 3 + 1] = color.g;
+            colors[i * 3 + 2] = color.b;
         }
-      }
-      st.current.t++;
-      raf = requestAnimationFrame(frame);
-    };
-    resize();
-    frame();
-    const parent = cv.parentElement;
-    const onResize = () => resize();
-    const onMouse = e => {
-      const rct = cv.getBoundingClientRect();
-      st.current.mx = e.clientX - rct.left;
-      st.current.my = e.clientY - rct.top;
-    };
-    const onLeave = () => {
-      st.current.mx = -9999;
-      st.current.my = -9999;
-    };
-    window.addEventListener('resize', onResize);
-    parent.addEventListener('mousemove', onMouse);
-    parent.addEventListener('mouseleave', onLeave);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener('resize', onResize);
-      parent.removeEventListener('mousemove', onMouse);
-      parent.removeEventListener('mouseleave', onLeave);
-    };
-  }, []);
-  return /*#__PURE__*/React.createElement("canvas", {
-    ref: cvRef,
-    style: {
-      position: 'absolute',
-      inset: 0,
-      width: '100%',
-      height: '100%',
-      display: 'block'
-    }
-  });
+        const particleGeometry = new THREE.BufferGeometry();
+        particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+        const particleMaterial = new THREE.PointsMaterial({
+            size: 0.026,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.86,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+            sizeAttenuation: true,
+        });
+        const particleSphere = new THREE.Points(particleGeometry, particleMaterial);
+        root.add(particleSphere);
+        const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.58, 2), new THREE.MeshBasicMaterial({
+            color: 0x2dd4bf,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.1,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        }));
+        root.add(core);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+            color: 0x5eead4,
+            transparent: true,
+            opacity: 0.18,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        });
+        const rings = [];
+        [
+            { radius: 1.86, tube: 0.006, x: Math.PI / 2.7, y: 0.2, z: -0.2 },
+            { radius: 1.7, tube: 0.005, x: Math.PI / 2, y: 0.65, z: 0.35 },
+            { radius: 1.46, tube: 0.004, x: Math.PI / 1.9, y: -0.55, z: -0.1 },
+        ].forEach(spec => {
+            const ring = new THREE.Mesh(new THREE.TorusGeometry(spec.radius, spec.tube, 8, 180), ringMaterial.clone());
+            ring.rotation.set(spec.x, spec.y, spec.z);
+            root.add(ring);
+            rings.push(ring);
+        });
+        const linkMaterial = new THREE.LineBasicMaterial({
+            color: 0x5eead4,
+            transparent: true,
+            opacity: 0.14,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        });
+        const linkGeometry = new THREE.BufferGeometry();
+        const linkPositions = [];
+        for (let i = 0; i < 190; i += 2) {
+            const a = i * 7;
+            const b = (a + 37 + (i % 11)) % count;
+            linkPositions.push(basePositions[a * 3], basePositions[a * 3 + 1], basePositions[a * 3 + 2], basePositions[b * 3], basePositions[b * 3 + 1], basePositions[b * 3 + 2]);
+        }
+        linkGeometry.setAttribute('position', new THREE.Float32BufferAttribute(linkPositions, 3));
+        const links = new THREE.LineSegments(linkGeometry, linkMaterial);
+        root.add(links);
+        const resize = () => {
+            const rect = mount.getBoundingClientRect();
+            W = Math.max(1, rect.width);
+            H = Math.max(1, rect.height);
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.8);
+            renderer.setPixelRatio(dpr);
+            renderer.setSize(W, H, false);
+            camera.aspect = W / H;
+            camera.updateProjectionMatrix();
+            const mobile = W < 760;
+            root.position.set(mobile ? 2.05 : 1.62, mobile ? -1.2 : -0.05, 0);
+            root.scale.setScalar(mobile ? 0.64 : 1.06);
+        };
+        const onPointer = (e) => {
+            const rect = mount.getBoundingClientRect();
+            pointer.current.x = ((e.clientX - rect.left) / rect.width - 0.5) || 0;
+            pointer.current.y = ((e.clientY - rect.top) / rect.height - 0.5) || 0;
+        };
+        const clock = new THREE.Clock();
+        const frame = () => {
+            const elapsed = clock.getElapsedTime();
+            const px = pointer.current.x;
+            const py = pointer.current.y;
+            const attr = particleGeometry.attributes.position;
+            for (let i = 0; i < count; i++) {
+                const ix = i * 3;
+                const bx = basePositions[ix];
+                const by = basePositions[ix + 1];
+                const bz = basePositions[ix + 2];
+                const side = bx * px - by * py;
+                const pulse = 1 + Math.sin(elapsed * 1.6 + phases[i] + side * 1.7) * 0.035;
+                const cursorPush = Math.max(0, 1 - Math.hypot(bx / 1.8 - px * 1.2, by / 1.8 + py * 1.2)) * 0.12;
+                const scale = pulse + cursorPush;
+                positions[ix] = bx * scale;
+                positions[ix + 1] = by * scale;
+                positions[ix + 2] = bz * scale;
+            }
+            attr.needsUpdate = true;
+            root.rotation.x = -0.1 - py * 0.16 + Math.sin(elapsed * 0.25) * 0.025;
+            root.rotation.y = elapsed * 0.12 + px * 0.32;
+            root.rotation.z = Math.sin(elapsed * 0.18) * 0.04;
+            core.rotation.x = elapsed * 0.18;
+            core.rotation.y = -elapsed * 0.24;
+            rings.forEach((ring, i) => {
+                ring.rotation.z += 0.0015 + i * 0.0006;
+            });
+            renderer.render(scene, camera);
+            raf = requestAnimationFrame(frame);
+        };
+        resize();
+        window.addEventListener('resize', resize);
+        window.addEventListener('pointermove', onPointer, { passive: true });
+        frame();
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener('resize', resize);
+            window.removeEventListener('pointermove', onPointer);
+            scene.traverse(obj => {
+                if (obj.geometry)
+                    obj.geometry.dispose();
+                if (obj.material) {
+                    const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+                    materials.forEach(mat => {
+                        if (mat.map)
+                            mat.map.dispose();
+                        mat.dispose();
+                    });
+                }
+                if (obj.userData && obj.userData.dispose)
+                    obj.userData.dispose();
+            });
+            renderer.dispose();
+            if (renderer.domElement.parentNode)
+                renderer.domElement.parentNode.removeChild(renderer.domElement);
+        };
+    }, []);
+    return (React.createElement("div", { ref: mountRef, "data-particle-sphere": true, "aria-hidden": "true", style: { position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0, pointerEvents: 'none' } }));
 }
-
 // ─── Sharp CTA Buttons ──────────────────────────────────────────────────────
-function SharpCTA({
-  children,
-  onClick,
-  href,
-  variant
-}) {
-  const [hov, setHov] = React.useState(false);
-  const Tag = href ? 'a' : 'button';
-  const isPrimary = !variant || variant === 'primary';
-  if (!isPrimary) {
-    return /*#__PURE__*/React.createElement(Tag, {
-      href: href,
-      onClick: onClick,
-      onMouseEnter: () => setHov(true),
-      onMouseLeave: () => setHov(false),
-      style: {
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 8,
-        background: 'none',
-        border: 'none',
-        cursor: 'pointer',
-        fontFamily: 'var(--font-mono)',
-        fontSize: 12,
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        color: hov ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
-        borderBottom: `1px solid ${hov ? 'rgba(255,255,255,0.35)' : 'transparent'}`,
-        transition: 'color 0.18s, border-color 0.18s',
-        textDecoration: 'none',
-        padding: '13px 0'
-      }
-    }, children, /*#__PURE__*/React.createElement("span", {
-      style: {
-        display: 'inline-block',
-        transform: hov ? 'translateX(4px)' : 'none',
-        transition: 'transform 0.18s'
-      }
-    }, "\u2192"));
-  }
-  return /*#__PURE__*/React.createElement(Tag, {
-    href: href,
-    onClick: onClick,
-    onMouseEnter: () => setHov(true),
-    onMouseLeave: () => setHov(false),
-    style: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 10,
-      padding: '13px 26px',
-      cursor: 'pointer',
-      textDecoration: 'none',
-      border: `1px solid ${hov ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)'}`,
-      borderRadius: 2,
-      background: hov ? '#fff' : 'rgba(255,255,255,0.05)',
-      color: hov ? '#070a0b' : '#fff',
-      fontFamily: 'var(--font-mono)',
-      fontSize: 12,
-      letterSpacing: '0.09em',
-      textTransform: 'uppercase',
-      fontWeight: 500,
-      transition: 'background 0.22s ease, color 0.22s, border-color 0.22s'
+function SharpCTA({ children, onClick, href, variant }) {
+    const [hov, setHov] = React.useState(false);
+    const Tag = href ? 'a' : 'button';
+    const isPrimary = !variant || variant === 'primary';
+    if (!isPrimary) {
+        return (React.createElement(Tag, { href: href, onClick: onClick, onMouseEnter: () => setHov(true), onMouseLeave: () => setHov(false), style: {
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: hov ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.4)',
+                borderBottom: `1px solid ${hov ? 'rgba(255,255,255,0.35)' : 'transparent'}`,
+                transition: 'color 0.18s, border-color 0.18s',
+                textDecoration: 'none', padding: '13px 0',
+            } },
+            children,
+            React.createElement("span", { style: { display: 'inline-block', transform: hov ? 'translateX(4px)' : 'none', transition: 'transform 0.18s' } }, "\u2192")));
     }
-  }, children, /*#__PURE__*/React.createElement("svg", {
-    width: "10",
-    height: "10",
-    viewBox: "0 0 10 10",
-    fill: "none",
-    style: {
-      transform: hov ? 'translate(2px,-2px)' : 'none',
-      transition: 'transform 0.22s'
-    }
-  }, /*#__PURE__*/React.createElement("path", {
-    d: "M1.5 8.5L8.5 1.5M8.5 1.5H2.5M8.5 1.5V7.5",
-    stroke: "currentColor",
-    strokeWidth: "1.4",
-    strokeLinecap: "round",
-    strokeLinejoin: "round"
-  })));
+    return (React.createElement(Tag, { href: href, onClick: onClick, onMouseEnter: () => setHov(true), onMouseLeave: () => setHov(false), style: {
+            display: 'inline-flex', alignItems: 'center', gap: 10,
+            padding: '13px 26px', cursor: 'pointer', textDecoration: 'none',
+            border: `1px solid ${hov ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.2)'}`,
+            borderRadius: 2,
+            background: hov ? '#fff' : 'rgba(255,255,255,0.05)',
+            color: hov ? '#000000' : '#fff',
+            fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.09em',
+            textTransform: 'uppercase', fontWeight: 500,
+            transition: 'background 0.22s ease, color 0.22s, border-color 0.22s',
+        } },
+        children,
+        React.createElement("svg", { width: "10", height: "10", viewBox: "0 0 10 10", fill: "none", style: { transform: hov ? 'translate(2px,-2px)' : 'none', transition: 'transform 0.22s' } },
+            React.createElement("path", { d: "M1.5 8.5L8.5 1.5M8.5 1.5H2.5M8.5 1.5V7.5", stroke: "currentColor", strokeWidth: "1.4", strokeLinecap: "round", strokeLinejoin: "round" }))));
 }
-
 // ─── Dev-Tool Marks ─────────────────────────────────────────────────────────
 // Claude — coral radial sunburst
-const ClaudeIcon = () => /*#__PURE__*/React.createElement("svg", {
-  width: "15",
-  height: "15",
-  viewBox: "0 0 44 44",
-  style: {
-    display: 'block'
-  }
-}, Array.from({
-  length: 11
-}).map((_, i) => {
-  const a = i / 11 * Math.PI * 2 - Math.PI / 2;
-  const inner = 3.2,
-    outer = 20;
-  return /*#__PURE__*/React.createElement("line", {
-    key: i,
-    x1: 22 + Math.cos(a) * inner,
-    y1: 22 + Math.sin(a) * inner,
-    x2: 22 + Math.cos(a) * outer,
-    y2: 22 + Math.sin(a) * outer,
-    stroke: "#D97757",
-    strokeWidth: "3.2",
-    strokeLinecap: "round"
-  });
-}));
-
-// Cursor — faceted isometric cube
-const CursorIcon = () => /*#__PURE__*/React.createElement("svg", {
-  width: "15",
-  height: "15",
-  viewBox: "0 0 44 44",
-  style: {
-    display: 'block'
-  }
-}, /*#__PURE__*/React.createElement("path", {
-  d: "M22 4 L38 13 L22 22 L6 13 Z",
-  fill: "#eceff1"
-}), /*#__PURE__*/React.createElement("path", {
-  d: "M6 13 L22 22 L22 40 L6 31 Z",
-  fill: "#878e94"
-}), /*#__PURE__*/React.createElement("path", {
-  d: "M38 13 L38 31 L22 40 L22 22 Z",
-  fill: "#b6bcc0"
-}));
-
-// Codex — OpenAI six-fold bloom
-const CodexIcon = () => /*#__PURE__*/React.createElement("svg", {
-  width: "15",
-  height: "15",
-  viewBox: "0 0 44 44",
-  style: {
-    display: 'block'
-  }
-}, /*#__PURE__*/React.createElement("g", {
-  transform: "translate(22,22)",
-  fill: "rgba(255,255,255,0.85)"
-}, [0, 60, 120, 180, 240, 300].map(deg => /*#__PURE__*/React.createElement("rect", {
-  key: deg,
-  x: "-2.3",
-  y: "-19",
-  width: "4.6",
-  height: "13",
-  rx: "2.3",
-  transform: `rotate(${deg})`
-})), /*#__PURE__*/React.createElement("circle", {
-  r: "2.5"
+const ClaudeIcon = () => (React.createElement("svg", { width: "15", height: "15", viewBox: "0 0 44 44", style: { display: 'block' } }, Array.from({ length: 11 }).map((_, i) => {
+    const a = (i / 11) * Math.PI * 2 - Math.PI / 2;
+    const inner = 3.2, outer = 20;
+    return (React.createElement("line", { key: i, x1: 22 + Math.cos(a) * inner, y1: 22 + Math.sin(a) * inner, x2: 22 + Math.cos(a) * outer, y2: 22 + Math.sin(a) * outer, stroke: "#D97757", strokeWidth: "3.2", strokeLinecap: "round" }));
 })));
-
+// Cursor — faceted isometric cube
+const CursorIcon = () => (React.createElement("svg", { width: "15", height: "15", viewBox: "0 0 44 44", style: { display: 'block' } },
+    React.createElement("path", { d: "M22 4 L38 13 L22 22 L6 13 Z", fill: "#eceff1" }),
+    React.createElement("path", { d: "M6 13 L22 22 L22 40 L6 31 Z", fill: "#878e94" }),
+    React.createElement("path", { d: "M38 13 L38 31 L22 40 L22 22 Z", fill: "#b6bcc0" })));
+// Codex — OpenAI six-fold bloom
+const CodexIcon = () => (React.createElement("svg", { width: "15", height: "15", viewBox: "0 0 44 44", style: { display: 'block' } },
+    React.createElement("g", { transform: "translate(22,22)", fill: "rgba(255,255,255,0.85)" },
+        [0, 60, 120, 180, 240, 300].map(deg => (React.createElement("rect", { key: deg, x: "-2.3", y: "-19", width: "4.6", height: "13", rx: "2.3", transform: `rotate(${deg})` }))),
+        React.createElement("circle", { r: "2.5" }))));
 // ─── Hero ────────────────────────────────────────────────────────────────────
-function PortfolioHero({
-  onNav
-}) {
-  return /*#__PURE__*/React.createElement("header", {
-    style: {
-      position: 'relative',
-      minHeight: '92vh',
-      overflow: 'hidden',
-      background: 'var(--night-800)'
-    }
-  }, /*#__PURE__*/React.createElement(DotMatrix, null), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'absolute',
-      inset: 0,
-      zIndex: 1,
-      pointerEvents: 'none',
-      background: 'radial-gradient(120% 90% at 50% 0%, transparent 38%, rgba(7,10,11,0.72) 100%)'
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'absolute',
-      inset: 0,
-      zIndex: 1,
-      pointerEvents: 'none',
-      background: 'linear-gradient(90deg, rgba(7,10,11,0.78) 0%, rgba(7,10,11,0.35) 38%, transparent 64%)'
-    }
-  }), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'relative',
-      zIndex: 2,
-      maxWidth: 1180,
-      margin: '0 auto',
-      padding: 'clamp(40px,8vh,100px) clamp(20px,5vw,56px) 160px',
-      pointerEvents: 'none'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: 10,
-      marginBottom: 26
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-mono)',
-      fontSize: 11,
-      letterSpacing: '0.14em',
-      textTransform: 'uppercase',
-      color: 'var(--night-muted)'
-    }
-  }, "AI Engineer\xA0\xA0/\xA0\xA0New York")), /*#__PURE__*/React.createElement("h1", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 700,
-      fontSize: 'clamp(40px, 8vw, 88px)',
-      lineHeight: 0.98,
-      letterSpacing: '-0.035em',
-      color: '#fff',
-      margin: 0,
-      maxWidth: '14ch'
-    }
-  }, "Nishant", /*#__PURE__*/React.createElement("br", null), "Sharma"), /*#__PURE__*/React.createElement("p", {
-    style: {
-      fontFamily: 'var(--font-sans)',
-      fontSize: 'clamp(16px, 2vw, 20px)',
-      lineHeight: 1.6,
-      color: 'var(--night-fg)',
-      margin: '26px 0 0',
-      maxWidth: 560
-    }
-  }, "AI engineer building production multi-agent systems \u2014 and studying exactly where they fail, so they fail less.", ' ', /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--night-muted)'
-    }
-  }, "M.S. Computer Engineering, NYU Tandon \u201926.")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      gap: 18,
-      marginTop: 38,
-      flexWrap: 'wrap',
-      pointerEvents: 'auto'
-    }
-  }, /*#__PURE__*/React.createElement(SharpCTA, {
-    onClick: () => onNav('work')
-  }, "View the work"), /*#__PURE__*/React.createElement(SharpCTA, {
-    variant: "ghost",
-    onClick: () => onNav('contact')
-  }, "Get in touch"))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0,
-      zIndex: 2,
-      borderTop: '1px solid var(--night-line)',
-      background: 'linear-gradient(180deg, transparent, rgba(7,10,11,0.66))',
-      backdropFilter: 'blur(4px)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      maxWidth: 1180,
-      margin: '0 auto',
-      padding: '16px clamp(20px,5vw,56px)',
-      display: 'flex',
-      gap: 'clamp(18px,5vw,56px)',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      fontFamily: 'var(--font-mono)',
-      fontSize: 12,
-      color: 'var(--night-muted)'
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 10
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontSize: 11,
-      letterSpacing: '0.1em',
-      textTransform: 'uppercase',
-      color: 'var(--night-faint)'
-    }
-  }, "Dev tools"), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    title: "Claude Code",
-    style: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  }, /*#__PURE__*/React.createElement(ClaudeIcon, null)), /*#__PURE__*/React.createElement("span", {
-    title: "Cursor",
-    style: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  }, /*#__PURE__*/React.createElement(CursorIcon, null)), /*#__PURE__*/React.createElement("span", {
-    title: "Codex",
-    style: {
-      display: 'flex',
-      alignItems: 'center'
-    }
-  }, /*#__PURE__*/React.createElement(CodexIcon, null))), /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--night-faint)',
-      fontSize: 10,
-      letterSpacing: '0.06em'
-    }
-  }, "Claude Code \xB7 Cursor \xB7 Codex")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'baseline',
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 700,
-      fontSize: 18,
-      color: '#fff'
-    }
-  }, "400+"), /*#__PURE__*/React.createElement("span", null, "Students mentored")), /*#__PURE__*/React.createElement("div", {
-    style: {
-      display: 'flex',
-      alignItems: 'baseline',
-      gap: 8
-    }
-  }, /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--font-display)',
-      fontWeight: 700,
-      fontSize: 18,
-      color: '#fff'
-    }
-  }, "99.9%"), /*#__PURE__*/React.createElement("span", null, "Uptime shipped")))), /*#__PURE__*/React.createElement("style", null, `
+function PortfolioHero({ onNav }) {
+    return (React.createElement("header", { style: { position: 'relative', minHeight: '100svh', overflow: 'hidden', background: 'var(--night-800)', display: 'flex', flexDirection: 'column', justifyContent: 'center' } },
+        React.createElement(ParticleSphereBackground, null),
+        React.createElement("div", { style: {
+                position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+                background: 'radial-gradient(120% 90% at 50% 0%, transparent 38%, rgba(7,10,11,0.72) 100%)',
+            } }),
+        React.createElement("div", { style: {
+                position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+                background: 'linear-gradient(90deg, rgba(7,10,11,0.78) 0%, rgba(7,10,11,0.35) 38%, transparent 64%)',
+            } }),
+        React.createElement("div", { style: {
+                position: 'relative', zIndex: 2, maxWidth: 1240, width: '100%', margin: '0 auto',
+                padding: 'clamp(40px,8vh,100px) clamp(20px,4vw,40px) 160px',
+                pointerEvents: 'none',
+                display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+            } },
+            React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 26 } },
+                React.createElement("span", { style: { fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--night-muted)' } }, "AI Engineer\u00A0\u00A0/\u00A0\u00A0New York")),
+            React.createElement("h1", { style: {
+                    fontFamily: 'var(--font-display)', fontWeight: 700,
+                    fontSize: 'clamp(40px, 8.8vw, 96px)', lineHeight: 0.98, letterSpacing: 0,
+                    color: '#fff', margin: 0, maxWidth: '15ch',
+                    display: 'inline-block', transform: 'scaleX(1.08)', transformOrigin: 'left center',
+                } },
+                "Nishant",
+                React.createElement("br", null),
+                "Sharma"),
+            React.createElement("p", { style: {
+                    fontFamily: 'var(--font-sans)', fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.6,
+                    color: 'var(--night-fg)', margin: '26px 0 0', maxWidth: 560,
+                } }, "AI Engineer developing Production agent systems, grounded in ML Research."),
+            React.createElement("div", { style: { display: 'flex', gap: 18, marginTop: 38, flexWrap: 'wrap', pointerEvents: 'auto' } },
+                React.createElement(SharpCTA, { onClick: () => onNav('work') }, "View the work"),
+                React.createElement(SharpCTA, { variant: "ghost", onClick: () => onNav('contact') }, "Get in touch"))),
+        React.createElement("div", { style: {
+                position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 2,
+                borderTop: '1px solid var(--night-line)',
+                background: 'linear-gradient(180deg, transparent, rgba(7,10,11,0.66))',
+                backdropFilter: 'blur(4px)',
+            } },
+            React.createElement("div", { className: "hero-metrics", style: {
+                    maxWidth: 1180, margin: '0 auto',
+                    padding: '16px clamp(20px,5vw,56px)',
+                    display: 'flex', gap: 'clamp(18px,5vw,56px)', flexWrap: 'wrap', alignItems: 'center',
+                    fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--night-muted)',
+                } },
+                React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+                    React.createElement("span", { className: "devtools-label", style: { fontSize: 11, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--night-faint)' } }, "Dev tools"),
+                    React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+                        React.createElement("span", { title: "Claude Code", style: { display: 'flex', alignItems: 'center' } },
+                            React.createElement(ClaudeIcon, null)),
+                        React.createElement("span", { title: "Cursor", style: { display: 'flex', alignItems: 'center' } },
+                            React.createElement(CursorIcon, null)),
+                        React.createElement("span", { title: "Codex", style: { display: 'flex', alignItems: 'center' } },
+                            React.createElement(CodexIcon, null))),
+                    React.createElement("span", { style: { color: 'var(--night-faint)', fontSize: 10, letterSpacing: '0.06em' } }, "Claude Code \u00B7 Cursor \u00B7 Codex")),
+                React.createElement("div", { style: { display: 'flex', alignItems: 'baseline', gap: 8 } },
+                    React.createElement("span", { style: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#fff' } }, "400+"),
+                    React.createElement("span", null, "Students mentored")),
+                React.createElement("div", { style: { display: 'flex', alignItems: 'baseline', gap: 8 } },
+                    React.createElement("span", { style: { fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 18, color: '#fff' } }, "99.9%"),
+                    React.createElement("span", null, "Uptime shipped")))),
+        React.createElement("style", null, `
         @keyframes hpulse {
           0%,100% { opacity:1; transform:scale(1); }
           50%      { opacity:.4; transform:scale(.8); }
         }
-      `));
+      `)));
 }
-Object.assign(window, {
-  PortfolioHero
-});
+Object.assign(window, { PortfolioHero });
+
 })(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/portfolio/Hero.jsx", error: String((e && e.message) || e) }); }
 
 // ui_kits/portfolio/Nav.jsx
@@ -2925,7 +2781,7 @@ function SitePet() {
         ctx.rotate(-rot);
         ctx.scale(sDir, 1);
         ctx.globalAlpha = a;
-        ctx.font = "700 13px 'IBM Plex Mono', monospace";
+        ctx.font = "700 13px 'Halvar Mono', 'IBM Plex Mono', monospace";
         ctx.fillStyle = '#34b870';
         ctx.textAlign = 'center';
         ctx.fillText('hi!', 0, -BH / 2 - 28);
@@ -3104,7 +2960,7 @@ function SitePet() {
       border: '1px solid rgba(52,184,112,0.26)',
       borderRadius: 4,
       padding: '8px 14px',
-      fontFamily: "'IBM Plex Mono', monospace",
+      fontFamily: "'Halvar Mono', 'IBM Plex Mono', monospace",
       fontSize: 12,
       letterSpacing: '0.02em',
       color: 'rgba(232,236,236,0.88)',

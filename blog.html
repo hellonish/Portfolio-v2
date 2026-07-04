@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="nord-terminal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogs — Nishant Sharma</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  
+  <!-- Hooking into the main app CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  
+  <style>
+    body {
+      background: var(--night-900);
+      color: var(--night-fg);
+      font-family: var(--font-sans);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Cover Image for dedicated post (No gradient, exact Notion style) */
+    .cover {
+      width: 100%;
+      height: 40vh;
+      min-height: 250px;
+      background-color: var(--night-800);
+      background-size: cover;
+      background-position: center;
+      display: none;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 60px 24px 120px;
+    }
+
+    /* System Ledger Listing (Mimicking main page Work/Research sections) */
+    .ledger-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 40px;
+    }
+    .ledger-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 32px;
+      border-left: 2px solid transparent;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .ledger-item:hover {
+      background: rgba(255, 255, 255, 0.025);
+      border-left-color: var(--accent);
+    }
+    .ledger-item-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .ledger-item-meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--night-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .ledger-item-read {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .ledger-item:hover .ledger-item-read {
+      opacity: 1;
+    }
+
+    /* Back Button */
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--night-muted);
+      text-decoration: none;
+      margin-bottom: 48px;
+      transition: color 0.2s;
+    }
+    .nav-back:hover {
+      color: var(--accent);
+    }
+
+    /* Markdown Document Styles (Notion aesthetic perfectly mapped to Nord-Terminal Theme) */
+    .content h1 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 40px 0;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+    }
+    .content h2 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: #fff;
+      margin: 64px 0 24px 0;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--night-line);
+    }
+    .content h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      margin: 40px 0 16px 0;
+    }
+    .content p {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      line-height: 1.7;
+      color: var(--night-fg);
+      margin-bottom: 24px;
+    }
+    .content a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .content a:hover {
+      border-bottom-color: var(--accent);
+    }
+    .content ul, .content ol {
+      padding-left: 24px;
+      margin-bottom: 32px;
+      color: var(--night-fg);
+      font-size: 17px;
+      line-height: 1.7;
+    }
+    .content li { margin-bottom: 12px; }
+    .content blockquote {
+      margin: 40px 0;
+      padding: 24px 32px;
+      border-left: 3px solid var(--accent);
+      background: rgba(255,255,255,0.02);
+      font-style: italic;
+      color: var(--night-muted);
+    }
+    .content pre {
+      background-color: #0b0d11;
+      padding: 24px;
+      border-radius: 8px;
+      overflow-x: auto;
+      border: 1px solid var(--night-line);
+      margin: 32px 0;
+    }
+    .content code {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      background-color: rgba(255,255,255,0.05);
+      padding: 3px 6px;
+      border-radius: 4px;
+      color: #fff;
+    }
+    .content pre code {
+      padding: 0;
+      background: transparent;
+      color: var(--night-fg);
+    }
+    .content img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 48px 0;
+      border: 1px solid var(--night-line);
+    }
+    .loader {
+      font-family: var(--font-mono);
+      color: var(--night-muted);
+      text-align: center;
+      padding: 100px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cover Image (Hidden on index, no gradient) -->
+  <div class="cover" id="cover-img"></div>
+
+  <div class="container">
+    <a href="/" class="nav-back">← cd ..</a>
+    
+    <div id="content" class="content">
+      <div class="loader">Fetching document...</div>
+    </div>
+  </div>
+
+  <script>
+    const covers = [
+      'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=2000&q=80', // Cyberpunk board
+      'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80', // Earth connection
+      'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2000&q=80', // Microchip
+      'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=2000&q=80', // Matrix code
+      'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=2000&q=80'  // AI Brain
+    ];
+
+    const allBlogs = [
+      { slug: 'PROJECT_SHOWCASE_SINGULARITY', title: 'Singularity — Multi-Agent OS', cat: 'SWE / AI', desc: 'A real-time edge architecture handling parallel LLM agent generation.' },
+      { slug: 'PROJECT_SHOWCASE_Snap2Caption', title: 'Snap2Caption — VLMs on Edge', cat: 'ML Engineering', desc: 'Deploying highly quantized Vision Language Models on edge devices.' },
+      { slug: 'PROJECT_SHOWCASE_RoBERTa_AGNews_LoRA', title: 'Parameter-Efficient Fine-Tuning of RoBERTa', cat: 'ML Engineering', desc: 'LoRA applied to RoBERTa for text classification on AGNews.' },
+      { slug: 'PROJECT_SHOWCASE_CIFAR10_ResNet', title: 'Improved ResNet for CIFAR-10', cat: 'ML Engineering', desc: 'Optimizations and augmentations pushing ResNet boundary on CIFAR-10.' },
+      { slug: 'PROJECT_SHOWCASE_PGDR', title: 'PGDR: Persistent Gradient Disagreement Reweighting', cat: 'ML Research', desc: 'Gradient-level intervention for spurious-correlation mitigation in CNNs.' },
+      { slug: 'PROJECT_SHOWCASE_SMOLSolver', title: 'SMOLSolver — Verifier-Guided Reasoning', cat: 'ML Research', desc: 'Lightweight dual-model framework for step-level math reasoning verification.' },
+      { slug: 'PROJECT_SHOWCASE_CrossDomainSuperResolution', title: 'Cross-Domain Robustness in Super-Resolution', cat: 'ML Research', desc: 'Benchmarking EDSR, SwinIR, and Stable Diffusion across datasets.' },
+      { slug: 'PROJECT_SHOWCASE_JailbreakingDeepModels', title: 'Jailbreaking Deep Vision Models', cat: 'ML Research', desc: 'Evaluating adversarial robustness of ResNet using PGD and FGSM attacks.' }
+    ];
+
+    async function loadPost() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const postName = urlParams.get('post');
+      const contentEl = document.getElementById('content');
+      
+      if (!postName) {
+        // Render System Ledger Index
+        document.title = "Blogs — Nishant Sharma";
+        let html = '<h1 style="font-family:var(--font-display); font-size:42px; margin-bottom: 8px; color:#fff;">System Archives</h1>';
+        html += '<p style="color:var(--night-muted); font-family:var(--font-mono); font-size:12px; margin-bottom: 32px; letter-spacing:0.05em;">SELECT A DOCUMENT TO READ CONTENT</p>';
+        html += '<div class="ledger-list">';
+        for (const blog of allBlogs) {
+          html += `
+            <a href="?post=${blog.slug}" class="ledger-item">
+              <div>
+                <div class="ledger-item-title">${blog.title}</div>
+                <div class="ledger-item-meta">${blog.cat}</div>
+              </div>
+              <div class="ledger-item-read">READ DOCUMENT ↗</div>
+            </a>
+          `;
+        }
+        html += '</div>';
+        contentEl.innerHTML = html;
+        return;
+      }
+
+      // Render Specific Blog Post
+      const coverEl = document.getElementById('cover-img');
+      const hash = postName.split('').reduce((a, b) => { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
+      coverEl.style.backgroundImage = `url('${covers[Math.abs(hash) % covers.length]}')`;
+      coverEl.style.display = 'block';
+
+      try {
+        const response = await fetch(`/projects/${postName}.md`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch document: ${response.statusText}`);
+        }
+        const text = await response.text();
+        
+        // Parse markdown
+        contentEl.innerHTML = marked.parse(text);
+        
+        // Update document title to the first h1
+        const h1 = document.querySelector('.content h1');
+        if (h1) {
+          document.title = h1.innerText + " — Nishant Sharma";
+        }
+      } catch (error) {
+        contentEl.innerHTML = `<h1>System Error</h1><p>${error.message}</p>`;
+      }
+    }
+
+    loadPost();
+  </script>
+</body>
+</html>

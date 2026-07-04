@@ -62,7 +62,7 @@ function CustomCursor() {
           s.style.width  = arm + 'px';
           s.style.height = arm + 'px';
         });
-        ringRef.current.style.opacity = isHov ? '1' : '0.72';
+        ringRef.current.style.opacity = isHov ? '0' : '0.72';
       }
 
       raf = requestAnimationFrame(tick);
@@ -87,7 +87,7 @@ function CustomCursor() {
   const cornerBase = {
     position: 'absolute',
     width: 6, height: 6,
-    borderColor: 'rgba(52,184,112,0.9)',
+    borderColor: 'var(--accent)',
     transition: 'width 0.16s ease, height 0.16s ease',
   };
 
@@ -98,8 +98,8 @@ function CustomCursor() {
         position: 'fixed', top: 0, left: 0, zIndex: 99999,
         width: 4, height: 4, marginLeft: -2, marginTop: -2,
         borderRadius: '50%',
-        background: 'rgba(52,184,112,1)',
-        boxShadow: '0 0 6px 1px rgba(52,184,112,0.7)',
+        background: 'var(--accent)',
+        boxShadow: 'none',
         pointerEvents: 'none',
         transition: 'transform 0.08s ease',
         willChange: 'transform',
