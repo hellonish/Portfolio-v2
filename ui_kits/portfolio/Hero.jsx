@@ -143,8 +143,8 @@ function ParticleSphereBackground() {
       camera.aspect = W / H;
       camera.updateProjectionMatrix();
       const mobile = W < 760;
-      root.position.set(mobile ? 2.05 : 1.62, mobile ? -1.2 : -0.05, 0);
-      root.scale.setScalar(mobile ? 0.64 : 1.06);
+      root.position.set(mobile ? 1.0 : 1.62, mobile ? -0.8 : -0.05, 0);
+      root.scale.setScalar(mobile ? 0.8 : 1.06);
     };
 
     const onPointer = (e) => {
@@ -315,7 +315,7 @@ const CodexIcon = () => (
 function PortfolioHero({ onNav }) {
   return (
     <section id="top" className="snap-section" data-theme="night" style={{ 
-      position: 'relative', minHeight: '100svh', overflow: 'hidden', 
+      position: 'relative', height: '100vh', overflow: 'hidden', 
       background: 'var(--night-900)',
       display: 'flex', flexDirection: 'column'
     }}>

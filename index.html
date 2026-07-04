@@ -63,6 +63,7 @@
   <script src="_ds_bundle.js"></script>
 
   <script type="text/babel" src="ui_kits/portfolio/Cursor.jsx"></script>
+  <script type="text/babel" src="ui_kits/portfolio/CustomSelect.jsx"></script>
   <script type="text/babel" src="ui_kits/portfolio/Nav.jsx"></script>
   <script type="text/babel" src="ui_kits/portfolio/Hero.jsx"></script>
   <script type="text/babel" src="ui_kits/portfolio/About.jsx"></script>
@@ -112,9 +113,7 @@
         <div id="app" ref={appRef}>
           <CustomCursor />
           <PortfolioNav onNav={nav} active={active} />
-          <div style={{ marginTop: -64 }}>
-            <PortfolioHero onNav={nav} />
-          </div>
+          <PortfolioHero onNav={nav} />
           <PortfolioAbout />
           <PortfolioWork />
           <PortfolioResearch />

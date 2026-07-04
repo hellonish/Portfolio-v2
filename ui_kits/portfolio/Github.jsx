@@ -48,6 +48,13 @@ function PortfolioGithub() {
     { label: 'OSS signal', value: '342 stars · 54 forks' }
   ];
 
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 860);
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 860);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <section id="github" className="snap-section" data-theme="night" style={{ 
       background: 'var(--night-900)', 
@@ -59,20 +66,20 @@ function PortfolioGithub() {
           <SectionHeader index="06" kicker="Open Source" title="GitHub" />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1.2fr)', gap: 'clamp(32px, 6vw, 64px)', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1fr) minmax(0,1.2fr)', gap: 'clamp(32px, 6vw, 64px)', alignItems: 'center' }}>
           
           {/* Left Stats Dashboard */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
             <p style={{ font: 'var(--text-body)', color: 'var(--night-muted)', maxWidth: 460, marginBottom: 16 }}>
               Most of my core research, tooling, and system architectures are built in public.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? 16 : 24 }}>
               {stats.map((s, i) => (
-                <div key={i} style={{ gridColumn: i === 3 ? '1 / -1' : 'auto' }}>
+                <div key={i} style={{ gridColumn: (i === 3 && !isMobile) ? '1 / -1' : 'auto' }}>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
                     {s.label}
                   </div>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: i === 3 ? 20 : 28, color: 'var(--accent)' }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: i === 3 ? (isMobile ? 14 : 20) : (isMobile ? 18 : 28), color: 'var(--accent)' }}>
                     {s.value}
                   </div>
                 </div>
@@ -81,22 +88,22 @@ function PortfolioGithub() {
           </div>
 
           {/* Right Heatmap */}
-          <div style={{ background: 'var(--night-800)', border: '1px solid var(--border)', borderRadius: 8, padding: '32px', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+          <div style={{ background: 'var(--night-800)', border: '1px solid var(--border)', borderRadius: 8, padding: isMobile ? '16px 12px' : '32px', display: 'flex', flexDirection: 'column' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 8 }}>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: '#fff' }}>
                 <a href="https://github.com/hellonish" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none' }}>@hellonish ↗</a>
               </div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: isMobile ? 10 : 11, color: 'var(--night-muted)' }}>
                 1,402 contributions in the last year
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 4, overflowX: 'auto', paddingBottom: 8 }}>
+            <div style={{ display: 'flex', gap: isMobile ? 1 : 4, overflowX: 'auto', paddingBottom: 8 }}>
               {heatmapData.map((week, wIdx) => (
-                <div key={wIdx} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div key={wIdx} style={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 1 : 4 }}>
                   {week.map((level, dIdx) => (
                     <div key={dIdx} style={{ 
-                      width: 12, height: 12, borderRadius: 2, 
+                      width: isMobile ? 4 : 12, height: isMobile ? 4 : 12, borderRadius: isMobile ? 1 : 2, 
                       background: getColor(level),
                       transition: 'transform 0.2s',
                       cursor: 'pointer'
@@ -109,13 +116,13 @@ function PortfolioGithub() {
               ))}
             </div>
             
-            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 6, marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--night-muted)' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: isMobile ? 3 : 6, marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: isMobile ? 8 : 10, color: 'var(--night-muted)' }}>
               <span>Less</span>
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: 'rgba(255, 255, 255, 0.05)' }} />
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: 'rgba(74, 222, 128, 0.2)' }} />
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: 'rgba(74, 222, 128, 0.4)' }} />
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: 'rgba(74, 222, 128, 0.7)' }} />
-              <div style={{ width: 10, height: 10, borderRadius: 2, background: '#4ade80' }} />
+              <div style={{ width: isMobile ? 4 : 10, height: isMobile ? 4 : 10, borderRadius: isMobile ? 1 : 2, background: 'rgba(255, 255, 255, 0.05)' }} />
+              <div style={{ width: isMobile ? 4 : 10, height: isMobile ? 4 : 10, borderRadius: isMobile ? 1 : 2, background: 'rgba(74, 222, 128, 0.2)' }} />
+              <div style={{ width: isMobile ? 4 : 10, height: isMobile ? 4 : 10, borderRadius: isMobile ? 1 : 2, background: 'rgba(74, 222, 128, 0.4)' }} />
+              <div style={{ width: isMobile ? 4 : 10, height: isMobile ? 4 : 10, borderRadius: isMobile ? 1 : 2, background: 'rgba(74, 222, 128, 0.7)' }} />
+              <div style={{ width: isMobile ? 4 : 10, height: isMobile ? 4 : 10, borderRadius: isMobile ? 1 : 2, background: '#4ade80' }} />
               <span>More</span>
             </div>
           </div>

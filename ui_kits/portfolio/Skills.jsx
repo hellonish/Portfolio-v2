@@ -94,6 +94,7 @@ function AgenticTerminal({ activeCategory, groups }) {
 function PortfolioSkills() {
   const DS = window.NishantSharmaPortfolioDesignSystem_acfe10;
   const { SectionHeader } = DS;
+  const { CustomSelect } = window;
   const [activeCategory, setActiveCategory] = React.useState(null);
 
   const groups = [
@@ -109,6 +110,13 @@ function PortfolioSkills() {
     ['Dev Tools', 'Cursor · Codex · OpenCode · Claude Code'],
   ];
 
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 860);
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 860);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <section id="skills" className="snap-section" data-theme="night" style={{ 
       background: 'var(--night-800)', 
@@ -123,34 +131,44 @@ function PortfolioSkills() {
           Interactive terminal session. Select a subsystem to execute a diagnostic fetch across the stack.
         </p>
 
-        <div className="skills-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.5fr) minmax(0,1fr)', gap: 'clamp(20px,4vw,48px)', marginTop: 32, alignItems: 'stretch' }}>
-          <div style={{ position: 'relative', height: '55vh' }}>
+        <div className="skills-grid" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1.5fr) minmax(0,1fr)', gap: 'clamp(20px,4vw,48px)', marginTop: 32, alignItems: 'stretch' }}>
+          {isMobile && (
+            <CustomSelect
+              value={activeCategory}
+              onChange={v => setActiveCategory(v)}
+              options={groups.map(([title], i) => ({ value: i, label: title }))}
+              placeholder="-- Select Subsystem --"
+            />
+          )}
+          <div style={{ position: 'relative', height: isMobile ? '40vh' : '55vh' }}>
             <AgenticTerminal activeCategory={activeCategory} groups={groups} />
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, overflowY: 'auto', height: '55vh', paddingRight: 12 }}>
-            {groups.map(([title, body], i) => (
-              <div key={title} onClick={() => setActiveCategory(i)} style={{ 
-                padding: '12px 16px', 
-                border: `1px solid ${i === activeCategory ? 'var(--accent)' : 'var(--night-line)'}`, 
-                borderRadius: 'var(--radius-md)', 
-                background: i === activeCategory ? 'rgba(255,255,255,0.04)' : 'var(--night-700)',
-                cursor: 'pointer',
-                transition: 'border-color 0.2s, background 0.2s'
-              }}
-              onMouseEnter={(e) => { if (i !== activeCategory) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
-              onMouseLeave={(e) => { if (i !== activeCategory) e.currentTarget.style.background = 'var(--night-700)'; }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                  <span style={{ color: i === activeCategory ? 'var(--accent)' : 'var(--night-muted)', fontSize: 13, fontFamily: 'var(--font-mono)' }}>$</span>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: i === activeCategory ? '#fff' : 'var(--night-fg)' }}>
-                    {title}
+          {!isMobile && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, overflowY: 'auto', height: '55vh', paddingRight: 12 }}>
+              {groups.map(([title, body], i) => (
+                <div key={title} onClick={() => setActiveCategory(i)} style={{ 
+                  padding: '12px 16px', 
+                  border: `1px solid ${i === activeCategory ? 'var(--accent)' : 'var(--night-line)'}`, 
+                  borderRadius: 'var(--radius-md)', 
+                  background: i === activeCategory ? 'rgba(255,255,255,0.04)' : 'var(--night-700)',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.2s, background 0.2s'
+                }}
+                onMouseEnter={(e) => { if (i !== activeCategory) e.currentTarget.style.background = 'rgba(255,255,255,0.02)'; }}
+                onMouseLeave={(e) => { if (i !== activeCategory) e.currentTarget.style.background = 'var(--night-700)'; }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <span style={{ color: i === activeCategory ? 'var(--accent)' : 'var(--night-muted)', fontSize: 13, fontFamily: 'var(--font-mono)' }}>$</span>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', color: i === activeCategory ? '#fff' : 'var(--night-fg)' }}>
+                      {title}
+                    </div>
+                  </div>
+                  <div style={{ font: 'var(--text-body)', fontSize: 13, color: 'var(--night-muted)', lineHeight: 1.7 }}>
+                    {body.split('·').slice(0, 3).join('·')} {body.split('·').length > 3 ? '...' : ''}
                   </div>
                 </div>
-                <div style={{ font: 'var(--text-body)', fontSize: 13, color: 'var(--night-muted)', lineHeight: 1.7 }}>
-                  {body.split('·').slice(0, 3).join('·')} {body.split('·').length > 3 ? '...' : ''}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

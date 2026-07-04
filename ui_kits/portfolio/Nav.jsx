@@ -29,7 +29,7 @@ function PortfolioNav({ onNav, active }) {
   };
 
   return (
-    <div style={{ position: 'sticky', top: 24, zIndex: 100, display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
+    <div style={{ position: 'fixed', top: 24, left: 0, right: 0, zIndex: 100, display: 'flex', justifyContent: 'center', pointerEvents: 'none' }}>
       <nav style={{
         pointerEvents: 'auto',
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -87,18 +87,19 @@ function PortfolioNav({ onNav, active }) {
           : <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/></svg>
         }
       </button>
-
+    </nav>
       {/* Mobile menu overlay */}
       {menuOpen && (
         <div style={{
-          position: 'fixed', top: 64, left: 0, right: 0, bottom: 0,
+          position: 'fixed', top: 0, left: 0, right: 0, height: '100vh',
           background: 'rgba(7,10,11,0.97)', backdropFilter: 'blur(16px)',
-          padding: '40px 32px', display: 'flex', flexDirection: 'column',
-          gap: 32, zIndex: 99, alignItems: 'flex-start',
+          padding: '104px 32px 40px', display: 'flex', flexDirection: 'column',
+          gap: 32, zIndex: -1, alignItems: 'flex-start', pointerEvents: 'auto',
+          overflowY: 'auto'
         }}>
           {links.map(([id, label]) => (
             id === 'blog' ? (
-              <a key={id} href="/blog" style={{
+              <a key={id} href="/blog" onClick={() => setMenuOpen(false)} style={{
                 background: 'none', border: 0, cursor: 'pointer', padding: '4px 0',
                 fontFamily: 'var(--font-mono)', fontSize: 20, letterSpacing: '0.04em',
                 color: '#d8dee9', textDecoration: 'none',
@@ -113,7 +114,6 @@ function PortfolioNav({ onNav, active }) {
           ))}
         </div>
       )}
-    </nav>
     </div>
   );
 }

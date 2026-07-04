@@ -17,14 +17,21 @@ function PortfolioContact() {
     { type: 'LINK', path: '/projects/singularity', href: 'https://singularity.hellonish.dev' },
   ];
 
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 860);
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 860);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <footer id="contact" className="snap-section" data-theme="night" style={{ 
       background: 'var(--night-900)', 
       display: 'flex', flexDirection: 'column',
-      padding: '0 clamp(20px,5vw,56px) 4vh' 
+      padding: isMobile ? '80px clamp(20px,5vw,56px) 4vh' : '0 clamp(20px,5vw,56px) 4vh' 
     }}>
       <div style={{ maxWidth: 1180, width: '100%', margin: '0 auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: '60px', flexWrap: 'wrap', position: 'relative' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center', justifyContent: 'center', gap: isMobile ? '40px' : '60px', position: 'relative' }}>
           
           {/* Background ASCII Monogram */}
           <div style={{ position: 'absolute', right: '0%', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-mono)', fontSize: 'clamp(30px, 4.5vw, 60px)', color: 'rgba(255,255,255,0.015)', pointerEvents: 'none', userSelect: 'none', zIndex: 0, whiteSpace: 'pre', lineHeight: 1.1, fontWeight: 700 }}>
@@ -37,15 +44,15 @@ function PortfolioContact() {
           </div>
 
           {/* Left CTA */}
-          <div style={{ zIndex: 1, flex: '1 1 400px' }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(34px,6vw,68px)', lineHeight: 1.02, letterSpacing: 0, color: '#fff', margin: '0 0 32px', maxWidth: '16ch' }}>
+          <div style={{ zIndex: 1, flex: isMobile ? 'none' : '1 1 400px', textAlign: 'left', width: '100%' }}>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(34px,6vw,68px)', lineHeight: 1.02, letterSpacing: 0, color: '#fff', margin: isMobile ? '0 0 24px' : '0 0 32px', maxWidth: '16ch' }}>
               Let&rsquo;s build something that actually helps someone.
             </h2>
             <Button variant="outline" href="mailto:hellonishantsh@gmail.com">hellonishantsh@gmail.com</Button>
           </div>
 
           {/* Right Data Table */}
-          <div style={{ zIndex: 1, flex: '0 1 460px', width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ zIndex: 1, flex: isMobile ? 'none' : '0 1 460px', width: '100%', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 4 }}>System Directory</div>
             {socials.map(s => (
               <a key={s.path} href={s.href} target="_blank" rel="noreferrer" style={{ 

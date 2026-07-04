@@ -2,6 +2,7 @@
 function PortfolioWork() {
   const DS = window.NishantSharmaPortfolioDesignSystem_acfe10;
   const { SectionHeader, Button } = DS;
+  const { CustomSelect } = window;
 
   const projects = [
     {
@@ -104,6 +105,13 @@ function PortfolioWork() {
   const [activeExpIdx, setActiveExpIdx] = React.useState(0);
   const activeExp = experience[activeExpIdx];
 
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 860);
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 860);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <>
       {/* ── PROJECTS ───────────────────────────────────────── */}
@@ -144,23 +152,31 @@ function PortfolioWork() {
             <SectionHeader index="02" kicker="Selected work" title="Projects" />
           </div>
 
-          <div className="ledger-layout">
+          <div className="ledger-layout" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1fr) minmax(0,1.5fr)', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>
             {/* Left Ledger */}
-            <div className="ledger-list">
-              {projects.map((p, i) => (
-                <div key={i} onClick={() => setActiveProjIdx(i)} style={{
-                  padding: '20px 24px', cursor: 'pointer',
-                  borderLeft: `2px solid ${i === activeProjIdx ? 'var(--accent)' : 'transparent'}`,
-                  background: i === activeProjIdx ? 'rgba(255,255,255,0.03)' : 'transparent',
-                  transition: 'background 0.2s, border-color 0.2s'
-                }}
-                onMouseEnter={(e) => { if (i !== activeProjIdx) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
-                onMouseLeave={(e) => { if (i !== activeProjIdx) e.currentTarget.style.background = 'transparent'; }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: i === activeProjIdx ? '#fff' : 'var(--night-fg)', marginBottom: 6 }}>{p.title.split('—')[0].trim()}</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>{p.meta}</div>
-                </div>
-              ))}
-            </div>
+            {isMobile ? (
+              <CustomSelect
+                value={activeProjIdx}
+                onChange={v => setActiveProjIdx(Number(v))}
+                options={projects.map((p, i) => ({ value: i, label: p.title.split('—')[0].trim() }))}
+              />
+            ) : (
+              <div className="ledger-list">
+                {projects.map((p, i) => (
+                  <div key={i} onClick={() => setActiveProjIdx(i)} style={{
+                    padding: '20px 24px', cursor: 'pointer',
+                    borderLeft: `2px solid ${i === activeProjIdx ? 'var(--accent)' : 'transparent'}`,
+                    background: i === activeProjIdx ? 'rgba(255,255,255,0.03)' : 'transparent',
+                    transition: 'background 0.2s, border-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => { if (i !== activeProjIdx) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
+                  onMouseLeave={(e) => { if (i !== activeProjIdx) e.currentTarget.style.background = 'transparent'; }}>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: i === activeProjIdx ? '#fff' : 'var(--night-fg)', marginBottom: 6 }}>{p.title.split('—')[0].trim()}</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>{p.meta}</div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Right Details */}
             <div className="ledger-details">
@@ -200,23 +216,31 @@ function PortfolioWork() {
             <SectionHeader index="03" kicker="Trajectory" title="Work Experience" />
           </div>
 
-          <div className="ledger-layout">
+          <div className="ledger-layout" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1fr) minmax(0,1.5fr)', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>
             {/* Left Ledger */}
-            <div className="ledger-list">
-              {experience.map((e, i) => (
-                <div key={i} onClick={() => setActiveExpIdx(i)} style={{
-                  padding: '20px 24px', cursor: 'pointer',
-                  borderLeft: `2px solid ${i === activeExpIdx ? 'var(--accent)' : 'transparent'}`,
-                  background: i === activeExpIdx ? 'rgba(255,255,255,0.03)' : 'transparent',
-                  transition: 'background 0.2s, border-color 0.2s'
-                }}
-                onMouseEnter={(e) => { if (i !== activeExpIdx) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
-                onMouseLeave={(e) => { if (i !== activeExpIdx) e.currentTarget.style.background = 'transparent'; }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: i === activeExpIdx ? '#fff' : 'var(--night-fg)', marginBottom: 6 }}>{e.company}</div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>{e.period}</div>
-                </div>
-              ))}
-            </div>
+            {isMobile ? (
+              <CustomSelect
+                value={activeExpIdx}
+                onChange={v => setActiveExpIdx(Number(v))}
+                options={experience.map((e, i) => ({ value: i, label: e.company }))}
+              />
+            ) : (
+              <div className="ledger-list">
+                {experience.map((e, i) => (
+                  <div key={i} onClick={() => setActiveExpIdx(i)} style={{
+                    padding: '20px 24px', cursor: 'pointer',
+                    borderLeft: `2px solid ${i === activeExpIdx ? 'var(--accent)' : 'transparent'}`,
+                    background: i === activeExpIdx ? 'rgba(255,255,255,0.03)' : 'transparent',
+                    transition: 'background 0.2s, border-color 0.2s'
+                  }}
+                  onMouseEnter={(e) => { if (i !== activeExpIdx) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
+                  onMouseLeave={(e) => { if (i !== activeExpIdx) e.currentTarget.style.background = 'transparent'; }}>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: i === activeExpIdx ? '#fff' : 'var(--night-fg)', marginBottom: 6 }}>{e.company}</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>{e.period}</div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Right Details */}
             <div className="ledger-details">

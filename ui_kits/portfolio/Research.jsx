@@ -2,6 +2,7 @@
 function PortfolioResearch() {
   const DS = window.NishantSharmaPortfolioDesignSystem_acfe10;
   const { SectionHeader, Button } = DS;
+  const { CustomSelect } = window;
 
   const papers = [
     {
@@ -58,6 +59,13 @@ function PortfolioResearch() {
   const [activeIndex, setActiveIndex] = React.useState(0);
   const activePaper = papers[activeIndex];
 
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 860);
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 860);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <section id="research" className="snap-section" data-theme="night" style={{ 
       background: 'var(--night-900)', 
@@ -84,23 +92,31 @@ function PortfolioResearch() {
           <SectionHeader index="04" kicker="Papers & experiments" title="Research" />
         </div>
 
-        <div className="ledger-layout">
+        <div className="ledger-layout" style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'minmax(0,1fr) minmax(0,1.5fr)', gap: 'clamp(24px, 4vw, 48px)', alignItems: 'start' }}>
           {/* Left Ledger */}
-          <div className="ledger-list">
-            {papers.map((p, i) => (
-              <div key={i} onClick={() => setActiveIndex(i)} style={{
-                padding: '20px 24px', cursor: 'pointer',
-                borderLeft: `2px solid ${i === activeIndex ? 'var(--accent)' : 'transparent'}`,
-                background: i === activeIndex ? 'rgba(255,255,255,0.03)' : 'transparent',
-                transition: 'background 0.2s, border-color 0.2s'
-              }}
-              onMouseEnter={(e) => { if (i !== activeIndex) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
-              onMouseLeave={(e) => { if (i !== activeIndex) e.currentTarget.style.background = 'transparent'; }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: i === activeIndex ? '#fff' : 'var(--night-fg)', marginBottom: 6 }}>{p.title.split('—')[0].trim()}</div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>{p.meta}</div>
-              </div>
-            ))}
-          </div>
+          {isMobile ? (
+            <CustomSelect
+              value={activeIndex}
+              onChange={v => setActiveIndex(Number(v))}
+              options={papers.map((p, i) => ({ value: i, label: p.title.split('—')[0].trim() }))}
+            />
+          ) : (
+            <div className="ledger-list">
+              {papers.map((p, i) => (
+                <div key={i} onClick={() => setActiveIndex(i)} style={{
+                  padding: '20px 24px', cursor: 'pointer',
+                  borderLeft: `2px solid ${i === activeIndex ? 'var(--accent)' : 'transparent'}`,
+                  background: i === activeIndex ? 'rgba(255,255,255,0.03)' : 'transparent',
+                  transition: 'background 0.2s, border-color 0.2s'
+                }}
+                onMouseEnter={(e) => { if (i !== activeIndex) e.currentTarget.style.background = 'rgba(255,255,255,0.015)'; }}
+                onMouseLeave={(e) => { if (i !== activeIndex) e.currentTarget.style.background = 'transparent'; }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 600, fontSize: 16, color: i === activeIndex ? '#fff' : 'var(--night-fg)', marginBottom: 6 }}>{p.title.split('—')[0].trim()}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--night-muted)' }}>{p.meta}</div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Right Details */}
           <div className="ledger-details">
