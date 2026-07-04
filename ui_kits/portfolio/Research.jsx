@@ -84,9 +84,9 @@ function PortfolioResearch() {
           <SectionHeader index="04" kicker="Papers & experiments" title="Research" />
         </div>
 
-        <div style={{ display: 'flex', gap: 'clamp(32px, 6vw, 80px)', height: '55vh' }}>
+        <div className="ledger-layout">
           {/* Left Ledger */}
-          <div style={{ flex: '0 0 35%', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
+          <div className="ledger-list">
             {papers.map((p, i) => (
               <div key={i} onClick={() => setActiveIndex(i)} style={{
                 padding: '20px 24px', cursor: 'pointer',
@@ -103,7 +103,7 @@ function PortfolioResearch() {
           </div>
 
           {/* Right Details */}
-          <div style={{ flex: 1, padding: '24px 0', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', height: '55vh', overflowY: 'auto', paddingRight: 16 }}>
+          <div className="ledger-details">
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--accent)', marginBottom: 12 }}>{activePaper.period}</div>
             <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(20px, 2.5vw, 36px)', color: '#fff', margin: '0 0 16px 0', lineHeight: 1.1 }}>{activePaper.title}</h3>
             

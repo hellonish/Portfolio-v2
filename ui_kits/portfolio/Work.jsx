@@ -144,9 +144,9 @@ function PortfolioWork() {
             <SectionHeader index="02" kicker="Selected work" title="Projects" />
           </div>
 
-          <div style={{ display: 'flex', gap: 'clamp(32px, 6vw, 80px)', height: '55vh' }}>
+          <div className="ledger-layout">
             {/* Left Ledger */}
-            <div style={{ flex: '0 0 35%', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
+            <div className="ledger-list">
               {projects.map((p, i) => (
                 <div key={i} onClick={() => setActiveProjIdx(i)} style={{
                   padding: '20px 24px', cursor: 'pointer',
@@ -163,7 +163,7 @@ function PortfolioWork() {
             </div>
 
             {/* Right Details */}
-            <div style={{ flex: 1, padding: '24px 0', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: 16 }}>
+            <div className="ledger-details">
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--accent)', marginBottom: 12 }}>{activeProj.period}</div>
               <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(20px, 2.5vw, 36px)', color: '#fff', margin: '0 0 16px 0', lineHeight: 1.1 }}>{activeProj.title}</h3>
               <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, lineHeight: 1.6, color: 'var(--night-fg)', maxWidth: 640, marginBottom: 20 }}>
@@ -200,9 +200,9 @@ function PortfolioWork() {
             <SectionHeader index="03" kicker="Trajectory" title="Work Experience" />
           </div>
 
-          <div style={{ display: 'flex', gap: 'clamp(32px, 6vw, 80px)', height: '55vh' }}>
+          <div className="ledger-layout">
             {/* Left Ledger */}
-            <div style={{ flex: '0 0 35%', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
+            <div className="ledger-list">
               {experience.map((e, i) => (
                 <div key={i} onClick={() => setActiveExpIdx(i)} style={{
                   padding: '20px 24px', cursor: 'pointer',
@@ -219,7 +219,7 @@ function PortfolioWork() {
             </div>
 
             {/* Right Details */}
-            <div style={{ flex: 1, padding: '24px 0', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', overflowY: 'auto', paddingRight: 16 }}>
+            <div className="ledger-details">
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
                 <div>
                   <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 'clamp(20px, 2.5vw, 32px)', color: '#fff', margin: '0 0 4px 0', lineHeight: 1.1 }}>{activeExp.role}</h3>
