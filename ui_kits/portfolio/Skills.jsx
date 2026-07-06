@@ -117,7 +117,8 @@ function PortfolioSkills() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return <section id="skills" className="snap-section" data-theme="night" style={{ 
+  return (
+    <section id="skills" className="snap-section" data-theme="night" style={{ 
         background: 'var(--night-800)', 
         display: 'flex', alignItems: 'center', 
         padding: '80px clamp(20px,5vw,56px) 20px',
