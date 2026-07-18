@@ -13,7 +13,7 @@ function PortfolioResearch() {
       metrics: [{ value: '+3.1pp', label: 'Worst-group acc' }, { value: '+2.5pp', label: 'Post-DFR gain' }],
       stack: ['PyTorch', 'ResNet-18', 'Waterbirds', 'GroupDRO', 'JTT', 'DFR'],
       links: [
-        { label: 'read paper', href: '/projects/pdfs/pgdr_final_report_nsharma.pdf' },
+        { label: 'paper page', href: '/research/pgdr/' },
         { label: 'read blog', href: '/blog.html?post=PROJECT_SHOWCASE_PGDR' }
       ],
     },
