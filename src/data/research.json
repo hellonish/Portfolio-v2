@@ -1,0 +1,87 @@
+[
+  {
+    "slug": "pgdr",
+    "title": "PGDR: Gradient Disagreement for Shortcut-Bias Detection",
+    "summary": "Persistent Gradient Disagreement Reweighting discovers shortcut-conflicting examples without training group labels, by asking whether a hard example pushes the classifier in a different gradient direction than easy same-class examples.",
+    "year": "2025",
+    "featured": true,
+    "venue": "Independent research",
+    "tags": ["Robustness", "Shortcut Learning", "Group Fairness"],
+    "stack": ["PyTorch", "ResNet-50", "Waterbirds", "SGD"],
+    "abstract": "Shortcut learning is an incorrect inductive bias: a model can perform well on average while relying on a feature that is predictive in training but not part of the intended concept. In Waterbirds, the intended label is bird type, but the shortcut is background. PGDR tests a mechanism-driven signal for discovering hidden groups without group supervision.",
+    "results": [
+      { "metric": "Worst-group accuracy (PGDR)", "value": "81.52%" },
+      { "metric": "Worst-group accuracy (ERM baseline)", "value": "68.38%" },
+      { "metric": "Worst-group accuracy (JTT)", "value": "85.41%" }
+    ],
+    "links": { "paper": "/research/pgdr/pgdr.pdf", "page": "/research/pgdr/", "repo": "" }
+  },
+  {
+    "slug": "jailbreaking-deep-models",
+    "title": "Jailbreaking Deep Models with Adversarial Image Attacks",
+    "summary": "Evaluates how small L-infinity bounded perturbations collapse a pretrained ResNet-34, and whether those adversarial examples transfer to other architectures.",
+    "year": "2025",
+    "featured": true,
+    "venue": "Course research report",
+    "tags": ["Adversarial ML", "Model Security", "Robustness"],
+    "stack": ["PyTorch", "ResNet-34", "DenseNet-121", "FGSM", "PGD"],
+    "abstract": "Image classifiers can be accurate on clean data but brittle under adversarial perturbations. This work quantifies that brittleness across one-step, iterative, patch-constrained and transfer attacks under an epsilon = 0.02 budget on a 100-class ImageNet-1K subset.",
+    "results": [
+      { "metric": "Clean top-1 accuracy", "value": "76.00%" },
+      { "metric": "Top-1 under I-FGSM / PGD", "value": "0.20%" },
+      { "metric": "Top-1 under 32x32 patch attack", "value": "<2%" }
+    ],
+    "links": { "paper": "/projects/pdfs/jailbreaking-deep-models.pdf", "page": "", "repo": "" }
+  },
+  {
+    "slug": "cross-domain-super-resolution",
+    "title": "Beyond Natural Images: Cross-Domain Super-Resolution Benchmark",
+    "summary": "Studies whether super-resolution models trained on natural images generalize to text and astronomical imagery, where natural-image priors break down.",
+    "year": "2025",
+    "featured": true,
+    "venue": "Course research report",
+    "tags": ["Computer Vision", "Domain Shift", "Benchmarking"],
+    "stack": ["EDSR", "SwinIR", "Stable Diffusion Upscaler", "PSNR", "SSIM", "LPIPS"],
+    "abstract": "Most reconstruction models are optimized around natural image priors: smooth gradients, dense textures, locally correlated edges. This benchmark compares EDSR, SwinIR and a diffusion upscaler across DIV2K, TextZoom and STAR to test whether those assumptions survive domain shift.",
+    "results": [
+      { "metric": "Key finding", "value": "Natural-image quality did not predict cross-domain robustness" },
+      { "metric": "Domain-specific fine-tuning", "value": "Recovered most lost performance" },
+      { "metric": "Zero-shot diffusion", "value": "Degraded severely on structured domains" }
+    ],
+    "links": { "paper": "/projects/pdfs/atcv.pdf", "page": "", "repo": "" }
+  },
+  {
+    "slug": "roberta-agnews-lora",
+    "title": "Parameter-Efficient RoBERTa Fine-Tuning with LoRA",
+    "summary": "Adapts RoBERTa for AG News classification under a strict sub-1M trainable-parameter budget using LoRA adapters and knowledge distillation.",
+    "year": "2024",
+    "featured": false,
+    "venue": "Course research report",
+    "tags": ["NLP", "PEFT", "Text Classification"],
+    "stack": ["RoBERTa", "LoRA", "PEFT", "Hugging Face", "AdamW"],
+    "abstract": "Full RoBERTa fine-tuning updates over 100M parameters. LoRA freezes the base model and trains small low-rank updates inside selected layers, making adaptation practical under tight compute budgets.",
+    "results": [
+      { "metric": "Trainable parameters", "value": "796K (0.63% of full model)" },
+      { "metric": "Validation accuracy", "value": "92.97%" },
+      { "metric": "Best inference accuracy", "value": "84.90%" }
+    ],
+    "links": { "paper": "/projects/pdfs/roberta_agnews.pdf", "page": "", "repo": "" }
+  },
+  {
+    "slug": "cifar10-resnet",
+    "title": "Improved ResNet for CIFAR-10 Classification",
+    "summary": "A parameter-efficient ResNet-style classifier staying under a 5M parameter budget while holding high validation accuracy.",
+    "year": "2024",
+    "featured": false,
+    "venue": "Course research report",
+    "tags": ["Computer Vision", "Efficient CNNs", "Classification"],
+    "stack": ["PyTorch", "ResNet", "OneCycleLR", "Mixed Precision"],
+    "abstract": "The main engineering idea is not simply to make the network deeper. The model combines progressive filter scaling, residual blocks, dropout, batch normalization, label smoothing and a OneCycleLR schedule to improve generalization under a compact parameter budget.",
+    "results": [
+      { "metric": "Parameters", "value": "4.17M" },
+      { "metric": "Validation accuracy", "value": "94.31%" },
+      { "metric": "Kaggle test accuracy", "value": "83.06%" }
+    ],
+    "links": { "paper": "/projects/pdfs/cifar-10-resnet.pdf", "page": "", "repo": "" }
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "slug": "surviving-real-world-data",
+    "title": "Building Agent Systems That Survive Real-World Data",
+    "summary": "Demo-ware breaks the moment inputs stop being clean. Notes on the failure modes that actually show up in production agent pipelines, and the guardrails worth building first.",
+    "date": "2025-11-18",
+    "readingTime": "8 min",
+    "featured": true,
+    "tags": ["Agents", "Production", "Engineering"]
+  },
+  {
+    "slug": "citation-grounding",
+    "title": "Getting Hallucination Under 10% with Citation Grounding",
+    "summary": "What it actually took to hold a research agent to a sub-10% hallucination rate: retrieval discipline, typed outputs, and refusing to let the model write anything it cannot point at.",
+    "date": "2025-09-02",
+    "readingTime": "11 min",
+    "featured": true,
+    "tags": ["LLM", "RAG", "Evaluation"]
+  },
+  {
+    "slug": "seven-dollar-stack",
+    "title": "The $7 Production Stack",
+    "summary": "A full multi-agent platform — Postgres, Redis, workers, reverse proxy, auto-SSL — running on AWS for the price of a sandwich. What I cut, and what I refused to cut.",
+    "date": "2025-07-21",
+    "readingTime": "6 min",
+    "featured": true,
+    "tags": ["Infra", "AWS", "Cost"]
+  },
+  {
+    "slug": "shortcut-learning-notes",
+    "title": "Shortcut Learning Is a Bias Problem, Not an Accuracy Problem",
+    "summary": "Average accuracy hides the failure. Why gradient disagreement turned out to be a more honest signal than misclassification for finding hidden groups.",
+    "date": "2025-05-30",
+    "readingTime": "9 min",
+    "featured": false,
+    "tags": ["Research", "Robustness", "ML"]
+  },
+  {
+    "slug": "small-models-narrow-tasks",
+    "title": "Small Models, Narrow Tasks",
+    "summary": "Small language models get dismissed because they are measured as general-purpose systems. Tuned for one job, the picture changes considerably.",
+    "date": "2025-03-14",
+    "readingTime": "7 min",
+    "featured": false,
+    "tags": ["LLM", "Research", "PEFT"]
+  }
+]

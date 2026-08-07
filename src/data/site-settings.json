@@ -1,0 +1,75 @@
+{
+  "site": {
+    "title": "Nishant Sharma",
+    "backLabel": "Back",
+    "footer": {
+      "navigationLabel": "Navigate",
+      "connectLabel": "Connect",
+      "resumeLabel": "Résumé"
+    }
+  },
+  "navigation": [
+    { "label": "Home", "to": "/" },
+    { "label": "Projects", "to": "/projects" },
+    { "label": "Research", "to": "/research" },
+    { "label": "Blog", "to": "/blog" }
+  ],
+  "home": {
+    "hero": {
+      "contactLabel": "Contact",
+      "resumeLabel": "Résumé"
+    },
+    "highlights": {
+      "kicker": "Profile",
+      "title": "Highlights"
+    },
+    "sections": {
+      "projects": {
+        "limit": 3,
+        "featuredOnly": true,
+        "kicker": "Selected work",
+        "title": "Projects",
+        "intro": "Software systems and products built for real users, real data, and real constraints.",
+        "linkLabel": "All projects"
+      },
+      "research": {
+        "limit": 3,
+        "featuredOnly": true,
+        "kicker": "Ongoing inquiry",
+        "title": "Research",
+        "linkLabel": "Research archive"
+      },
+      "blog": {
+        "limit": 3,
+        "featuredOnly": false,
+        "title": "Blog",
+        "linkLabel": "Browse all writing"
+      }
+    }
+  },
+  "pages": {
+    "projects": {
+      "eyebrow": "Software",
+      "title": "Projects",
+      "description": "Production systems, applied AI platforms, and engineering work built under real constraints."
+    },
+    "research": {
+      "eyebrow": "Research",
+      "title": "Research",
+      "description": "Studies in robustness, shortcut learning, model security, vision, reasoning, and parameter-efficient training."
+    },
+    "blog": {
+      "eyebrow": "Writing",
+      "title": "Blog",
+      "description": "Notes on building agent systems, evaluation, and the gap between a demo and something people can trust.",
+      "allTagsLabel": "All",
+      "emptyTagMessage": "No posts tagged “{tag}”."
+    },
+    "notFound": {
+      "eyebrow": "404",
+      "title": "Page not found",
+      "description": "That route does not exist.",
+      "backHomeLabel": "Back home"
+    }
+  }
+}

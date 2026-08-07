@@ -1,0 +1,22 @@
+# Dependencies and generated output
+node_modules/
+dist/
+dist-ssr/
+.vite/
+.next/
+
+# Local tools and environment configuration
+.vercel/
+.local/
+.env
+.env.*
+!.env.example
+venv/
+.claude/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+*.log
+coverage/

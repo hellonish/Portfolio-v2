@@ -1,0 +1,60 @@
+{
+  "name": "Nishant Sharma",
+  "role": "AI Engineer",
+  "tagline": "Backend and infrastructure engineer building AI agents and pursuing independent AI alignment research.",
+  "hero": {
+    "kicker": "AI engineering · New York, NY",
+    "summary": "I build reliable software systems. Currently, I’m building AI agents and pursuing independent research in AI alignment.",
+    "note": "Open to collaborating on work in adjacent areas."
+  },
+  "bio": [
+    "I am an experienced backend and infrastructure engineer. Currently, I am building AI agents and working in AI alignment as an independent researcher.",
+    "My work spans production software, machine learning systems, and research into robust and trustworthy AI. I am open to collaborating on work in adjacent areas."
+  ],
+  "location": "New York, NY",
+  "availability": "Open to collaboration",
+  "email": "hellonishantsh@gmail.com",
+  "resume": "https://resumes.hellonish.dev/base-resume-b703550f719c.pdf",
+  "socials": [
+    { "label": "GitHub", "url": "https://github.com/hellonish", "icon": "mdi-github" },
+    { "label": "LinkedIn", "url": "https://linkedin.com/in/hellonish", "icon": "mdi-linkedin" },
+    { "label": "Email", "url": "mailto:hellonishantsh@gmail.com", "icon": "mdi-email-outline" }
+  ],
+  "highlights": [
+    {
+      "label": "Currently",
+      "title": "AI engineering & independent research",
+      "description": "Building AI agents and working independently on AI alignment research."
+    },
+    {
+      "label": "Engineering",
+      "title": "Backend & infrastructure experience",
+      "description": "Software engineering experience at Ingelt Study Abroad and Macverin Technologies, alongside freelance web development."
+    },
+    {
+      "label": "Live products",
+      "title": "Two products available today",
+      "links": [
+        { "label": "Singularity", "href": "https://singularity.hellonish.dev" },
+        { "label": "ineedajob.pro", "href": "https://www.ineedajob.pro" }
+      ]
+    },
+    {
+      "label": "Research",
+      "title": "Robustness, vision & reasoning",
+      "description": "Work on PGDR, cross-domain super-resolution, and verifier-guided reasoning—the latter recognized with a Best Project award."
+    },
+    {
+      "label": "Mentorship",
+      "title": "Teaching & technical leadership",
+      "description": "Graduate machine learning TA, technical lead and programming mentor at the Computer Society of India, and TeacherOn mentor."
+    }
+  ],
+  "skills": [
+    { "group": "Languages", "items": ["Python", "TypeScript", "JavaScript", "SQL", "Bash"] },
+    { "group": "AI / ML", "items": ["PyTorch", "Hugging Face", "PEFT / LoRA", "Transformers", "MLflow"] },
+    { "group": "Backend", "items": ["FastAPI", "PostgreSQL", "Redis", "ARQ", "SQLAlchemy"] },
+    { "group": "Frontend", "items": ["Vue", "React", "Next.js", "Vuetify", "Vite"] },
+    { "group": "Infra", "items": ["Docker", "Kubernetes", "Terraform", "AWS", "Caddy"] }
+  ]
+}

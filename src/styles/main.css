@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+
+:root {
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+  --measure: 68ch;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.v-application {
+  font-family: var(--font-sans) !important;
+}
+
+/* Monospace reserved for metadata, eyebrows and tags — never body copy. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.measure {
+  max-width: var(--measure);
+}
+
+.lead {
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+/* Row hover: the list rows are the primary interaction surface. */
+.entry-row {
+  position: relative;
+  display: block;
+  padding: 20px 0;
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.16);
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.entry-row:hover {
+  transform: translateX(6px);
+}
+
+.entry-row .entry-title {
+  font-weight: 600;
+  font-size: 1.0625rem;
+  transition: color 180ms ease;
+}
+
+.entry-row:hover .entry-title {
+  color: rgb(var(--v-theme-primary));
+}
+
+.entry-row .entry-arrow {
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.entry-row:hover .entry-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Page transition */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .entry-row,
+  .entry-row .entry-title,
+  .entry-row .entry-arrow,
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: none;
+  }
+  .entry-row:hover { transform: none; }
+}
