@@ -8,6 +8,7 @@ dist-ssr/
 # Local tools and environment configuration
 .vercel/
 .local/
+Markdowns/
 .env
 .env.*
 !.env.example
