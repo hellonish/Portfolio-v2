@@ -14,7 +14,7 @@
       { "metric": "Worst-group accuracy (ERM baseline)", "value": "68.38%" },
       { "metric": "Worst-group accuracy (JTT)", "value": "85.41%" }
     ],
-    "links": { "paper": "/research/pgdr/pgdr.pdf", "page": "/research/pgdr/", "repo": "" }
+    "links": { "paper": "/research/pgdr/pgdr.pdf", "page": "/research/pgdr/", "blog": "/blog/pgdr-shortcut-bias-detection", "repo": "" }
   },
   {
     "slug": "jailbreaking-deep-models",
@@ -31,7 +31,7 @@
       { "metric": "Top-1 under I-FGSM / PGD", "value": "0.20%" },
       { "metric": "Top-1 under 32x32 patch attack", "value": "<2%" }
     ],
-    "links": { "paper": "/projects/pdfs/jailbreaking-deep-models.pdf", "page": "", "repo": "" }
+    "links": { "paper": "/projects/pdfs/jailbreaking-deep-models.pdf", "page": "", "blog": "/blog/jailbreaking-deep-models", "repo": "" }
   },
   {
     "slug": "cross-domain-super-resolution",
@@ -48,7 +48,7 @@
       { "metric": "Domain-specific fine-tuning", "value": "Recovered most lost performance" },
       { "metric": "Zero-shot diffusion", "value": "Degraded severely on structured domains" }
     ],
-    "links": { "paper": "/projects/pdfs/atcv.pdf", "page": "", "repo": "" }
+    "links": { "paper": "/projects/pdfs/atcv.pdf", "page": "", "blog": "/blog/cross-domain-super-resolution", "repo": "" }
   },
   {
     "slug": "roberta-agnews-lora",
@@ -65,7 +65,7 @@
       { "metric": "Validation accuracy", "value": "92.97%" },
       { "metric": "Best inference accuracy", "value": "84.90%" }
     ],
-    "links": { "paper": "/projects/pdfs/roberta_agnews.pdf", "page": "", "repo": "" }
+    "links": { "paper": "/projects/pdfs/roberta_agnews.pdf", "page": "", "blog": "/blog/roberta-agnews-lora", "repo": "" }
   },
   {
     "slug": "cifar10-resnet",
@@ -82,6 +82,6 @@
       { "metric": "Validation accuracy", "value": "94.31%" },
       { "metric": "Kaggle test accuracy", "value": "83.06%" }
     ],
-    "links": { "paper": "/projects/pdfs/cifar-10-resnet.pdf", "page": "", "repo": "" }
+    "links": { "paper": "/projects/pdfs/cifar-10-resnet.pdf", "page": "", "blog": "/blog/cifar10-compact-resnet", "repo": "" }
   }
 ]

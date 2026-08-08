@@ -7,6 +7,7 @@ const routes = [
   { path: '/projects', name: 'projects', component: () => import('@/views/ProjectsView.vue') },
   { path: '/research', name: 'research', component: () => import('@/views/ResearchView.vue') },
   { path: '/blog', name: 'blog', component: () => import('@/views/BlogView.vue') },
+  { path: '/blog/:slug', name: 'blog-post', component: () => import('@/views/BlogPostView.vue') },
   { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('@/views/NotFoundView.vue') },
 ]
 
@@ -15,6 +16,7 @@ const pageTitles = {
   projects: settings.pages.projects.title,
   research: settings.pages.research.title,
   blog: settings.pages.blog.title,
+  'blog-post': settings.pages.blog.title,
   'not-found': settings.pages.notFound.title,
 }
 

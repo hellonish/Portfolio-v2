@@ -26,6 +26,10 @@ defineProps({
         <h3 class="research-item__title">{{ item.title }}</h3>
         <p class="research-item__summary">{{ item.summary }}</p>
         <p class="research-item__tags mb-0">{{ item.tags.slice(0, 3).join(' / ') }}</p>
+        <div class="research-item__actions">
+          <a :href="item.links.paper" target="_blank" rel="noopener noreferrer">Report ↗</a>
+          <router-link :to="item.links.blog">Blog →</router-link>
+        </div>
       </article>
     </div>
   </section>
@@ -56,6 +60,27 @@ defineProps({
   letter-spacing: 0.09em;
   text-transform: uppercase;
   opacity: 0.58;
+}
+
+.research-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.3rem;
+}
+
+.research-item__actions a {
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  font-weight: 600;
+  text-decoration-color: rgba(128, 128, 128, 0.5);
+  text-underline-offset: 0.23rem;
+}
+
+.research-item__actions a:hover,
+.research-item__actions a:focus-visible {
+  color: rgb(var(--v-theme-primary));
 }
 
 .research-heading {

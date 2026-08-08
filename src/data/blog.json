@@ -1,47 +1,195 @@
 [
   {
-    "slug": "surviving-real-world-data",
-    "title": "Building Agent Systems That Survive Real-World Data",
-    "summary": "Demo-ware breaks the moment inputs stop being clean. Notes on the failure modes that actually show up in production agent pipelines, and the guardrails worth building first.",
-    "date": "2025-11-18",
-    "readingTime": "8 min",
+    "slug": "pgdr-shortcut-bias-detection",
+    "title": "Finding Shortcut Bias with Gradient Disagreement",
+    "summary": "How persistent gradient disagreement exposed shortcut-conflicting examples in Waterbirds without group labels.",
+    "year": "2025",
+    "readingTime": "7 min",
     "featured": true,
-    "tags": ["Agents", "Production", "Engineering"]
+    "kind": "Research note",
+    "tags": ["Robustness", "Shortcut Learning", "PyTorch"],
+    "heroMetric": { "value": "81.52%", "label": "worst-group accuracy" },
+    "intro": "A model can look reliable on an aggregate metric while learning the wrong feature. This study treats disagreement in gradient direction as a way to find the hidden examples that push against a shortcut.",
+    "sections": [
+      { "title": "The failure worth measuring", "body": "Waterbirds pairs bird type with background often enough that a conventional classifier can rely on land versus water instead of the bird. The meaningful evaluation is therefore the minority setting: landbirds on water and waterbirds on land." },
+      { "title": "A mechanism-driven signal", "body": "After warming up a ResNet-50, I ranked examples by class margin and examined the bottom 15 percent. For every hard example, I compared its final-layer gradient to the average gradient from easy examples of the same class. Low cosine alignment indicated that the example was asking the classifier to change in a different direction." },
+      { "title": "Why persistence mattered", "body": "An example entered the pseudo-group only when that disagreement appeared across all three training snapshots. Keeping that selection fixed produced a cleaner signal than continuously refreshing it as the classifier changed." }
+    ],
+    "steps": ["Warm up the classifier and identify the hardest within-class examples.", "Compare each hard example's final-layer gradient with easy same-class examples.", "Retain examples with persistent low alignment, then rebalance training around them."],
+    "results": [
+      { "label": "PGDR worst-group accuracy", "value": "81.52%" },
+      { "label": "ERM baseline", "value": "68.38%" },
+      { "label": "Hidden-minority detection AUC", "value": "0.800" }
+    ],
+    "takeaway": "Average accuracy is not a robustness metric when shortcuts are available. Gradient geometry gave the project a practical way to surface examples that conflict with a model's dominant pattern.",
+    "links": { "report": "/research/pgdr/pgdr.pdf" }
   },
   {
-    "slug": "citation-grounding",
-    "title": "Getting Hallucination Under 10% with Citation Grounding",
-    "summary": "What it actually took to hold a research agent to a sub-10% hallucination rate: retrieval discipline, typed outputs, and refusing to let the model write anything it cannot point at.",
-    "date": "2025-09-02",
-    "readingTime": "11 min",
-    "featured": true,
-    "tags": ["LLM", "RAG", "Evaluation"]
-  },
-  {
-    "slug": "seven-dollar-stack",
-    "title": "The $7 Production Stack",
-    "summary": "A full multi-agent platform — Postgres, Redis, workers, reverse proxy, auto-SSL — running on AWS for the price of a sandwich. What I cut, and what I refused to cut.",
-    "date": "2025-07-21",
+    "slug": "jailbreaking-deep-models",
+    "title": "How Small Image Perturbations Can Break Deep Classifiers",
+    "summary": "A ResNet-34's clean accuracy collapsed under iterative and localized adversarial image attacks.",
+    "year": "2025",
     "readingTime": "6 min",
     "featured": true,
-    "tags": ["Infra", "AWS", "Cost"]
+    "kind": "Research note",
+    "tags": ["Adversarial ML", "Model Security", "Vision"],
+    "heroMetric": { "value": "0.20%", "label": "top-1 under iterative attack" },
+    "intro": "Clean-data accuracy can create a false sense of safety. Under a fixed L-infinity budget of epsilon = 0.02, iterative attacks nearly eliminated a pretrained classifier's accuracy on a curated ImageNet subset.",
+    "sections": [
+      { "title": "One budget, several threat models", "body": "The evaluation compared one-step FGSM with iterative FGSM and PGD, then repeated the test with perturbations confined to a 32 by 32 patch. This made it possible to distinguish a global vulnerability from one that a localized alteration could exploit." },
+      { "title": "The collapse was not subtle", "body": "ResNet-34 began at 76.00 percent top-1 accuracy. FGSM reduced it to 6.00 percent; five-step I-FGSM and ten-step PGD reduced it to 0.20 percent. Patch attacks were nearly as effective, landing between 1.60 and 1.80 percent." },
+      { "title": "Transfer changed the threat boundary", "body": "Images crafted against ResNet-34 also harmed DenseNet-121, whose top-1 accuracy fell from 74.80 to as low as 59.80 percent. The transfer effect was smaller than the white-box result, but it showed that model internals are not always necessary to create harmful inputs." }
+    ],
+    "results": [
+      { "label": "Clean top-1", "value": "76.00%" },
+      { "label": "I-FGSM / PGD top-1", "value": "0.20%" },
+      { "label": "Patch PGD top-1", "value": "1.60%" }
+    ],
+    "takeaway": "Robustness should be tested as a deployment property, with iterative and localized threat models—not inferred from untouched test images.",
+    "links": { "report": "/projects/pdfs/jailbreaking-deep-models.pdf" }
   },
   {
-    "slug": "shortcut-learning-notes",
-    "title": "Shortcut Learning Is a Bias Problem, Not an Accuracy Problem",
-    "summary": "Average accuracy hides the failure. Why gradient disagreement turned out to be a more honest signal than misclassification for finding hidden groups.",
-    "date": "2025-05-30",
-    "readingTime": "9 min",
-    "featured": false,
-    "tags": ["Research", "Robustness", "ML"]
+    "slug": "cross-domain-super-resolution",
+    "title": "Super-Resolution Beyond Natural Images",
+    "summary": "A cross-domain benchmark showed why strong natural-image scores do not guarantee reliable reconstruction of text or astronomy.",
+    "year": "2025",
+    "readingTime": "6 min",
+    "featured": true,
+    "kind": "Research note",
+    "tags": ["Computer Vision", "Domain Shift", "Benchmarking"],
+    "heroMetric": { "value": "+10.61 dB", "label": "TextZoom gain after adaptation" },
+    "intro": "Natural photographs make familiar assumptions about texture and local structure. This benchmark tested what happened when those priors met two domains where every sharp edge or point source carries meaning.",
+    "sections": [
+      { "title": "Three domains, one reconstruction task", "body": "EDSR, SwinIR, and a Stable Diffusion upscaler were evaluated at 2x reconstruction on DIV2K natural images, TextZoom document imagery, and STAR astronomical imagery. PSNR and SSIM captured fidelity; LPIPS added a view of diffusion outputs." },
+      { "title": "Source-domain quality did not travel", "body": "SwinIR led on DIV2K at 31.10 dB PSNR, but both conventional models fell to roughly 14.25 dB on TextZoom and 19.5 dB on STAR. The diffusion upscaler dropped to 5.65 dB on text, where plausible-looking output is not the same as correct output." },
+      { "title": "Adaptation changed the conclusion", "body": "Fine-tuned SwinIR reached 24.85 dB on TextZoom and 22.91 dB on STAR. The gap made the source of failure clearer: target domains were not necessarily too difficult, but their structure did not match the learned prior." }
+    ],
+    "results": [
+      { "label": "SwinIR on DIV2K", "value": "31.10 dB" },
+      { "label": "Zero-shot SwinIR on TextZoom", "value": "14.25 dB" },
+      { "label": "Fine-tuned SwinIR on TextZoom", "value": "24.85 dB" }
+    ],
+    "takeaway": "In structured domains, visual plausibility can be a failure mode. Fidelity metrics, qualitative checks, and domain adaptation have to be evaluated together.",
+    "links": { "report": "/projects/pdfs/atcv.pdf" }
   },
   {
-    "slug": "small-models-narrow-tasks",
-    "title": "Small Models, Narrow Tasks",
-    "summary": "Small language models get dismissed because they are measured as general-purpose systems. Tuned for one job, the picture changes considerably.",
-    "date": "2025-03-14",
-    "readingTime": "7 min",
+    "slug": "roberta-agnews-lora",
+    "title": "Fine-Tuning RoBERTa Under a One-Million-Parameter Budget",
+    "summary": "Selective LoRA placement adapted RoBERTa to AG News with 796K trainable parameters.",
+    "year": "2024",
+    "readingTime": "5 min",
     "featured": false,
-    "tags": ["LLM", "Research", "PEFT"]
+    "kind": "Research note",
+    "tags": ["NLP", "PEFT", "LoRA"],
+    "heroMetric": { "value": "0.63%", "label": "of the full model trained" },
+    "intro": "Parameter-efficient fine-tuning is not just a way to spend less compute. It is a design space in which adapter rank, target layers, and the evaluation path all matter.",
+    "sections": [
+      { "title": "Target the adaptation", "body": "Rather than updating the full base model, the experiment froze RoBERTa and placed LoRA adapters across early layers 0 and 1, middle layer 5, and late layers 10 and 11. That layout gave the model room to adjust lexical, intermediate, and task-specific representations." },
+      { "title": "A small trainable footprint", "body": "The final setup used rank 12, alpha 32, adapter dropout, AdamW, cosine decay, and five epochs. In total, it trained 796,420 parameters—about 0.63 percent of a fully trainable RoBERTa." },
+      { "title": "Keep evaluation differences visible", "body": "Targeted LoRA produced the best validation score at 92.97 percent accuracy, while a LoRA-plus-distillation variant posted the best listed inference score at 84.90 percent. Preserving that distinction is more useful than declaring one universal winner." }
+    ],
+    "results": [
+      { "label": "Trainable parameters", "value": "796K" },
+      { "label": "Validation accuracy", "value": "92.97%" },
+      { "label": "Best inference accuracy", "value": "84.90%" }
+    ],
+    "takeaway": "Selective adaptation outperformed a broader setup with fewer trainable weights; under constraints, where adapters go can matter more than how many there are.",
+    "links": { "report": "/projects/pdfs/roberta_agnews.pdf" }
+  },
+  {
+    "slug": "cifar10-compact-resnet",
+    "title": "Designing a Compact ResNet for CIFAR-10",
+    "summary": "A 4.17M-parameter ResNet made the tradeoff between validation performance and external generalization tangible.",
+    "year": "2024",
+    "readingTime": "5 min",
+    "featured": false,
+    "kind": "Research note",
+    "tags": ["Computer Vision", "Efficient CNNs", "PyTorch"],
+    "heroMetric": { "value": "4.17M", "label": "parameters" },
+    "intro": "A compact classifier does not have to be simplistic. This experiment asked how far a careful ResNet-style design could go on 32 by 32 images while treating the parameter budget as a real constraint.",
+    "sections": [
+      { "title": "Design for the image size", "body": "CIFAR-10 images are too small to discard detail with early max pooling. The network began with a 3 by 3 convolution and scaled channels gradually from 32 through 256, using two residual blocks per stage." },
+      { "title": "Treat training as part of the model", "body": "Dropout, batch normalization, random crops, horizontal flips, Nesterov SGD, label smoothing, mixed precision, gradient clipping, and a OneCycle schedule all contributed to the final behavior over 120 epochs." },
+      { "title": "The useful caveat", "body": "Validation accuracy reached 94.31 percent, while the Kaggle test score was 83.059 percent. That difference was an important result in itself: a single held-out split can make a model look more finished than it is." }
+    ],
+    "results": [
+      { "label": "Parameters", "value": "4.17M" },
+      { "label": "Validation accuracy", "value": "94.31%" },
+      { "label": "Kaggle test accuracy", "value": "83.06%" }
+    ],
+    "takeaway": "Generalization came from the entire training system, not depth alone—and it still needed an external test to be believed.",
+    "links": { "report": "/projects/pdfs/cifar-10-resnet.pdf" }
+  },
+  {
+    "slug": "singularity-agentic-research-platform",
+    "title": "Building Singularity: An Agentic Research Platform That Stays Responsive",
+    "summary": "The systems decisions behind a citation-grounded research platform that keeps long-running work visible and recoverable.",
+    "year": "2025",
+    "readingTime": "8 min",
+    "featured": true,
+    "kind": "Build note",
+    "tags": ["Agents", "Systems Design", "FastAPI"],
+    "heroMetric": { "value": "31", "label": "REST and SSE endpoints" },
+    "intro": "An agentic research application is a systems problem as much as an AI problem. The central challenge was designing a dependable path from an open-ended question to a citation-grounded report while jobs run longer than a web request.",
+    "sections": [
+      { "title": "Stage the research work", "body": "Planner workers propose approaches from different perspectives before a plan manager combines them. Research agents then retrieve evidence, extract PDFs, assess credibility, detect contradictions, and synthesize section-level material." },
+      { "title": "Write from leaves upward", "body": "Leaf sections are written before their parents receive completed child content as context. Qdrant stores retrieved chunks as 384-dimensional embeddings so writers can retrieve evidence for the section in front of them instead of filling an outline with placeholders." },
+      { "title": "Make long work observable", "body": "The API writes a job to Redis and returns quickly; ARQ workers handle execution and publish progress through Redis Pub/Sub to Server-Sent Events. Startup recovery marks stale jobs as failed, while idempotency keys and an append-only report history make the workflow safer to retry." }
+    ],
+    "results": [
+      { "label": "Research architecture", "value": "Planner → retrieval → synthesis" },
+      { "label": "Streaming path", "value": "Redis Pub/Sub + SSE" },
+      { "label": "Report history", "value": "Append-only versions" }
+    ],
+    "takeaway": "The agents and retrieval make the product useful; queues, recovery, streaming, versioning, and security boundaries are what make it feel dependable.",
+    "links": { "external": "https://singularity.hellonish.dev", "externalLabel": "Visit Singularity" }
+  },
+  {
+    "slug": "smolsolver-math-reasoning",
+    "title": "What a Small Math Model Taught Me About Answer Selection",
+    "summary": "A generator–verifier–ranker system showed that majority vote still beat learned single-answer selection on GSM8K.",
+    "year": "2024",
+    "readingTime": "6 min",
+    "featured": false,
+    "kind": "Build note",
+    "tags": ["Math Reasoning", "QLoRA", "Evaluation"],
+    "heroMetric": { "value": "68.61%", "label": "majority-vote accuracy" },
+    "intro": "The project began with a deceptively useful question: when a small model samples several math solutions, can a learned verifier choose the right one better than consensus? The answer revealed where the system was actually limited.",
+    "sections": [
+      { "title": "Separate generation from selection", "body": "A QLoRA-tuned Phi-2 generated 15 candidates for each GSM8K question. One RoBERTa-large model estimated outcome correctness, while another was trained with a pairwise margin-ranking objective to put correct solutions above incorrect ones." },
+      { "title": "A negative result with a clear lesson", "body": "Majority vote was strongest overall at 68.61 percent. Ranker-weighted voting approached it at 68.16 percent, but selecting the highest-scored individual candidate was far weaker: 41.17 percent for the classifier and 36.54 percent for the ranker." },
+      { "title": "Consensus exposed the bottleneck", "body": "Majority vote achieved 96.04 percent where samples agreed but only 32.13 percent where they did not. The learned scores contained useful evidence, yet they were not calibrated enough to rescue a generator that was producing competing answer clusters." }
+    ],
+    "results": [
+      { "label": "Candidates evaluated", "value": "19,785" },
+      { "label": "Majority vote", "value": "68.61%" },
+      { "label": "Ranker-weighted voting", "value": "68.16%" }
+    ],
+    "takeaway": "Selector complexity cannot always compensate for instability upstream. Improving the generator's consistency looked more promising than adding another decision layer.",
+    "links": { "external": "https://github.com/hellonish/SMOLSolver-Lightweight-Generator-Verifier-Ranker-Framework-for-Math-Reasoning", "externalLabel": "View repository" }
+  },
+  {
+    "slug": "snap2caption-mlops",
+    "title": "Building the MLOps Backbone for an Image-Captioning System",
+    "summary": "An image-captioning project used to make the deployment, observability, artifact, and feedback paths as concrete as the model.",
+    "year": "2025",
+    "readingTime": "8 min",
+    "featured": true,
+    "kind": "Build note",
+    "tags": ["MLOps", "Kubernetes", "LLaVA"],
+    "heroMetric": { "value": "4-bit", "label": "QLoRA training precision" },
+    "intro": "Snap2Caption was a way to work through the machine-learning system around a model: reliable data pairs, training artifacts, deployment paths, monitoring, and feedback—not only a caption returned to a browser.",
+    "sections": [
+      { "title": "Start with trustworthy multimodal data", "body": "The Docker Compose pipeline downloads data, matches images to captions, normalizes folders, creates splits, and uploads processed material to object storage. Pairing checks mattered because a mismatched image-caption pair teaches the wrong relationship, not merely a noisier one." },
+      { "title": "Move artifacts through environments", "body": "Terraform provisioned Chameleon Cloud infrastructure; Ansible and Kubespray configured Kubernetes. Helm deployed MLflow, Postgres, MinIO, and persistent storage, while ArgoCD and Argo Workflows handled synchronization, image building, deployment, and promotion." },
+      { "title": "Be precise about what is live", "body": "The default branch returns a static caption placeholder rather than serving the fine-tuned LLaVA model. A separate serving branch adds GPU inference and metrics. Keeping that boundary visible makes the MLOps work more credible, not less." }
+    ],
+    "results": [
+      { "label": "Model base", "value": "LLaVA-1.5-7B" },
+      { "label": "Artifact tracking", "value": "MLflow + MinIO" },
+      { "label": "Monitoring", "value": "Prometheus + Grafana" }
+    ],
+    "takeaway": "A model becomes a product only when its data, artifacts, feedback, and operational limits are treated as first-class parts of the system.",
+    "links": { "external": "https://github.com/hellonish/Snap2Caption", "externalLabel": "View repository" }
   }
 ]

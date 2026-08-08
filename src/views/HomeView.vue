@@ -31,12 +31,7 @@ function selectItems(items, section) {
 const projectItems = computed(() => selectItems(projects, 'projects'))
 const researchItems = computed(() => selectItems(research, 'research'))
 
-const blogItems = computed(() =>
-  selectItems(
-    [...blog].sort((a, b) => new Date(b.date) - new Date(a.date)),
-    'blog',
-  ),
-)
+const blogItems = computed(() => selectItems(blog, 'blog'))
 </script>
 
 <template>

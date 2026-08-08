@@ -24,7 +24,7 @@ function formatDate(iso) {
       <li v-for="post in items" :key="post.slug" class="blog-row">
         <time :datetime="post.date" class="blog-date">{{ formatDate(post.date) }}</time>
         <div>
-          <h3 class="blog-title">{{ post.title }}</h3>
+          <h3 class="blog-title"><router-link :to="`/blog/${post.slug}`">{{ post.title }}</router-link></h3>
           <p class="blog-summary mb-0">{{ post.summary }}</p>
         </div>
         <span class="blog-time">{{ post.readingTime }}</span>
@@ -110,6 +110,19 @@ function formatDate(iso) {
   font-size: 1rem;
   font-weight: 600;
   line-height: 1.45;
+}
+
+.blog-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-title a:hover,
+.blog-title a:focus-visible {
+  color: rgb(var(--v-theme-primary));
+  text-decoration: underline;
+  text-decoration-color: rgba(128, 128, 128, 0.5);
+  text-underline-offset: 0.22rem;
 }
 
 .blog-summary {

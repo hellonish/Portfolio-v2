@@ -17,7 +17,7 @@ All content lives in `src/data/`. Edit the JSON, save — no code changes needed
 | `about.json` | Name, bio, skills, socials (single object) |
 | `projects.json` | `/projects` — software work |
 | `research.json` | `/research` — AI Work, with abstracts and results |
-| `blog.json` | `/blog` — posts, with tag filtering |
+| `blog.json` | `/blog` and `/blog/:slug` — structured posts, with tag filtering |
 
 ### `projects.json`
 
@@ -58,15 +58,22 @@ Same base fields, plus the research treatment:
   "slug": "post-slug",
   "title": "Post title",
   "summary": "Shown in the list.",
-  "date": "2025-11-18",
+  "year": "2025",
   "readingTime": "8 min",
   "featured": true,
-  "tags": ["Agents", "Production"]
+  "kind": "Research note",
+  "tags": ["Agents", "Production"],
+  "intro": "The article opener.",
+  "sections": [{ "title": "Section", "body": "Article copy." }],
+  "results": [{ "label": "Metric", "value": "Value" }],
+  "takeaway": "Closing point.",
+  "links": { "report": "/path/to/report.pdf" }
 }
 ```
 
 Tags populate the filter chips automatically. `featured: true` surfaces an item on the homepage
-(top 3 per section).
+(top 3 per section). The article page uses the structured sections, results, takeaway, and optional
+report or external link to present each post as more than a rendered Markdown document.
 
 ## Design lab
 
@@ -84,10 +91,8 @@ to your chosen pairing before shipping** — it currently pulls 8 extra families
 
 ## Notes
 
-- **Placeholder data.** Projects and research are drawn from your existing markdown reports.
-  Blog posts are invented placeholders — replace them.
-- **Post bodies.** `blog.json` holds metadata only; rows are not yet linked to full articles.
-  When you want post pages, add markdown files and a `/blog/:slug` route.
+- **Post bodies.** Blog content lives in structured entries in `blog.json`; the Markdown source
+  documents remain reference material rather than being rendered directly.
 - Theme choice persists in `localStorage`. Dark is the default.
 - Monospace is used for metadata and tags only, never body copy.
 - All text meets WCAG AA contrast in both themes (verified: worst case 4.75:1).
