@@ -172,7 +172,7 @@ import portraitUrl from '../../picture.png'
   .hero-portrait-frame {
     width: min(72%, 240px);
     aspect-ratio: 5 / 4;
-    justify-self: start;
+    justify-self: center;
   }
 
   .hero-portrait {
