@@ -26,15 +26,13 @@ const listedProjects = computed(() =>
         :tags="project.tags"
         :href="project.links.demo || project.links.repo || project.links.archive"
       />
-      <a
-        v-if="project.links.archive"
-        :href="project.links.archive"
-        target="_blank"
-        rel="noopener noreferrer"
+      <router-link
+        v-if="project.links.blog"
+        :to="project.links.blog"
         class="project-entry__archive"
       >
-        Project notes <span aria-hidden="true">↗</span>
-      </a>
+        Read blog <span aria-hidden="true">→</span>
+      </router-link>
     </div>
   </div>
 </template>
