@@ -28,6 +28,14 @@ import portraitUrl from '../../picture.png'
         >
           {{ settings.home.hero.resumeLabel }} <span aria-hidden="true">↗</span>
         </a>
+        <a
+          href="https://twitter.com/nishant_sh20"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hero-link"
+        >
+          Twitter <span aria-hidden="true">↗</span>
+        </a>
       </nav>
     </div>
 

@@ -1,10 +1,10 @@
 {
   "name": "Nishant Sharma",
-  "role": "AI Engineer",
+  "role": "AI and Infrastructure Engineer",
   "tagline": "Backend and infrastructure engineer building AI agents and pursuing independent AI alignment research.",
   "hero": {
-    "kicker": "AI engineering · New York, NY",
-    "summary": "I build reliable software systems. Currently, I’m building AI agents and pursuing independent research in AI alignment.",
+    "kicker": "AI and Infrastructure Engineering · New York, NY",
+    "summary": "I am an AI Engineer with 2 years of Backend and Infrastructure Engineering Experience. Currently working as an independent researcher in AI Alignment.",
     "note": "Open to collaborating on work in adjacent areas."
   },
   "bio": [
@@ -16,45 +16,109 @@
   "email": "hellonishantsh@gmail.com",
   "resume": "https://resumes.hellonish.dev/base-resume-b703550f719c.pdf",
   "socials": [
-    { "label": "GitHub", "url": "https://github.com/hellonish", "icon": "mdi-github" },
-    { "label": "LinkedIn", "url": "https://linkedin.com/in/hellonish", "icon": "mdi-linkedin" },
-    { "label": "Email", "url": "mailto:hellonishantsh@gmail.com", "icon": "mdi-email-outline" }
+    {
+      "label": "GitHub",
+      "url": "https://github.com/hellonish",
+      "icon": "mdi-github"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://linkedin.com/in/hellonish",
+      "icon": "mdi-linkedin"
+    },
+    {
+      "label": "Email",
+      "url": "mailto:hellonishantsh@gmail.com",
+      "icon": "mdi-email-outline"
+    }
   ],
   "highlights": [
     {
-      "label": "Currently",
-      "title": "AI engineering & independent research",
-      "description": "Building AI agents and working independently on AI alignment research."
-    },
-    {
       "label": "Engineering",
-      "title": "Backend & infrastructure experience",
-      "description": "Software engineering experience at Ingelt Study Abroad and Macverin Technologies, alongside freelance web development."
+      "title": "Cloud infrastructure at client scale",
+      "description": "Worked with 8+ clients across 12 projects in one year, helping them build their cloud infrastructure."
     },
     {
-      "label": "Live products",
-      "title": "Two products available today",
+      "label": "Startup",
+      "title": "Owning critical early-stage systems",
+      "description": "Worked at an early-stage startup, owning parallel workflow development, cloud infrastructure, and API reliability."
+    },
+    {
+      "label": "Products",
+      "title": "Open-source AI platforms",
+      "description": "Manage two open-source platforms: Singularity, a general-purpose local and cloud agent with search and deep research capabilities; and ineedajob.pro, an AI career intelligence platform.",
       "links": [
-        { "label": "Singularity", "href": "https://singularity.hellonish.dev" },
-        { "label": "ineedajob.pro", "href": "https://www.ineedajob.pro" }
+        {
+          "label": "Singularity",
+          "href": "https://singularity.hellonish.dev"
+        },
+        {
+          "label": "ineedajob.pro",
+          "href": "https://www.ineedajob.pro"
+        }
       ]
     },
     {
       "label": "Research",
-      "title": "Robustness, vision & reasoning",
-      "description": "Work on PGDR, cross-domain super-resolution, and verifier-guided reasoning—the latter recognized with a Best Project award."
+      "title": "Novel ML research & award-winning reasoning",
+      "description": "Created PGDR (Persistent Gradient Disagreement Reweighting), a novel method for inductive bias in machine learning; and produced a fine-tuned mathematical verifier-guided reasoning model in a team, winning a Best Project award."
     },
     {
       "label": "Mentorship",
-      "title": "Teaching & technical leadership",
-      "description": "Graduate machine learning TA, technical lead and programming mentor at the Computer Society of India, and TeacherOn mentor."
+      "title": "Mentoring 100+ ML students",
+      "description": "Served as the Graduate Teaching Assistant for Machine Learning at NYU, mentoring 100+ students, and as Technical Lead at the Computer Society of India."
     }
   ],
   "skills": [
-    { "group": "Languages", "items": ["Python", "TypeScript", "JavaScript", "SQL", "Bash"] },
-    { "group": "AI / ML", "items": ["PyTorch", "Hugging Face", "PEFT / LoRA", "Transformers", "MLflow"] },
-    { "group": "Backend", "items": ["FastAPI", "PostgreSQL", "Redis", "ARQ", "SQLAlchemy"] },
-    { "group": "Frontend", "items": ["Vue", "React", "Next.js", "Vuetify", "Vite"] },
-    { "group": "Infra", "items": ["Docker", "Kubernetes", "Terraform", "AWS", "Caddy"] }
+    {
+      "group": "Languages",
+      "items": [
+        "Python",
+        "TypeScript",
+        "JavaScript",
+        "SQL",
+        "Bash"
+      ]
+    },
+    {
+      "group": "AI / ML",
+      "items": [
+        "PyTorch",
+        "Hugging Face",
+        "PEFT / LoRA",
+        "Transformers",
+        "MLflow"
+      ]
+    },
+    {
+      "group": "Backend",
+      "items": [
+        "FastAPI",
+        "PostgreSQL",
+        "Redis",
+        "ARQ",
+        "SQLAlchemy"
+      ]
+    },
+    {
+      "group": "Frontend",
+      "items": [
+        "Vue",
+        "React",
+        "Next.js",
+        "Vuetify",
+        "Vite"
+      ]
+    },
+    {
+      "group": "Infra",
+      "items": [
+        "Docker",
+        "Kubernetes",
+        "Terraform",
+        "AWS",
+        "Caddy"
+      ]
+    }
   ]
 }
