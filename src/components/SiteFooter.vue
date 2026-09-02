@@ -24,7 +24,7 @@ const currentYear = new Date().getFullYear()
       </nav>
 
       <div class="site-footer__column">
-        <p class="site-footer__label">{{ settings.site.footer.projectsLabel }}</p>
+        <p class="site-footer__label">{{ settings.site.footer.workLabel }}</p>
         <a
           v-for="link in about.footerLinks"
           :key="link.url"
