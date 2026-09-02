@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirecting…</title>
+    <script>
+      // GitHub Pages cannot rewrite requests to index.html. Send the requested
+      // client-side route to index.html, where it is restored before Vue loads.
+      (() => {
+        const requestedUrl = new URL(window.location.href)
+        const appUrl = new URL('/', requestedUrl.origin)
+
+        appUrl.searchParams.set(
+          'path',
+          `${requestedUrl.pathname}${requestedUrl.search}${requestedUrl.hash}`,
+        )
+        window.location.replace(appUrl)
+      })()
+    </script>
+  </head>
+  <body>
+    <p>Redirecting…</p>
+  </body>
+</html>

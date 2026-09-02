@@ -9,6 +9,17 @@
       content="Nishant Sharma is a backend and infrastructure engineer building AI agents and pursuing independent AI alignment research."
     />
     <title>Nishant Sharma — Engineer &amp; Researcher</title>
+    <script>
+      // GitHub Pages serves public/404.html for unknown paths. Restore the intended
+      // client-side route before Vue Router reads the current location.
+      (() => {
+        const fallbackPath = new URL(window.location.href).searchParams.get('path')
+
+        if (fallbackPath?.startsWith('/') && !fallbackPath.startsWith('//')) {
+          window.history.replaceState(null, '', fallbackPath)
+        }
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>
