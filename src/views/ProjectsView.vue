@@ -52,6 +52,8 @@ function postRoute(path) {
   position: absolute;
   right: 0;
   bottom: 1.1rem;
+  height: 2rem;
+  padding-block: 0;
 }
 
 .project-entry__archive:hover,
