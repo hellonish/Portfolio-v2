@@ -1,9 +1,20 @@
 <script setup>
+import { useRoute } from 'vue-router'
 import settings from '@/data/site-settings.json'
 
 defineProps({
   items: { type: Array, default: () => [] },
 })
+
+const route = useRoute()
+
+function writingRoute(name, slug) {
+  return {
+    name,
+    ...(slug ? { params: { slug } } : {}),
+    query: { from: route.fullPath },
+  }
+}
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
@@ -17,14 +28,14 @@ function formatDate(iso) {
         <span class="blog-count">{{ String(items.length).padStart(2, '0') }}</span>
         <h2 id="blog-title" class="blog-heading">{{ settings.home.sections.blog.title }}</h2>
       </div>
-      <router-link to="/blog" class="blog-link">{{ settings.home.sections.blog.linkLabel }} <span aria-hidden="true">→</span></router-link>
+      <router-link :to="writingRoute('blog')" class="blog-link">{{ settings.home.sections.blog.linkLabel }} <span aria-hidden="true">→</span></router-link>
     </header>
 
     <ol class="blog-list">
       <li v-for="post in items" :key="post.slug" class="blog-row">
         <time :datetime="post.date" class="blog-date">{{ formatDate(post.date) }}</time>
         <div>
-          <h3 class="blog-title"><router-link :to="`/blog/${post.slug}`">{{ post.title }}</router-link></h3>
+          <h3 class="blog-title"><router-link :to="writingRoute('blog-post', post.slug)">{{ post.title }}</router-link></h3>
           <p class="blog-summary mb-0">{{ post.summary }}</p>
         </div>
         <span class="blog-time">{{ post.readingTime }}</span>
@@ -63,7 +74,7 @@ function formatDate(iso) {
 }
 
 .blog-heading {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 400;
   letter-spacing: -0.035em;

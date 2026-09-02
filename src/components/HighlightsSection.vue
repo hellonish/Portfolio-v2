@@ -58,7 +58,7 @@ import settings from '@/data/site-settings.json'
 }
 
 .highlights-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(2.2rem, 4vw, 3.25rem);
   font-weight: 400;
   letter-spacing: -0.025em;
@@ -81,7 +81,6 @@ import settings from '@/data/site-settings.json'
   padding-top: 0.25rem;
 }
 
-.highlight-title,
 .highlight-description,
 .highlight-links {
   font-family: var(--font-sans);
@@ -89,6 +88,7 @@ import settings from '@/data/site-settings.json'
 
 .highlight-title {
   margin-bottom: 0.45rem;
+  font-family: var(--font-sans);
   font-size: 1.02rem;
   font-weight: 600;
   line-height: 1.45;

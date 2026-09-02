@@ -17,24 +17,33 @@ import portraitUrl from '../../picture.png'
       <p class="hero-note mb-0">{{ about.hero.note }}</p>
 
       <nav class="hero-actions mt-9" aria-label="Portfolio links">
-        <a :href="`mailto:${about.email}`" class="hero-link">
-          {{ settings.home.hero.contactLabel }} <span aria-hidden="true">↗</span>
+        <a :href="`mailto:${about.email}`" class="hero-link hero-link--launch">
+          <span>{{ settings.home.hero.contactLabel }}</span>
+          <span class="hero-link__arrow hero-link__arrow--launch" aria-hidden="true">
+            <span>↗</span><span>↗</span>
+          </span>
         </a>
         <a
           :href="about.resume"
           target="_blank"
           rel="noopener noreferrer"
-          class="hero-link"
+          class="hero-link hero-link--launch"
         >
-          {{ settings.home.hero.resumeLabel }} <span aria-hidden="true">↗</span>
+          <span>{{ settings.home.hero.resumeLabel }}</span>
+          <span class="hero-link__arrow hero-link__arrow--launch" aria-hidden="true">
+            <span>↗</span><span>↗</span>
+          </span>
         </a>
         <a
           href="https://twitter.com/nishant_sh20"
           target="_blank"
           rel="noopener noreferrer"
-          class="hero-link"
+          class="hero-link hero-link--launch"
         >
-          Twitter <span aria-hidden="true">↗</span>
+          <span>Twitter</span>
+          <span class="hero-link__arrow hero-link__arrow--launch" aria-hidden="true">
+            <span>↗</span><span>↗</span>
+          </span>
         </a>
       </nav>
     </div>
@@ -54,12 +63,21 @@ import portraitUrl from '../../picture.png'
 
 <style scoped>
 .hero-section {
+  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(220px, 0.65fr);
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 610px);
   align-items: center;
-  gap: clamp(3rem, 7vw, 6rem);
-  min-height: min(690px, calc(100vh - 7rem));
+  gap: clamp(2.5rem, 5vw, 5rem);
+  min-height: 100vh;
   padding: clamp(2rem, 6vh, 4.5rem) 0 clamp(4rem, 9vh, 7rem);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.hero-copy,
+.hero-portrait-frame {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-copy {
@@ -83,7 +101,7 @@ import portraitUrl from '../../picture.png'
 }
 
 .hero-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: 'Passero One', cursive;
   font-size: clamp(4rem, 6.6vw, 6rem);
   font-weight: 400;
   letter-spacing: -0.05em;
@@ -110,22 +128,81 @@ import portraitUrl from '../../picture.png'
 }
 
 .hero-link {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.2rem 0;
-  border-bottom: 1px solid rgba(128, 128, 128, 0.5);
+  padding: 0.25rem 0 0.4rem;
   color: inherit;
   font-size: 0.9rem;
   font-weight: 500;
   line-height: 1.5;
   text-decoration: none;
-  transition: border-color 160ms ease, color 160ms ease;
+  transition: color 180ms ease;
+}
+
+.hero-link::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  content: '';
+  opacity: 0.45;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
+.hero-link__arrow {
+  display: inline-block;
+  line-height: 1;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 180ms ease, border-color 180ms ease, box-shadow 260ms ease;
+}
+
+/* The arrow launches out and a fresh one takes its place. */
+.hero-link--launch::after {
+  transform: scaleX(0.38);
+  transform-origin: left;
+}
+
+.hero-link--launch:hover::after,
+.hero-link--launch:focus-visible::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+.hero-link__arrow--launch {
+  position: relative;
+  width: 1em;
+  height: 1.1em;
+  overflow: hidden;
+}
+
+.hero-link__arrow--launch span {
+  position: absolute;
+  inset: 0;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
+.hero-link__arrow--launch span:last-child {
+  transform: translate(-0.42rem, 0.42rem);
+  opacity: 0;
+}
+
+.hero-link--launch:hover .hero-link__arrow--launch span:first-child,
+.hero-link--launch:focus-visible .hero-link__arrow--launch span:first-child {
+  transform: translate(0.42rem, -0.42rem);
+  opacity: 0;
+}
+
+.hero-link--launch:hover .hero-link__arrow--launch span:last-child,
+.hero-link--launch:focus-visible .hero-link__arrow--launch span:last-child {
+  transform: translate(0);
+  opacity: 1;
 }
 
 .hero-link:hover,
 .hero-link:focus-visible {
-  border-color: currentColor;
   color: rgb(var(--v-theme-primary));
 }
 
@@ -136,11 +213,12 @@ import portraitUrl from '../../picture.png'
 
 .hero-portrait-frame {
   overflow: hidden;
-  width: min(100%, 220px);
-  aspect-ratio: 4 / 5;
+  width: auto;
+  height: 50vh;
+  aspect-ratio: 1;
   justify-self: end;
-  border: 1px solid rgba(128, 128, 128, 0.22);
-  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 50%;
   background: rgb(var(--v-theme-surface-variant));
 }
 
@@ -149,7 +227,8 @@ import portraitUrl from '../../picture.png'
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 49% 50%;
+  object-position: 50% 39%;
+  transform: scale(1.1);
   filter: saturate(0.78) contrast(1.02);
 }
 
@@ -178,19 +257,39 @@ import portraitUrl from '../../picture.png'
   }
 
   .hero-portrait-frame {
-    width: min(72%, 240px);
-    aspect-ratio: 4 / 5;
+    width: min(100%, 360px);
+    height: auto;
+    aspect-ratio: 1;
     justify-self: center;
   }
 
   .hero-portrait {
-    object-position: 50% 43%;
+    object-position: 50% 39%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-link {
+  .hero-link,
+  .hero-link::after,
+  .hero-link__arrow,
+  .hero-link__arrow--launch span {
     transition: none;
+  }
+
+  .hero-link:hover .hero-link__arrow,
+  .hero-link:focus-visible .hero-link__arrow {
+    transform: none;
+  }
+
+  .hero-link--launch:hover .hero-link__arrow--launch span:first-child,
+  .hero-link--launch:focus-visible .hero-link__arrow--launch span:first-child {
+    transform: none;
+    opacity: 1;
+  }
+
+  .hero-link--launch:hover .hero-link__arrow--launch span:last-child,
+  .hero-link--launch:focus-visible .hero-link__arrow--launch span:last-child {
+    opacity: 0;
   }
 }
 </style>

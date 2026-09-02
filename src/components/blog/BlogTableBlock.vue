@@ -23,7 +23,7 @@ defineProps({
 
 <style scoped>
 .block { margin: 3.75rem 0; padding: 1.75rem; background: rgba(128, 128, 128, 0.08); }
-h2 { margin-bottom: 1.15rem; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
+h2 { margin-bottom: 1.15rem; font-family: var(--font-sans); font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1; }
 .block__scroll { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 th, td { padding: 0.8rem 0.35rem; border-top: 1px solid rgba(128, 128, 128, 0.2); text-align: left; white-space: nowrap; }

@@ -14,9 +14,9 @@ All content lives in `src/data/`. Edit the JSON, save — no code changes needed
 
 | File | Drives |
 |---|---|
-| `about.json` | Name, bio, skills, socials (single object) |
+| `about.json` | Name, hero copy, footer profile, socials, and highlights (single object) |
 | `projects.json` | `/projects` — software work |
-| `research.json` | `/research` — AI Work, with abstracts and results |
+| `research.json` | `/research` — research work, summaries, tags, and links |
 | `blog.json` | `/blog` and `/blog/:slug` — structured posts, with tag filtering |
 
 ### `projects.json`
@@ -30,26 +30,20 @@ All content lives in `src/data/`. Edit the JSON, save — no code changes needed
   "featured": true,
   "status": "Live | Complete | Archived",
   "tags": ["shown on the homepage"],
-  "stack": ["shown as chips on the project page"],
-  "highlights": ["bulleted list"],
-  "links": { "repo": "", "demo": "" }
+  "links": { "repo": "", "demo": "", "blog": "", "archive": "" }
 }
 ```
 
 ### `research.json`
 
-Same base fields, plus the research treatment:
+Same base fields, plus the research venue:
 
 ```json
 {
   "venue": "Independent research",
-  "abstract": "Longer prose than summary.",
-  "results": [{ "metric": "Worst-group accuracy", "value": "81.52%" }],
-  "links": { "paper": "", "page": "", "repo": "" }
+  "links": { "paper": "", "blog": "" }
 }
 ```
-
-`results` renders as a two-column table. Add as many rows as you like.
 
 ### `blog.json`
 
@@ -64,16 +58,14 @@ Same base fields, plus the research treatment:
   "kind": "Research note",
   "tags": ["Agents", "Production"],
   "intro": "The article opener.",
-  "sections": [{ "title": "Section", "body": "Article copy." }],
-  "results": [{ "label": "Metric", "value": "Value" }],
-  "takeaway": "Closing point.",
+  "content": [{ "type": "section", "title": "Section", "paragraphs": ["Article copy."] }],
   "links": { "report": "/path/to/report.pdf" }
 }
 ```
 
 Tags populate the filter chips automatically. `featured: true` surfaces an item on the homepage
-(top 3 per section). The article page uses the structured sections, results, takeaway, and optional
-report or external link to present each post as more than a rendered Markdown document.
+(top 3 per section). The article page uses the structured `content` blocks and optional report or
+external link to present each post as more than a rendered Markdown document.
 
 ## Design lab
 

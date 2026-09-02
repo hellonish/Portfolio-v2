@@ -1,20 +1,29 @@
 {
   "name": "Nishant Sharma",
-  "role": "AI and Infrastructure Engineer",
-  "tagline": "Backend and infrastructure engineer building AI agents and pursuing independent AI alignment research.",
+  "tagline": "Software engineer building AI agents and pursuing independent AI alignment research.",
   "hero": {
-    "kicker": "AI and Infrastructure Engineering · New York, NY",
-    "summary": "I am an AI Engineer with 2 years of Backend and Infrastructure Engineering Experience. Currently working as an independent researcher in AI Alignment.",
-    "note": "Open to collaborating on work in adjacent areas."
+    "kicker": "AI Engineer · New York, NY",
+    "summary": "2+ years of Full-Stack Engineering and 1+ year of AI and Infrastructure Engineering.",
+    "note": "I have worked on langauge modelling, reasoning models and, currently working as an independent researcher in AI Alignment."
   },
-  "bio": [
-    "I am an experienced backend and infrastructure engineer. Currently, I am building AI agents and working in AI alignment as an independent researcher.",
-    "My work spans production software, machine learning systems, and research into robust and trustworthy AI. I am open to collaborating on work in adjacent areas."
-  ],
   "location": "New York, NY",
   "availability": "Open to collaboration",
   "email": "hellonishantsh@gmail.com",
   "resume": "https://resumes.hellonish.dev/base-resume-b703550f719c.pdf",
+  "footerLinks": [
+    {
+      "label": "Singularity",
+      "url": "https://singularity.felixlabs.org"
+    },
+    {
+      "label": "ineedajob.pro",
+      "url": "https://www.ineedajob.pro"
+    },
+    {
+      "label": "felixlabs",
+      "url": "https://www.felixlabs.org"
+    }
+  ],
   "socials": [
     {
       "label": "GitHub",
@@ -67,58 +76,6 @@
       "label": "Mentorship",
       "title": "Mentoring 100+ ML students",
       "description": "Served as the Graduate Teaching Assistant for Machine Learning at NYU, mentoring 100+ students, and as Technical Lead at the Computer Society of India."
-    }
-  ],
-  "skills": [
-    {
-      "group": "Languages",
-      "items": [
-        "Python",
-        "TypeScript",
-        "JavaScript",
-        "SQL",
-        "Bash"
-      ]
-    },
-    {
-      "group": "AI / ML",
-      "items": [
-        "PyTorch",
-        "Hugging Face",
-        "PEFT / LoRA",
-        "Transformers",
-        "MLflow"
-      ]
-    },
-    {
-      "group": "Backend",
-      "items": [
-        "FastAPI",
-        "PostgreSQL",
-        "Redis",
-        "ARQ",
-        "SQLAlchemy"
-      ]
-    },
-    {
-      "group": "Frontend",
-      "items": [
-        "Vue",
-        "React",
-        "Next.js",
-        "Vuetify",
-        "Vite"
-      ]
-    },
-    {
-      "group": "Infra",
-      "items": [
-        "Docker",
-        "Kubernetes",
-        "Terraform",
-        "AWS",
-        "Caddy"
-      ]
     }
   ]
 }

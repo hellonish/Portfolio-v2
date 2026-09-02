@@ -46,12 +46,12 @@ const post = computed(() => blog.find((item) => item.slug === route.params.slug)
 .article { padding-bottom: 3rem; }
 .article__header { max-width: 60rem; padding: clamp(1rem, 4vw, 3rem) 0 clamp(2.5rem, 6vw, 5rem); }
 .article__meta, .article__eyebrow { display: flex; gap: 1rem; font-family: var(--font-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.62; }
-.article__header h1, .article__missing h1 { max-width: 18ch; margin: 1.5rem 0; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(3.1rem, 8vw, 6.4rem); font-weight: 400; letter-spacing: -0.055em; line-height: 0.89; }
+.article__header h1, .article__missing h1 { max-width: 18ch; margin: 1.5rem 0; font-family: var(--font-sans); font-size: clamp(3.1rem, 8vw, 6.4rem); font-weight: 400; letter-spacing: -0.055em; line-height: 0.89; }
 .article__intro { max-width: 61ch; margin-bottom: 1.5rem; font-size: clamp(1rem, 1.7vw, 1.2rem); line-height: 1.65; opacity: 0.78; }
 .article__tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .article__metric { display: flex; flex-direction: column; justify-content: end; min-height: clamp(15rem, 27vw, 22rem); padding: clamp(1.5rem, 4vw, 3rem); background: rgb(var(--v-theme-primary)); color: rgb(var(--v-theme-on-primary)); }
 .article__metric span { margin-bottom: 0.7rem; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.75; }
-.article__metric strong { font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(4rem, 11vw, 9rem); font-weight: 400; letter-spacing: -0.06em; line-height: 0.8; }
+.article__metric strong { font-family: var(--font-sans); font-size: clamp(4rem, 11vw, 9rem); font-weight: 400; letter-spacing: -0.06em; line-height: 0.8; }
 .article__body { max-width: 46rem; margin: 0 auto; padding-top: clamp(3rem, 9vw, 7rem); }
 .article__actions { display: flex; flex-wrap: wrap; gap: 1.5rem; padding-top: 1.4rem; border-top: 1px solid rgba(128, 128, 128, 0.22); }
 .article__actions a, .article__missing a { color: inherit; font-size: 0.83rem; font-weight: 600; text-decoration-color: rgba(128, 128, 128, 0.5); text-underline-offset: 0.25rem; }

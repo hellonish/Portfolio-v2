@@ -24,6 +24,23 @@ const currentYear = new Date().getFullYear()
       </nav>
 
       <div class="site-footer__column">
+        <p class="site-footer__label">{{ settings.site.footer.projectsLabel }}</p>
+        <a
+          v-for="link in about.footerLinks"
+          :key="link.url"
+          :href="link.url"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="site-footer__link site-footer__link--launch"
+        >
+          <span>{{ link.label }}</span>
+          <span class="site-footer__arrow" aria-hidden="true">
+            <span>↗</span><span>↗</span>
+          </span>
+        </a>
+      </div>
+
+      <div class="site-footer__column">
         <p class="site-footer__label">{{ settings.site.footer.connectLabel }}</p>
         <a
           v-for="social in about.socials"
@@ -31,13 +48,18 @@ const currentYear = new Date().getFullYear()
           :href="social.url"
           :target="social.url.startsWith('http') ? '_blank' : undefined"
           :rel="social.url.startsWith('http') ? 'noopener noreferrer' : undefined"
-          class="site-footer__link"
+          class="site-footer__link site-footer__link--launch"
         >
-          {{ social.label }}
-          <span v-if="social.url.startsWith('http')" aria-hidden="true">↗</span>
+          <span>{{ social.label }}</span>
+          <span class="site-footer__arrow" aria-hidden="true">
+            <span>↗</span><span>↗</span>
+          </span>
         </a>
-        <a :href="about.resume" target="_blank" rel="noopener noreferrer" class="site-footer__link">
-          {{ settings.site.footer.resumeLabel }} <span aria-hidden="true">↗</span>
+        <a :href="about.resume" target="_blank" rel="noopener noreferrer" class="site-footer__link site-footer__link--launch">
+          <span>{{ settings.site.footer.resumeLabel }}</span>
+          <span class="site-footer__arrow" aria-hidden="true">
+            <span>↗</span><span>↗</span>
+          </span>
         </a>
       </div>
 
@@ -57,7 +79,7 @@ const currentYear = new Date().getFullYear()
 
 .site-footer__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(110px, 0.45fr) minmax(110px, 0.45fr);
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(110px, 0.45fr));
   gap: clamp(2rem, 6vw, 5rem);
   max-width: 1080px;
   margin: 0 auto;
@@ -65,7 +87,7 @@ const currentYear = new Date().getFullYear()
 }
 
 .site-footer__name {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-sans);
   font-size: 1.65rem;
   line-height: 1;
 }
@@ -115,12 +137,85 @@ const currentYear = new Date().getFullYear()
   transition: color 160ms ease, text-decoration-color 160ms ease;
 }
 
-.site-footer__link:hover,
-.site-footer__link:focus-visible,
+.site-footer__link:not(.site-footer__link--launch):hover,
+.site-footer__link:not(.site-footer__link--launch):focus-visible,
 .site-footer__email:hover,
 .site-footer__email:focus-visible {
   color: rgb(var(--v-theme-primary));
   text-decoration-color: currentColor;
+}
+
+/* Matches the hero links: a left-originating rule and a replacement arrow. */
+.site-footer__link--launch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding-bottom: 0.3rem;
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.site-footer__link--launch::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  content: '';
+  opacity: 0.45;
+  transform: scaleX(0.38);
+  transform-origin: left;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
+.site-footer__link--launch:hover,
+.site-footer__link--launch:focus-visible {
+  color: rgb(var(--v-theme-primary));
+}
+
+.site-footer__link--launch:hover::after,
+.site-footer__link--launch:focus-visible::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.site-footer__arrow {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1.1em;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.site-footer__arrow span {
+  position: absolute;
+  inset: 0;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 180ms ease;
+}
+
+.site-footer__arrow span:last-child {
+  opacity: 0;
+  transform: translate(-0.42rem, 0.42rem);
+}
+
+.site-footer__link--launch:hover .site-footer__arrow span:first-child,
+.site-footer__link--launch:focus-visible .site-footer__arrow span:first-child {
+  opacity: 0;
+  transform: translate(0.42rem, -0.42rem);
+}
+
+.site-footer__link--launch:hover .site-footer__arrow span:last-child,
+.site-footer__link--launch:focus-visible .site-footer__arrow span:last-child {
+  opacity: 1;
+  transform: translate(0);
+}
+
+.site-footer__link--launch:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 4px;
 }
 
 .site-footer__bottom {
@@ -156,8 +251,21 @@ const currentYear = new Date().getFullYear()
 
 @media (prefers-reduced-motion: reduce) {
   .site-footer__link,
-  .site-footer__email {
+  .site-footer__email,
+  .site-footer__link--launch::after,
+  .site-footer__arrow span {
     transition: none;
+  }
+
+  .site-footer__link--launch:hover .site-footer__arrow span:first-child,
+  .site-footer__link--launch:focus-visible .site-footer__arrow span:first-child {
+    opacity: 1;
+    transform: none;
+  }
+
+  .site-footer__link--launch:hover .site-footer__arrow span:last-child,
+  .site-footer__link--launch:focus-visible .site-footer__arrow span:last-child {
+    opacity: 0;
   }
 }
 </style>

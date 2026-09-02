@@ -3,7 +3,7 @@
    Nishant Sharma Portfolio v2
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Passero+One&display=swap');
 
 /* ── Reset ───────────────────────────────────────────────── */
 *, *::before, *::after {
@@ -16,8 +16,8 @@
 :root {
 
   /* Fonts */
-  --font-display: 'Halvar Breitschrift', 'Halvar', 'Eurostile Extended', 'Orbitron', sans-serif;
-  --font-sans:    'Halvar Mono', 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  --font-display: 'Passero One', cursive;
+  --font-sans:    'Cantarell', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:    'Halvar Mono', 'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
 
   /* Type scale (font shorthand) */
@@ -121,6 +121,7 @@ html {
 body {
   font-family: var(--font-sans);
   font-size: 15px;
+  font-weight: 500;
   line-height: 1.6;
   color: var(--text);
   background-color: var(--surface);

@@ -13,7 +13,7 @@ defineProps({
 
 <style scoped>
 .block { margin: 0 0 3rem; }
-h2 { margin-bottom: 0.85rem; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -0.035em; line-height: 0.98; }
+h2 { margin-bottom: 0.85rem; font-family: var(--font-sans); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -0.035em; line-height: 0.98; }
 p { margin: 0.9rem 0 0; font-size: 1rem; line-height: 1.8; opacity: 0.8; }
 p:first-of-type { margin-top: 0; }
 </style>

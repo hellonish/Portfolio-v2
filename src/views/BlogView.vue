@@ -1,15 +1,13 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import blog from '@/data/blog.json'
 import settings from '@/data/site-settings.json'
 
-const activeTag = ref(null)
-const allTags = computed(() => [...new Set(blog.flatMap((post) => post.tags))].sort())
-const posts = computed(() => activeTag.value ? blog.filter((post) => post.tags.includes(activeTag.value)) : blog)
+const route = useRoute()
 
-function emptyTagMessage(tag) {
-  return settings.pages.blog.emptyTagMessage.replace('{tag}', tag)
+function postRoute(slug) {
+  return { name: 'blog-post', params: { slug }, query: { from: route.fullPath } }
 }
 </script>
 
@@ -21,13 +19,8 @@ function emptyTagMessage(tag) {
       description="Research notes and build write-ups shaped from experiments, systems decisions, and the results that changed my mind."
     />
 
-    <div class="d-flex flex-wrap ga-1 mb-7">
-      <v-chip :variant="activeTag === null ? 'flat' : 'tonal'" :color="activeTag === null ? 'primary' : undefined" size="small" @click="activeTag = null">{{ settings.pages.blog.allTagsLabel }}</v-chip>
-      <v-chip v-for="tag in allTags" :key="tag" :variant="activeTag === tag ? 'flat' : 'tonal'" :color="activeTag === tag ? 'primary' : undefined" size="small" @click="activeTag = activeTag === tag ? null : tag">{{ tag }}</v-chip>
-    </div>
-
     <div class="post-grid">
-      <router-link v-for="post in posts" :key="post.slug" :to="`/blog/${post.slug}`" class="post-card">
+      <router-link v-for="post in blog" :key="post.slug" :to="postRoute(post.slug)" class="post-card">
         <div class="post-card__topline"><span>{{ post.kind }}</span><span>{{ post.year }} · {{ post.readingTime }}</span></div>
         <div>
           <h2>{{ post.title }}</h2>
@@ -36,8 +29,6 @@ function emptyTagMessage(tag) {
         <div class="post-card__footer"><span>{{ post.heroMetric.value }} <small>{{ post.heroMetric.label }}</small></span><span aria-hidden="true">→</span></div>
       </router-link>
     </div>
-
-    <p v-if="!posts.length" class="text-body-2 mt-6" style="opacity: 0.6">{{ emptyTagMessage(activeTag) }}</p>
   </div>
 </template>
 
@@ -47,7 +38,7 @@ function emptyTagMessage(tag) {
 .post-card:nth-child(odd) { border-right: 1px solid rgba(128, 128, 128, 0.18); }
 .post-card:hover, .post-card:focus-visible { background: rgba(128, 128, 128, 0.08); }
 .post-card__topline, .post-card__footer { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--font-mono); font-size: 0.63rem; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.62; }
-.post-card h2 { margin: 2.2rem 0 0.65rem; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 400; letter-spacing: -0.025em; line-height: 1; }
+.post-card h2 { margin: 2.2rem 0 0.65rem; font-family: var(--font-sans); font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 400; letter-spacing: -0.025em; line-height: 1; }
 .post-card p { max-width: 52ch; font-size: 0.84rem; line-height: 1.65; opacity: 0.72; }
 .post-card__footer { align-items: end; }
 .post-card__footer > span:first-child { font-family: var(--font-sans); font-size: 0.93rem; font-weight: 600; letter-spacing: normal; text-transform: none; opacity: 1; }

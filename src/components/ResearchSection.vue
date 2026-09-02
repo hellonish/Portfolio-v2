@@ -1,9 +1,16 @@
 <script setup>
+import { useRoute } from 'vue-router'
 import settings from '@/data/site-settings.json'
 
 defineProps({
   items: { type: Array, default: () => [] },
 })
+
+const route = useRoute()
+
+function postRoute(path) {
+  return { path, query: { from: route.fullPath } }
+}
 </script>
 
 <template>
@@ -27,8 +34,8 @@ defineProps({
         <p class="research-item__summary">{{ item.summary }}</p>
         <p class="research-item__tags mb-0">{{ item.tags.slice(0, 3).join(' / ') }}</p>
         <div class="research-item__actions">
-          <a :href="item.links.paper" target="_blank" rel="noopener noreferrer">Report ↗</a>
-          <router-link :to="item.links.blog">Blog →</router-link>
+          <a :href="item.links.paper" target="_blank" rel="noopener noreferrer" class="minimal-action">Report ↗</a>
+          <router-link :to="postRoute(item.links.blog)" class="minimal-action">Read blog →</router-link>
         </div>
       </article>
     </div>
@@ -66,25 +73,12 @@ defineProps({
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-top: 1.3rem;
-}
-
-.research-item__actions a {
-  color: inherit;
-  font-family: var(--font-sans);
-  font-size: 0.73rem;
-  font-weight: 600;
-  text-decoration-color: rgba(128, 128, 128, 0.5);
-  text-underline-offset: 0.23rem;
-}
-
-.research-item__actions a:hover,
-.research-item__actions a:focus-visible {
-  color: rgb(var(--v-theme-primary));
+  margin-top: auto;
+  padding-top: 1.3rem;
 }
 
 .research-heading {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(3rem, 6vw, 4.75rem);
   font-weight: 400;
   letter-spacing: -0.04em;
@@ -111,6 +105,8 @@ defineProps({
 }
 
 .research-item {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   padding: 0 clamp(1.25rem, 3vw, 2rem);
   border-left: 1px solid rgba(128, 128, 128, 0.2);
@@ -137,7 +133,7 @@ defineProps({
 
 .research-item__title {
   margin-bottom: 0.9rem;
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-sans);
   font-size: clamp(1.35rem, 2.2vw, 1.75rem);
   font-weight: 400;
   line-height: 1.22;

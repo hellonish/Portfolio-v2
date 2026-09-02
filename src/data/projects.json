@@ -7,14 +7,6 @@
     "featured": true,
     "status": "Live",
     "tags": ["Multi-Agent", "FastAPI", "Next.js", "AWS"],
-    "stack": ["Next.js", "FastAPI", "PostgreSQL", "Redis", "ARQ", "Docker", "Caddy"],
-    "highlights": [
-      "BYOK inference supporting Gemini, xAI and DeepSeek",
-      "Real-time SSE streaming with chat over research reports",
-      "Sliding-window rate limiting, JWT + Google OAuth",
-      "ARQ workers with orphan job recovery on startup",
-      "Full Docker stack on AWS at $7 effective monthly cost"
-    ],
     "links": {
       "repo": "",
       "demo": "https://singularity.hellonish.dev",
@@ -30,14 +22,6 @@
     "featured": true,
     "status": "Live",
     "tags": ["LLM Pipelines", "Next.js", "FastAPI", "Chrome Extension"],
-    "stack": ["Next.js", "FastAPI", "SQLAlchemy", "Pydantic", "Supabase"],
-    "highlights": [
-      "BYOK inference across Anthropic, OpenAI, Gemini, xAI and DeepSeek",
-      "JobLens pipeline: profile synthesis, JD breakdown, match scoring",
-      "Typed structured outputs everywhere via Pydantic response models",
-      "Cover letter engine with Regular, Storyline, Disruptive and Custom modes",
-      "Hopper Chrome extension for ATS detection and resume form-filling"
-    ],
     "links": {
       "repo": "",
       "demo": "https://ineedajob.pro",
@@ -52,14 +36,6 @@
     "featured": true,
     "status": "Archived",
     "tags": ["MLOps", "Kubernetes", "LLaVA", "MLflow"],
-    "stack": ["LLaVA", "QLoRA", "FastAPI", "React", "Terraform", "Kubernetes", "MLflow", "MinIO", "Grafana"],
-    "highlights": [
-      "Preprocessed InstaCities1M image-caption pairs",
-      "Fine-tuned LLaVA with LoRA/QLoRA for caption generation",
-      "Run and artifact tracking with MLflow, object storage on MinIO",
-      "Provisioned with Terraform, Ansible, Kubespray and Helm",
-      "Monitoring via Prometheus and Grafana"
-    ],
     "links": {
       "repo": "https://github.com/hellonish/Snap2Caption",
       "demo": "",
@@ -75,12 +51,6 @@
     "featured": false,
     "status": "Complete",
     "tags": ["Math Reasoning", "QLoRA", "GSM8K"],
-    "stack": ["Phi-2", "QLoRA", "RoBERTa-large", "GSM8K", "PyTorch", "PEFT"],
-    "highlights": [
-      "Inspired by the rStar paper on small-model reasoning",
-      "Compared learned verifier and ranker against majority vote",
-      "Studied narrow-task tuning over general-purpose scaling"
-    ],
     "links": {
       "repo": "https://github.com/hellonish/SMOLSolver-Lightweight-Generator-Verifier-Ranker-Framework-for-Math-Reasoning",
       "demo": "",

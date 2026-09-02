@@ -1,12 +1,18 @@
 <script setup>
 import { computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useTheme } from 'vuetify'
 import SiteFooter from '@/components/SiteFooter.vue'
 import settings from '@/data/site-settings.json'
 
 const theme = useTheme()
+const route = useRoute()
 const storageKey = 'portfolio-theme'
 const isDark = computed(() => theme.global.name.value === 'dark')
+const backTarget = computed(() => {
+  const source = route.query.from
+  return typeof source === 'string' && source.startsWith('/') && !source.startsWith('//') ? source : '/'
+})
 
 onMounted(() => {
   try {
@@ -44,7 +50,7 @@ function toggleTheme() {
     <v-main>
       <v-container class="py-8 py-md-12 px-6 px-md-8" style="max-width: 1080px">
         <nav v-if="$route.path !== '/'" class="page-back-nav" aria-label="Page navigation">
-          <router-link to="/" class="page-back-link" aria-label="Back to home">
+          <router-link :to="backTarget" class="page-back-link" aria-label="Back">
             <span aria-hidden="true">←</span> {{ settings.site.backLabel }}
           </router-link>
         </nav>

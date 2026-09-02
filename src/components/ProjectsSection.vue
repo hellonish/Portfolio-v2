@@ -62,7 +62,7 @@ defineProps({
 }
 
 .section-title {
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -117,7 +117,7 @@ defineProps({
 
 .project-row__title {
   margin-bottom: 0.65rem;
-  font-family: 'Instrument Serif', Georgia, serif;
+  font-family: var(--font-sans);
   font-size: clamp(1.35rem, 2.2vw, 1.75rem);
   font-weight: 400;
   line-height: 1.22;

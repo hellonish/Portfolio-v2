@@ -4,6 +4,7 @@
     "backLabel": "Back",
     "footer": {
       "navigationLabel": "Navigate",
+      "projectsLabel": "Projects",
       "connectLabel": "Connect",
       "resumeLabel": "Résumé"
     }
@@ -61,7 +62,6 @@
     "blog": {
       "eyebrow": "Writing",
       "title": "Blog",
-      "description": "Notes on building agent systems, evaluation, and the gap between a demo and something people can trust.",
       "allTagsLabel": "All",
       "emptyTagMessage": "No posts tagged “{tag}”."
     },

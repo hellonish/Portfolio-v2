@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import PageHeader from '@/components/PageHeader.vue'
 import research from '@/data/research.json'
 import settings from '@/data/site-settings.json'
@@ -7,6 +8,11 @@ import settings from '@/data/site-settings.json'
 const listedResearch = computed(() =>
   [...research].sort((a, b) => Number(b.year) - Number(a.year)),
 )
+const route = useRoute()
+
+function postRoute(path) {
+  return { path, query: { from: route.fullPath } }
+}
 </script>
 
 <template>
@@ -31,8 +37,8 @@ const listedResearch = computed(() =>
           </div>
         </div>
         <div class="research-entry__actions">
-          <a :href="item.links.paper" target="_blank" rel="noopener noreferrer">Report <span aria-hidden="true">↗</span></a>
-          <router-link :to="item.links.blog">Read blog <span aria-hidden="true">→</span></router-link>
+          <a :href="item.links.paper" target="_blank" rel="noopener noreferrer" class="minimal-action">Report <span aria-hidden="true">↗</span></a>
+          <router-link :to="postRoute(item.links.blog)" class="minimal-action">Read blog <span aria-hidden="true">→</span></router-link>
         </div>
       </article>
     </div>
@@ -49,10 +55,9 @@ const listedResearch = computed(() =>
   border-bottom: 1px solid rgba(128, 128, 128, 0.18);
 }
 .research-entry__meta { display: grid; align-content: start; gap: 0.45rem; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.07em; line-height: 1.45; text-transform: uppercase; opacity: 0.6; }
-.research-entry__content h2 { margin-bottom: 0.55rem; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(1.7rem, 3vw, 2.25rem); font-weight: 400; line-height: 1.05; }
+.research-entry__content h2 { margin-bottom: 0.55rem; font-family: var(--font-sans); font-size: clamp(1.7rem, 3vw, 2.25rem); font-weight: 400; line-height: 1.05; }
 .research-entry__content p { max-width: 66ch; margin-bottom: 1rem; font-size: 0.88rem; line-height: 1.65; opacity: 0.72; }
 .research-entry__actions { display: grid; align-content: start; gap: 0.65rem; min-width: 6.5rem; }
-.research-entry__actions a { color: inherit; font-size: 0.78rem; font-weight: 600; text-decoration-color: rgba(128, 128, 128, 0.45); text-underline-offset: 0.25rem; white-space: nowrap; }
-.research-entry__actions a:hover, .research-entry__actions a:focus-visible { color: rgb(var(--v-theme-primary)); }
+.research-entry__actions a { white-space: nowrap; }
 @media (max-width: 720px) { .research-entry { grid-template-columns: 1fr; gap: 1rem; } .research-entry__actions { display: flex; flex-wrap: wrap; gap: 1.25rem; } }
 </style>

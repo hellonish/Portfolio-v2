@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cantarell:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500&family=Passero+One&display=swap');
 
 :root {
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Cantarell', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display: 'Passero One', cursive;
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --measure: 68ch;
 }
@@ -14,6 +14,7 @@ html {
 
 body {
   font-family: var(--font-sans);
+  font-weight: 500;
 }
 
 .v-application {
@@ -43,6 +44,37 @@ body {
   font-size: 1.0625rem;
   line-height: 1.7;
   opacity: 0.85;
+}
+
+/* Compact outlined actions used for secondary page links. */
+.minimal-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-height: 2rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid rgba(128, 128, 128, 0.42);
+  background: rgba(128, 128, 128, 0.1);
+  color: inherit;
+  font-family: var(--font-sans);
+  font-size: 0.73rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.minimal-action:hover,
+.minimal-action:focus-visible {
+  border-color: rgb(var(--v-theme-primary));
+  background: transparent;
+  color: rgb(var(--v-theme-primary));
+}
+
+.minimal-action:focus-visible {
+  outline: 2px solid rgb(var(--v-theme-primary));
+  outline-offset: 3px;
 }
 
 /* Row hover: the list rows are the primary interaction surface. */
@@ -101,6 +133,7 @@ body {
   .entry-row,
   .entry-row .entry-title,
   .entry-row .entry-arrow,
+  .minimal-action,
   .fade-enter-active,
   .fade-leave-active {
     transition: none;
